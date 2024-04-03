@@ -1,0 +1,286 @@
+Plant Name,Air Purification,Humidity Increase,Stress Reduction,Mental Health,Productivity,Sleep Improvement,Aromatherapy,Aesthetic Pleasure
+Snake Plant, 1, 1, 1, 1, 1, 0, 0, 1
+Spider Plant, 1, 1, 1, 1, 1, 0, 0, 1
+Lavender, 0.5, 0.5, 1, 1, 0.5, 1, 0, 1
+Boston Fern, 1, 1, 1, 1, 1, 0.5, 0, 1
+Peace Lily, 1, 1, 1, 1, 1, 0, 0, 1
+Rubber Plant, 1, 1, 1, 1, 1, 0.5, 0, 1
+Indian Kale, 1, 1, 0.5, 0.5, 0.5, 0.5, 0, 1
+English Ivy, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Fiddleleaf Fig, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 1
+Wandering Jew, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Flamingo Flower, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Ponytail Palm, 0.5, 0, 0.5, 0.5, 0.5, 0, 0, 1
+Swiss Cheese Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Clivia, 0.5, 0, 0.5, 0.5, 0.5, 0, 0, 1
+Dumb Cane, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Money Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Money Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Peacock Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Zebra Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Fiddle Leaf Fig, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Bird's Nest Fern, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+String of Hearts, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Inchplant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+String of Bananas, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Haworthia, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Crocodile Fern, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Sensitive Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Polka Dot Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Nerve Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Alocasia Polly, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+African Mask Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Red Prayer Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Caladium, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Rattlesnake Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+String of Turtles, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Kentia Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Alocasia Zebrina, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Fan Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Purple Passion Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parrot's Beak, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+String of Dolphins, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Goldfish Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Aspidistra, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Orchid, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Maranta Red Vein, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Cacti, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Tradescantia Nanouk, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Rubber Plant, 1, 0.5, 1, 0.5, 0.5, 0, 0, 1
+Japanese Aralia, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Miniature Fishtail, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 1
+Steel Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Variegated Caribbean Agave, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Century Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Elephant Ear, 1, 1, 0.5, 0.5, 0.5, 0, 0, 1
+Staghorn Fern, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Peace Lily, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Variegated Balfour Aralia, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Aralia Balfouriana, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Grass Tree, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Cast Iron Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Hawaiian Elf, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parasol Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Guzmania, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Lipstick Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Lady Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Velvet-Leaf Vine, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Rose Grape, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Striped Dracaena, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Zz Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Creeping Fig, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Spindle Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Willow Ficus, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Philodendron, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+African Evergreen, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Arrowhead Vine, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Goosefoot Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Golden Barrel, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Madagascar Dragon Tree, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parrot Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Weeping Fig, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Bower Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Bower of Beauty, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Spindle Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Stromante, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Yellow Malaysian Dracaena, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Ming Aralia, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parsley Panax, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Holly-Fern, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Snake Plant, 1, 1, 0.5, 0.5, 0.5, 0, 0, 1
+Fernleaf Philodendron, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Grape Ivy, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Rubber Plant, 1, 0.5, 1, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Boston Fern, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Sword Fern, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Phrynium, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Tree-Cereus, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Yellow Malaysian Dracaena, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chicken Gizzard Aralia, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Fabian Aralia, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Red Aralia, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Bougainvillia, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Paper Flower, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Prayer Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Herringbone, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Golden Pothos, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Tree-Cereus, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Dumcane, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Dwarf Bouquet, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Calypso Queen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Dumcane, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Spiny Licuala Palm, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Croton Petra, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Peace Lily, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Guzmania, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Lacy Tree-Philodendron, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Fabian Aralia, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Red Aralia, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+English Ivy, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+White Pothos, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Splitleaf Philodendron, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Mexican Breadfruit, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Peace Lily, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Umbella Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Hawaiian Elf, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parasol Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Weeping Fig, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Rubber Plant, 1, 0.5, 1, 0.5, 0.5, 0, 0, 1
+Rabbit's Foot, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Squirrel's Foot, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Yucca, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Palm Lily, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Lisa Dracaena, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Bella Palm, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Neanthebella Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Dwarf Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parlor Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Rosy Maidenhair, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Australian Maidenhair, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Yellow Malaysian Dracaena, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Majesty Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Umbrella Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Lady Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Algerian Ivy, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Montgomery Ivy, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Cornstalk Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Weeping Fig, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Red Philodendron, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Snake Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Hawaiian Elf, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parasol Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Bougainvillea, 0, 0, 0, 0, 0, 0, 0, 1
+Paper Flower, 0, 0, 0, 0, 0, 0, 0, 1
+Spineless Yucca, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Palm Lily, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Phrynium, 0, 0, 0, 0, 0, 0, 0, 1
+Dumbcane, 0, 0, 0, 0, 0, 0, 0, 1
+Ming Aralia, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parsley Panax, 0, 0, 0, 0, 0, 0, 0, 1
+Parlor Ivy, 0, 0, 0, 0, 0, 0, 0, 1
+Sweetheart Plant, 0, 0, 0, 0, 0, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Umbrella Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Lady Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Algerian Ivy, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Montgomery Ivy, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Cornstalk Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Weeping Fig, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Red Philodendron, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Snake Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Hawaiian Elf, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parasol Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Paper Flower, 0, 0, 0, 0, 0, 0, 0, 1
+Spineless Yucca, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Palm Lily, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Phrynium, 0, 0, 0, 0, 0, 0, 0, 1
+Dumbcane, 0, 0, 0, 0, 0, 0, 0, 1
+Ming Aralia, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parsley Panax, 0, 0, 0, 0, 0, 0, 0, 1
+Parlor Ivy, 0, 0, 0, 0, 0, 0, 0, 1
+Sweetheart Plant, 0, 0, 0, 0, 0, 0, 0, 1
+Heartleaf Philodendron, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Cordatum Vine, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Peace Lily, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Cornstalk Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Spider Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Lime Philodendron, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Madagascar Dragon Tree, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Peace Lily, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Malaysian Dracaena, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Snake Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Monster Cactus, 0, 0, 0, 0, 0, 0, 0, 1
+Peace Lily, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Burro-Tail, 0, 0, 0, 0, 0, 0, 0, 1
+Rubber Plant, 1, 0.5, 1, 0.5, 0.5, 0, 0, 1
+Coral Berry, 0, 0, 0, 0, 0, 0, 0, 1
+Hawaiian Elf, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parasol Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Silver Vase, 0, 0, 0, 0, 0, 0, 0, 1
+China Doll, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Fiddleleaf Fig, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 1
+Grass Tree, 0, 0, 0, 0, 0, 0, 0, 1
+White Pothos, 0, 0, 0, 0, 0, 0, 0, 1
+Striped Dracaena, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Areca Palm, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Butterfly Palm, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Striped Dracaena, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Bird Nest Anthurium, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Cabbage Anthurium, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Golden Pothos, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+King Sago, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Snake Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Jade Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Pignee Date Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Lilliput Agave, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Century Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Snake Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Bella Palm, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Neanthebella Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Dwarf Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parlor Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Snake Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Dumbcane, 0, 0, 0, 0, 0, 0, 0, 1
+Medallion Calathea, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Japanese Tassel Fern, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Willow Fig Tree, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Ming Aralia, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parsley Panax, 0, 0, 0, 0, 0, 0, 0, 1
+Janet Craig, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Lady Palm, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Tailflower, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Wax Flower, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Elephant Ear, 1, 1, 0.5, 0.5, 0.5, 0, 0, 1
+Malaysian Dracaena, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Malaysian Dracaena, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Herringbone, 0, 0, 0, 0, 0, 0, 0, 1
+Pink Praying Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Guzmania, 0, 0, 0, 0, 0, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Peace Lily, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Oleander, 0, 0, 0, 0, 0, 0, 0, 1
+Rose Bay, 0, 0, 0, 0, 0, 0, 0, 1
+African Evergreen, 0, 0, 0, 0, 0, 0, 0, 1
+Arrowhead Vine, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Goosefoot Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Dwarf Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Parlor Palm, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Bamboo Palm, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Reed Palm, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Dumbcane, 0, 0, 0, 0, 0, 0, 0, 1
+African Evergreen, 0, 0, 0, 0, 0, 0, 0, 1
+Arrowhead Vine, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Goosefoot Plant, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Christ-Thorn, 0, 0, 0, 0, 0, 0, 0, 1
+Crown of Thorns, 0, 0, 0, 0, 0, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Spineless Yucca, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Palm Lily, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Giant Candelabra Tree, 0, 0, 0, 0, 0, 0, 0, 1
+English Ivy, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Evergreen, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Areca Palm, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Butterfly Palm, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Boston Ivy, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Blue Star Fern, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Crown of Thorns, 0, 0, 0, 0, 0, 0, 0, 1
+Zebra Cactus, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Alocasia Amazonica, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Chinese Water Bamboo, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Rattlesnake Calathea, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Silver Dollar Plant, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 1
+Star Jasmine, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 1

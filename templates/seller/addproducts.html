@@ -1,0 +1,169 @@
+{% extends 'seller/base1.html' %}
+{% load static %}
+  {% block content %}
+
+    <div class="body-wrapper" >
+      
+      <div class="container-fluid">
+        <div class="card" >
+          <div class="card-body">
+            {% if error_message %}
+            <div class="alert alert-danger">
+                {{ error_message }}
+            </div>
+            {% endif %}
+            <h4 class="card-title">Add Plants</h4> 
+            {% if certification_status == 'approved' %}
+            <form method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+              {% csrf_token %}
+              <div class="form-group" style="margin-top: 30px;">
+                  <label for="product_name">Plant Name:</label>
+                  <input type="text" id="product_name" name="product_name" class="form-control" oninput="validateProductName()" required>
+                  <span id="product_name_error" class="text-danger"></span>
+              </div>
+              <div class="form-group mb-3" style="margin-top: 10px;">
+                <label for="product_stock">Enter Stock :</label>     
+                <input type="text" id="product_stock" name="product_stock" class="form-control" oninput="validateProductStock()" required>
+                <span id="product_stock_error" class="text-danger"></span>
+            </div>
+              <div class="form-group mb-3" style="margin-top: 10px;">
+                  <label for="product_price">Plant Price:</label>
+                 
+                  <input type="text" id="product_price" name="product_price" class="form-control" oninput="validateProductPrice()" required>
+                  <span id="product_price_error" class="text-danger"></span>
+              </div>
+              
+            <div class="col-md-13" style="margin-top: 10px;">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Plant Image:</label>
+                  <div class="col-sm-9">
+                    <input type="file" id="product_image" name="product_image" accept="image/*" oninput="validateProductImage()" class="form-control" required>
+                    <span id="product_image_error" class="text-danger"></span>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-13" style="margin-top: 10px;">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Category : </label>
+                  <div class="col-sm-9">
+                    <select id="categorySelect" class="form-control" style="border:1px solid black;" name="select_category">
+                        <option disabled value="">Select Category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.category_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <span id="select_category_error" class="text-danger"></span>
+                  </div>
+                </div>
+            </div>
+
+              <input type="hidden" name="product_form" value="1">
+              <button type="submit"class="btn btn-primary" id="add-product-button" >Add Plants</button>
+          </form>    
+          {% elif certification_status == 'pending' %}
+          <p class="certification-message">You need an approved certification to add Plants.</p>
+          {% elif certification_status == 'rejected' %}
+            <p class="certification-message">Your certification application has been rejected.</p>
+          {% else %}
+          <a href="{% url 'addproducts' %}" class="btn btn-danger">Go Back</a></p>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function validateProductName() {
+        const productNameInput = document.getElementById('product_name');
+        const productNameError = document.getElementById('product_name_error');
+        const productNameValue = productNameInput.value.trim();
+    
+        if (!/^[A-Z][a-zA-Z]*$/.test(productNameValue)) {
+            productNameError.textContent = 'Product Name should start with a capital letter, no space in between words and contain only alphabetic characters.';
+        } else {
+            productNameError.textContent = '';
+        }
+    }
+    
+    function validateProductDescription() {
+        const productDescriptionInput = document.getElementById('product_description');
+        const productDescriptionError = document.getElementById('product_description_error');
+        const productDescriptionValue = productDescriptionInput.value.trim();
+
+        if (productDescriptionValue === '') {
+            productDescriptionError.textContent = 'Product Description is required.';
+        } else {
+            productDescriptionError.textContent = '';
+        }
+    }
+
+    function validateProductPrice() {
+        const productPriceInput = document.getElementById('product_price');
+        const productPriceError = document.getElementById('product_price_error');
+        const productPriceValue = parseFloat(productPriceInput.value.trim());
+    
+        if (isNaN(productPriceValue) || productPriceValue <= 30) {
+            productPriceError.textContent = 'Product Price should be a valid numeric value above 30.';
+        } else {
+            productPriceError.textContent = '';
+        }
+    }
+    
+    function validateProductStock() {
+        const productStockInput = document.getElementById('product_stock');
+        const productStockError = document.getElementById('product_stock_error');
+        const productStockValue = productStockInput.value.trim();
+        
+        // Check if the input is a valid integer and greater than or equal to 1
+        if (!/^[1-9]\d*$/.test(productStockValue)) {
+            productStockError.textContent = 'Stock must be a positive integer greater than or equal to 1.';
+        } else {
+            productStockError.textContent = '';
+        }
+    }
+    
+    function validateProductImage() {
+        const productImageInput = document.getElementById('product_image');
+        const productImageError = document.getElementById('product_image_error');
+        const productImageValue = productImageInput.value.trim().toLowerCase(); // Convert to lowercase for case-insensitive comparison
+    
+        // Define an array of allowed file extensions
+        const allowedExtensions = ['jpg', 'jpeg', 'png'];
+    
+        // Get the file extension from the input value
+        const fileExtension = productImageValue.split('.').pop();
+    
+        if (productImageValue === '') {
+            productImageError.textContent = 'Product Image is required.';
+        } else if (!allowedExtensions.includes(fileExtension)) {
+            productImageError.textContent = 'Invalid file format. Please use jpg, jpeg, or png.';
+        } else {
+            productImageError.textContent = '';
+        }
+    }
+    
+    function validateCategory() {
+        const categorySelect = document.getElementById('categorySelect');
+        const selectCategoryError = document.getElementById('select_category_error');
+    
+        if (categorySelect.value === '') {
+            selectCategoryError.textContent = 'Please select a category.';
+        } else {
+            selectCategoryError.textContent = '';
+        }
+    }
+
+    function validateForm() {
+        const errorElements = document.querySelectorAll('.text-danger');
+        for (const errorElement of errorElements) {
+            if (errorElement.textContent !== '') {
+                return false; // Prevent form submission if there are validation errors
+            }
+        }
+        return true; // Submit the form if there are no validation errors
+    }
+</script>
+
+</body>
+{% endblock %}
+</html>

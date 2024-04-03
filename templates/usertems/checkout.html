@@ -1,0 +1,496 @@
+{% extends 'usertems/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?key=YOUR_BING_MAPS_API_KEY"></script>
+<style>
+    #logoname
+    {
+        font-family: sans-serif;
+        color:#27350F;
+        text-decoration: none;
+        text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+        font-size: larger;
+        margin-top:-37px;
+    }
+    @media (max-width: 991.98px) {
+        #logoname
+        {
+            font-size: medium;
+            margin-top:0px;
+        }
+    }
+</style>
+<section class="ftco-section">
+<link href="{% static 'css/tablestyle.css' %}" rel="stylesheet">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 ftco-animate">
+              <form method="post" class="forms-sample" onsubmit="return validateForm()">
+                {% csrf_token %}
+                <hr  class="text animated zoomIn" id="usern2">
+                <h2 style="margin-left:5px;margin-bottom:50px;margin-left:50px;text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;">Billing Details</h2>
+                <div class="row align-items-end">
+                    <!-- First Name -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="firstname">First Name</label>
+                            <input type="text" id="firstname" name="firstname" placeholder="First Name" class="form-control text animated zoomIn" value="{{ billing_details.first_name }}" style="margin-top: 10px;">
+                            <span id="fname_name_error" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <!-- Last Name -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="lastname">Last Name</label>
+                            <input type="text" id="lastname" name="lastname" placeholder="Last Name" class="form-control text animated zoomIn" value="{{ billing_details.last_name }}" style="margin-top: 10px;">
+                            <span id="lname_name_error" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <!-- State -->
+                    <div class="w-100"></div>
+                    <!-- State -->
+                    
+                    <div class="col-md-12">
+                        <div class="form-group text animated zoomIn">
+                            <label for="state">District </label>
+                            <div class="select-wrap">
+                                <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                                <select id="state" name="state" value="{{ billing_details.state }}" class="form-control">
+                                  <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                  <option value="Kochi">Kochi</option>
+                                  <option value="Kozhikode">Kozhikode</option>
+                                  <option value="Thrissur">Thrissur</option>
+                                  <option value="Kollam">Kollam</option>
+                                  <option value="Alappuzha">Alappuzha</option>
+                                  <option value="Palakkad">Palakkad</option>
+                                  <option value="Kannur">Kannur</option>
+                                  <option value="Kottayam">Kottayam</option>
+                                  <option value="Malappuram">Malappuram</option>
+                                  <option value="Pathanamthitta">Pathanamthitta</option>
+                                  <option value="Idukki">Idukki</option>
+                                  <option value="Wayanad">Wayanad</option>
+                                    <!-- Add more options for other cities/states -->
+                                </select>
+                            </div>
+                            <span id="stateError" class="error"></span>
+                        </div>
+                    </div>
+                    <!-- Street Address -->
+                    <div class="w-100"></div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="streetaddress">Street Address</label>
+                            <input style="margin-top: 10px;" type="text" id="streetaddress" name="streetaddress" class="form-control text animated zoomIn" placeholder="House number and street name" value="{{ billing_details.street_address }}">
+                            <span id="streetaddress_error" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <!-- Apartment, Suite, Unit (optional) -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="apartmentsuiteunit">Apartment, Suite, Unit (optional)</label>
+                            <input style="margin-top: 10px;" type="text" id="apartmentsuiteunit" name="apartmentsuiteunit" class="form-control text animated zoomIn" placeholder="Apartment, suite, unit, etc. (optional)" value="{{ billing_details.apartment_suite_unit }}">
+                        </div>
+                    </div>
+                    <!-- Town / City -->
+                    <div class="w-100"></div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="towncity">Town / City</label>
+                            <input style="margin-top: 10px;" type="text" id="towncity" name="towncity" class="form-control text animated zoomIn" placeholder="Town or City" value="{{ billing_details.town_city }}">
+                            <span id="town_error" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <!-- Postcode / ZIP -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="postcodezip">Pincode</label>
+                            <input style="margin-top: 10px;" type="text" id="postcodezip" name="postcodezip" class="form-control text animated zoomIn" placeholder="Postcode or ZIP" value="{{ billing_details.postcode_zip }}">
+                            <span id="pincode_error" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <!-- Phone -->
+                    <div class="w-100"></div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input style="margin-top: 10px;" type="text" id="phone" name="phone" class="form-control text animated zoomIn" placeholder="Phone" value="{{ billing_details.phone }}">
+                            <span id="phone_error" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <!-- Email Address -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="emailaddress">Email Address</label>
+                            <input style="margin-top: 10px;" type="text" id="emailaddress" name="emailaddress" class="form-control text animated zoomIn" placeholder="Email Address" value="{{ billing_details.email }}">
+                            <span id="email_error" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-100"></div>
+                    <label >Location(optional)</label>
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="form-group">
+                            {% if billing_details.latitude and billing_details.longitude %}
+                                <input class="form-control text animated zoomIn"  type="text" id="lat"  class="cardelement" placeholder="latitude" value="{{billing_details.latitude}}" name="latitude" >
+                            {% else %}
+                                <input class="form-control text animated zoomIn" type="text" id="lat"  class="cardelement" placeholder="Latitude" name="latitude" >
+                            {% endif %}
+                            <span id="latspan" class="text-danger error-message"></span> <!-- Add error message span -->
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">   
+                        <div class="form-group">
+                            {% if billing_details.latitude and billing_details.longitude %}
+                                <input class="form-control text animated zoomIn" type="text" id="long"  name="longitude" placeholder="longitude" value="{{billing_details.longitude}}" class="cardelement" >
+                            {% else %}
+                                <input class="form-control text animated zoomIn" type="text" id="long"  name="longitude" placeholder="Longitude"class="cardelement" >
+                            {% endif %}
+                            <span id="longspan" class="text-danger error-message"></span> <!-- Add error message span -->
+                        </div>
+                    </div>            
+                        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">  
+                          <button onclick="getCoordinates()" style="background: none; border: none; text-decoration: none; margin-left:20px; cursor: pointer;">
+                            Get Coordinates
+                          </button> 
+                        </div>
+                   
+                </div>
+              
+                   
+                <button type="submit" class="btn btn-dark btn-fw" style="margin-top:20px; margin-left:35%;" name="place_order">Pay {{ total_price|floatformat:2 }}</button>
+
+            </form>
+                
+             
+                {% if billing_details.latitude and billing_details.longitude %}
+                <div class="mb-4" id="myMap" style="width: 100%; height: 150px;"></div>
+                <div class="mb-4" id="locationInfo"></div>
+                 {% endif %}
+                <!-- END -->
+            </div>
+            <div class="col-lg-4 grid-margin stretch-card animated zoomIn">
+                
+                <div class="card text-center" style="    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; margin-top:25%;">
+                  <div class="card-body " >
+                  <div style="background-color:#88B44E; width:100%;height:100px;border-radius:5px;padding:30px;">
+                      <h3 class="text-light">Cart Total</h3>
+          
+                  </div>
+                    <div class="cart-total mb-3 " style="background-color:white;">
+                        <p style="margin-top:10%;">
+                            <span class="text-primary">Subtotal : </span>
+                            <span> RS {{ total_price|floatformat:2 }}</span>
+                        </p>
+                        {% comment %} <p>
+                            <span class="text-primary">Delivery : </span>
+                            <span>RS 0.00</span>
+                        </p>
+                        <p>
+                            <span class="text-primary">Discount : </span>
+                            <span>RS 0.00</span>
+                        </p> {% endcomment %}
+                        <hr style="margin-top:20%;">
+                        <p class="total-price" style="margin-top:10%;">
+                            <span style="font-weight:bolder;">Total Amount : </span>
+                            <span id="total-amount">RS {{ total_price|floatformat:2 }}</span>
+                        </p>
+                    </div>
+                    <!-- Link to proceed to checkout -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section> <!-- .section -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+ 
+     
+    
+    
+      function getCoordinates() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+            alert("Geolocation is not supported by this browser.");
+          }
+        }
+      function showPosition(position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+        
+          // Populate the latitude and longitude input fields with the obtained values
+          document.getElementById('lat').value = latitude;
+          document.getElementById('long').value = longitude;
+        }
+
+  </script>
+<script>
+    function validateForm() {
+        let isValid = true;
+
+        // Validation for First Name
+        const firstNameInput = document.getElementById('firstname');
+        const firstNameError = document.getElementById('fname_name_error');
+        const firstNameValue = firstNameInput.value.trim();
+
+        if (!/^[A-Z][a-zA-Z\s]*$/.test(firstNameValue)) {
+            if (!/^[A-Z]/.test(firstNameValue)) {
+                firstNameError.textContent = 'First Name should start with a capital letter.';
+            } else {
+                firstNameError.textContent = 'First Name should contain only letters and spaces.';
+            }
+            isValid = false;
+        } else {
+            firstNameError.textContent = '';
+        }
+
+        // Validation for Last Name
+        const lastNameInput = document.getElementById('lastname');
+        const lastNameError = document.getElementById('lname_name_error');
+        const lastNameValue = lastNameInput.value.trim();
+
+        if (!/^[A-Z][a-zA-Z\s]*$/.test(lastNameValue)) {
+            if (!/^[A-Z]/.test(lastNameValue)) {
+                lastNameError.textContent = 'Last Name should start with a capital letter.';
+            } else {
+                lastNameError.textContent = 'Last Name should contain only letters and spaces.';
+            }
+            isValid = false;
+        } else {
+            lastNameError.textContent = '';
+        }
+
+        // Validation for State
+        const stateSelect = document.getElementById('state');
+        const stateError = document.getElementById('state_error');
+        const stateValue = stateSelect.value.trim();
+
+        if (state === "") {
+            valid = false;
+            document.getElementById('stateError').textContent = "Please select a state.";
+        } else {
+            document.getElementById('stateError').textContent = "";
+        }
+
+         // Validation for Street Address
+         const streetAddressInput = document.getElementById('streetaddress');
+         const streetAddressError = document.getElementById('streetaddress_error');
+         const streetAddressValue = streetAddressInput.value.trim();
+ 
+         if (streetAddressValue === '') {
+             streetAddressError.textContent = 'Street Address is required.';
+             isValid = false;
+         } else {
+             streetAddressError.textContent = '';
+         }
+ 
+         // Validation for Town / City
+         const townCityInput = document.getElementById('towncity');
+         const townCityError = document.getElementById('town_error');
+         const townCityValue = townCityInput.value.trim();
+ 
+         if (townCityValue === '') {
+             townCityError.textContent = 'Town / City is required.';
+             isValid = false;
+         } else {
+             townCityError.textContent = '';
+         }
+ 
+         // Validation for Postcode / ZIP
+         const postcodeZipInput = document.getElementById('postcodezip');
+        const postcodeZipError = document.getElementById('pincode_error');
+        const postcodeZipValue = postcodeZipInput.value.trim();
+
+        // Validation for a 6-digit PIN code with an optional space
+        if (!/^\d{6}( \d{6})?$/.test(postcodeZipValue)) {
+            postcodeZipError.textContent = 'Invalid Pin code. Please enter a 6-digit Pincode (without space).';
+            isValid = false;
+        } else {
+            postcodeZipError.textContent = '';
+        }
+
+         // Validation for Phone
+         const phoneInput = document.getElementById('phone');
+         const phoneError = document.getElementById('phone_error');
+         const phoneValue = phoneInput.value.trim();
+ 
+         // Example validation: A phone number must be exactly 10 digits
+         if (!/^\d{10}$/.test(phoneValue)) {
+             phoneError.textContent = 'Phone number should be exactly 10 digits.';
+             isValid = false;
+         } else {
+             phoneError.textContent = '';
+         }
+ 
+         // Validation for Email Address
+         const emailAddressInput = document.getElementById('emailaddress');
+         const emailAddressError = document.getElementById('email_error');
+         const emailAddressValue = emailAddressInput.value.trim();
+ 
+         // Example validation: Basic email format check
+         if (!/^\S+@\S+\.\S+$/.test(emailAddressValue)) {
+             emailAddressError.textContent = 'Invalid email address.';
+             isValid = false;
+         } else {
+             emailAddressError.textContent = '';
+         }
+         
+         var latitude = $("#lat").val().trim();
+         var latError = $("#latspan");
+         var latPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/; // Regex for latitude
+         
+         if (latitude !== "" && !latPattern.test(latitude)) {
+             latError.html("Invalid latitude format").css("color", "red");
+             isValid = false;
+         } else {
+             latError.html("").css("color", "red");
+         }
+         
+         var longitude = $("#long").val().trim();
+         var longError = $("#longspan");
+         var longPattern = /^[-+]?(180(\.0+)?|((1[0-7]\d)|(\d{1,2}))(\.\d+)?)$/; // Regex for longitude
+         
+         if (longitude !== "" && !longPattern.test(longitude)) {
+             longError.html("Invalid longitude format").css("color", "red");
+             isValid = false;
+         } else {
+             longError.html("").css("color", "red");
+         }
+         
+        if (!isValid) {
+            return false; // Prevent form submission if validation fails
+        }
+
+        // Additional validation logic if needed...
+
+        return true; // Submit the form if there are no validation errors
+    }
+</script>
+  
+
+<script type="text/javascript">
+    var map;
+
+    function GetMap() {
+        var latitude = {{ billing_details.latitude|default:0 }};
+        var longitude = {{ billing_details.longitude|default:0 }};
+
+        map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+            center: new Microsoft.Maps.Location(latitude, longitude),
+            zoom: 10
+        });
+
+        var location = new Microsoft.Maps.Location(latitude, longitude);
+        var pin = new Microsoft.Maps.Pushpin(location, { title: 'Location' });
+        map.entities.push(pin);
+
+        reverseGeocode(latitude, longitude);
+    }
+
+    function reverseGeocode(latitude, longitude) {
+        var apiKey = 'Au3Blei_Uhp8WxG4OPh-ZutbAHXmqrN3vEc-UkASaaTY6adPoJEo2QHBLTyNNvhB';
+        var apiUrl = 'https://dev.virtualearth.net/REST/v1/Locations/' + latitude + ',' + longitude + '?key=' + apiKey;
+
+        fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.resourceSets && data.resourceSets.length > 0) {
+                const resources = data.resourceSets[0].resources;
+                if (resources && resources.length > 0) {
+                    const address = resources[0].address;
+                    const state = address.adminDistrict2; // Assuming the district is stored in the 'locality' field
+
+                    const street = address.addressLine;
+                    const town = address.locality;
+                    const pincode = address.postalCode;
+                    const city = address.locality;
+                    
+                    // Display or use these extracted values as needed
+                    console.log('District:', state);
+                    console.log('Street:', street);
+                    console.log('Town:', town);
+                    
+                    console.log('Pincode:', pincode);
+
+                    // Example: Displaying in the HTML element
+                    displayLocationInfo(state, street, town, pincode);
+                } else {
+                    console.error('No address found for the provided coordinates.');
+                }
+            } else {
+                console.error('No results found for reverse geocoding.');
+            }
+        })
+        .catch(error => console.error('Error fetching reverse geocoding data:', error));
+}
+
+function displayLocationInfo(state, street, town, pincode) {
+    // Update the state dropdown menu
+    var stateSelect = document.getElementById('state');
+    var stateOptions = stateSelect.options;
+    for (var i = 0; i < stateOptions.length; i++) {
+        if (stateOptions[i].value === state) {
+            stateSelect.selectedIndex = i; // Set the selected index
+            break;
+        }
+    }
+
+    // Update the street address field
+    document.getElementById('streetaddress').value = street;
+
+    // Update the town/city field
+    document.getElementById('towncity').value = town;
+
+    // Update the pincode field
+    document.getElementById('postcodezip').value = pincode;
+}
+
+
+    // Call GetMap function when the page is loaded
+    window.onload = function() {
+        GetMap();
+    };
+</script>
+
+
+   
+    <script>
+        function geocodeAddress() {
+            // Fetch address details from form
+            const district = document.getElementById('state').value;
+            const streetAddress = document.getElementById('streetaddress').value;
+            const townCity = document.getElementById('towncity').value;
+            const postcodeZip = document.getElementById('postcodezip').value;
+            const address = `${streetAddress}, ${townCity}, ${district}, ${postcodeZip}`;
+    
+            // Perform geocoding using Bing Maps API
+            fetch(`https://dev.virtualearth.net/REST/v1/Locations?q=${encodeURIComponent(address)}&key=Au3Blei_Uhp8WxG4OPh-ZutbAHXmqrN3vEc-UkASaaTY6adPoJEo2QHBLTyNNvhB`)
+                .then(response => response.json())
+                .then(data => {
+                    const coordinates = data.resourceSets[0].resources[0].point.coordinates;
+                    const latitude = coordinates[0];
+                    const longitude = coordinates[1];
+    
+                    // Update latitude and longitude fields in the form
+                    document.getElementById('lat').value = latitude;
+                    document.getElementById('long').value = longitude;
+                })
+                .catch(error => console.error('Error geocoding address:', error));
+        }
+    
+        // Call geocodeAddress function when the form is submitted
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            geocodeAddress(); // Call the geocoding function
+            this.submit(); // Submit the form after geocoding
+        });
+    
+        // Optional: Call geocodeAddress function when certain address fields are changed
+        // Example: Call geocodeAddress when the state dropdown changes
+        document.getElementById('state').addEventListener('change', geocodeAddress);
+    </script>
+    
+{% endblock %}

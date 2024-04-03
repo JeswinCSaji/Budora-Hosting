@@ -1,0 +1,473 @@
+
+{% load static %}
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/userpro.css' %}" rel="stylesheet">
+        <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+        <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <!-- Template Stylesheet -->
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% if user.is_superuser %}
+    <div class="container-fluid sticky-top">
+        <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light py-2 py-lg-2 ">
+            <a href="index.html" class="navbar-brand text animated rubberBand" id="budoralogo" >
+                <img class="img-fluid" src="{% static 'images/8.png' %}" alt="Logo">
+                <a id="logoname" class="text animated rubberBand" href="#">BUDORA </a>
+            </a>
+            <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    
+                    <div class="navbar-nav ms-auto" style="text-decoration: none; 
+                            text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;">
+                           
+                           <a href="{% url 'admin_index' %}" class="nav-item nav-link " style="font-weight: lighter;">Dashboard</a>
+                           <a href="{% url 'dashlegal' %}" class="nav-item nav-link " style="font-weight: lighter;">Seller Approval</a>
+                           <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="font-weight: lighter;">Category</a>
+                            <div class="dropdown-menu bg-light rounded-0 m-0">
+                                <p class="dropdown-item">{{ user.userprofile.name }}</p>
+                                <a href="{% url 'addcategory' %}" class="dropdown-item" style="font-weight: lighter;">Add</a>
+                                <a href="{% url 'viewcategory' %}" class="dropdown-item" style="font-weight: lighter;">View</a>
+                            </div>
+                            </div> 
+                            <a href="{% url 'viewproducts' %}" class="nav-item nav-link " style="font-weight: lighter;">View Added product</a>
+                                {% if user.is_authenticated %}
+                                <div class="nav-item dropdown" style="margin-left: 50px;">
+                                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle"></i></a>
+                                    <div class="dropdown-menu bg-light rounded-0 m-0">
+                                        <p class="dropdown-item">{{ user.userprofile.name }}</p>
+                                        <a href="{% url 'profile' %}" class="dropdown-item">Profile</a>
+                                        <a href="{% url 'seller_loggout' %}" class="dropdown-item">Logout</a>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <a  class="nav-item nav-link" href="{% url 'loginu' %}" style="font-weight: lighter;">Login <i class="fa fa-arrow-right"></i></a>
+                                {% endif %} 
+                    </div>
+                </div>
+        </nav>
+        </div>
+        </div>
+    
+    {% elif user.is_staff %}
+    <div class="container-fluid sticky-top">
+        <div class="container">
+        <nav class="navbar navbar-expand-lg py-2 py-lg-2 ">
+            <a href="" class="navbar-brand animated rubberBand" id="budoralogo" >
+                <img class="img-fluid" id="logotext" src="{% static 'images/8.png' %}" alt="Logo" >
+                <a id="logoname" class="animated rubberBand" href="#">BUDORA </a>
+            </a>
+            <p style="margin-left: 8%; margin-top: 1.5%; color: white; background-color: #27350F; padding:7;box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;" class="text animated rubberBand">Seller : {{ user.seller.name }}</p>
+            <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="fa fa-bars" ></span>
+            </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    
+                    <div class="navbar-nav ms-auto" style="text-decoration: none;
+                            text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;">
+                            <a href="{% url 'seller_index' %}" class="nav-item nav-link  text animated pulse" style="font-weight: lighter;">Dashboard</a>
+                            <a href="{% url 'addproducts' %}" class="nav-item nav-link text animated pulse" style="font-weight: lighter;">Add Plants</a>
+                            <a href="{% url 'viewaddproduct' %}" class="nav-item nav-link text animated pulse" style="font-weight: lighter;">View Plants</a>
+                            <a href="{% url 'sellerorder' %}" class="nav-item nav-link text animated pulse" style="font-weight: lighter;">View Orders</a>
+
+                                {% if user.is_authenticated %}
+                                <div class="nav-item dropdown text animated pulse" style="margin-left: 50px;">
+                                {% if user.userprofile.profile_pic %}
+					            <img src="{{ user.userprofile.profile_pic.url }}" alt="" width="35" height="35" style="margin-top:20px" class="rounded-circle">
+
+
+					            {% else %}
+                                <a href="#" class="nav-link dropdown-toggle text animated zoomIn"  data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle"></i></a>
+  
+					            {% endif %}
+                                    <div class="dropdown-menu bg-dark rounded-0 m-0">
+                                       
+                                        <a href="{% url 'profile' %}"   style="color:grey;" class="dropdown-item">Profile</a>
+                                        <a  onclick="confirmLogout();"   style="color:grey;" class="dropdown-item">Logout</a>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <a  class="nav-item nav-link text animated pulse" href="{% url 'loginu' %}" style="font-weight: lighter;">Login <i class="fa fa-arrow-right"></i></a>
+                                {% endif %} 
+                    </div>
+                </div>
+        </nav>
+        </div>
+        </div>
+
+
+    {% else  %}
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <div class="container-fluid sticky-top">
+        <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light py-2 py-lg-2 ">
+            <a href="index.html" class="navbar-brand animated rubberBand" id="budoralogo" >
+                <img class="img-fluid" src="{% static 'images/8.png' %}" alt="Logo">
+                <a id="logoname" class="animated rubberBand" style="margin-left:-20px; " href="#">BUDORA </a>
+            </a>
+            <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse " id="navbarCollapse" data-wow-delay="0.1s" >
+                <div class="navbar-nav ms-auto" style="text-decoration: none;
+                text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;">
+                <form class="nav-item nav-link text animated zoomIn" style="font-weight: lighter;margin-top:-6px;" id="search-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="search-input" placeholder="Search for products">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <ul id="search-results" class="list-group" style="position: absolute; width: 100%; display: none;">
+                        <!-- Search results will be populated here as list items -->
+                    </ul>
+                                                             
+                </form>
+                    <a href="{% url 'index' %}" class="nav-item nav-link active text animated zoomIn" style="font-weight: lighter;">Home</a>
+                    <a href="{% url 'store' %}" class="nav-item nav-link animated zoomIn" style="font-weight: lighter;">Store</a>
+
+                    {% comment %} <a href="#" class="nav-item nav-link text animated pulse" style="font-weight: lighter;">Rental</a>
+                    <a href="#" class="nav-item nav-link text animated pulse" style="font-weight: lighter;">Store</a> {% endcomment %}
+        
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'nearbystores' %}" class="nav-item nav-link text animated zoomIn" style="font-weight: lighter;" >Nearby</a>
+
+                    <a href="{% url 'cart' %}" class="nav-item nav-link text animated zoomIn" style="font-weight: lighter;"><i class="fas fa-shopping-cart"></i></a>
+                    <a href="{% url 'wishlist' %}" class="nav-item nav-link text animated zoomIn" style="font-weight: lighter;"><i class="fa fa-heart"></i></a>               
+                    <div class="nav-item dropdown">
+                        {% if user.userprofile.profile_pic %}
+                        <img src="{{ user.userprofile.profile_pic.url }}" alt="" width="30" height="30" style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px; margin-top:20px;" class="rounded-circle animated zoomIn">
+                        {% else %}
+                        <a href="#" class="nav-link dropdown-toggle text animated zoomIn" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle"></i></a>
+                        {% endif %}
+                        <div class="dropdown-menu bg-light rounded-0 m-0">
+                            <p class="dropdown-item">{{ user.userprofile.name }}</p>
+                            <a href="{% url 'profile' %}" class="dropdown-item">Profile</a>
+                            <a href="{% url 'orders' %}" class="dropdown-item">Orders</a>
+                            <a href="{% url 'loggout' %}" class="dropdown-item">Logout</a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a  class="nav-item nav-link text animated zoomIn" href="{% url 'loginu' %}">Login <i class="fa fa-arrow-right"></i></a>
+                    {% endif %}
+                    
+                </div>
+                    
+                </div>
+ 
+            </div>
+        </nav>
+        </div>
+        </div>
+    {% endif  %}
+    
+    <form method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <div id="divout" >
+        
+        {% if user.is_superuser %}
+            <h5 id="usern" class=" text animated rubberBand"> Admin </h5>
+            {% elif user.is_staff %}
+            <h5 id="usern" class=" text animated rubberBand"> Seller </h5>
+            {% else  %}
+            <h5 id="usern" class=" text animated rubberBand"> User </h5>
+            {% endif  %}
+        <!-- {{ user.profile.profile_picture.url }} -->
+        {% if user.userprofile.profile_pic %}
+      <img id="propic" src="{{user.userprofile.profile_pic.url }}" alt="profile pic" class="card-img-top text animated rubberBand"/>
+      {% else %}
+    <!-- Display a default profile picture or a message if no profile picture is available -->
+      <img id="propic" src="{% static 'images/usericon.png' %}" class="card-img-top text animated rubberBand" />
+      {% endif %}
+        <h5 id="proname" class="text animated zoomIn" >{{ user.userprofile.name }}</h5>
+
+        </div>
+                <div id="divout2">
+                    {% csrf_token %}
+                    <hr  class="text animated zoomIn" id="usern2">
+                    <h5  class=" text animated zoomIn" id="usern1"> USERPROFILE </h5>
+                    
+
+                    <!-- <div>
+                        <label for="profile_picture" class="form-label">Profile Picture:</label>
+                        <input type="file"  class="form-control"  id="cardelement" name="profile_picture" style="border-color: #27350F;
+                        border-style:solid;
+                        border-width: 1px;
+                        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                        width: 300px;
+                        height: 40px;
+                        padding: 10px;">
+                    </div> -->
+                    <div>
+                        {% if user.is_staff %}
+                            <label for="name" id="carde" class="form-label text animated zoomIn">Name:</label>
+                            <hr class=" text animated zoomIn" id="signintext2">
+                            <input type="text" class="form-control text animated zoomIn" value="{{ user.userprofile.name }}" name="name" id="cardelement" >
+                            <span id="owner_name_error" class="text-danger"></span>
+                        {% else %}
+                            <label for="name" id="carde" class="form-label text animated zoomIn">Full Name:</label>
+                            <hr class=" text animated zoomIn" id="signintext2">
+                            <input type="text" class="form-control text animated zoomIn" value="{{ user.userprofile.name }}" name="name" id="cardelement" >
+                            <span id="owner_name_error" class="text-danger"></span>
+
+                        {% endif  %}
+                        
+                    </div>
+                    <div>
+                        <label for="profile_pic"  id="carde"  class="form-label text animated zoomIn">Profile Picture:</label><br>
+                        <hr class=" text animated zoomIn" id="signintext2">
+                        <input type="file"  class="form-control text animated zoomIn"  id="cardelement" name="profile_pic" >
+                        <span id="profilepicerror" class="text-danger"></span>
+
+                    </div>
+                    <div>
+                        <label for="email" id="carde" class="form-label text animated zoomIn">Email:</label>
+                        <hr class=" text animated zoomIn" id="signintext2">
+                        <input type="email"  class="form-control text animated zoomIn" id="cardelement" name="email" value="{{ user.email }}" readonly>
+                    </div>
+                    <div>
+                        {% if user.is_staff %}
+                        <label for="phone_number" id="carde" class="form-label text animated zoomIn" >Mobile :</label>
+                        <hr class=" text animated zoomIn" id="signintext2">
+                        <input class="form-control text animated zoomIn" id="cardelement" name="phone_number" value="{{ user.seller.contact }}">
+                        <span id="phone_number_error" class="text-danger"></span>
+
+                        {% else %}
+                        <label for="phone_number" id="carde" class="form-label text animated zoomIn" >Mobile :</label>
+                        <hr class=" text animated zoomIn" id="signintext2">
+                        {% if user.userprofile.phone_number is not None  %}
+                        <input class="form-control text animated zoomIn" id="cardelement" name="phone_number" value="{{ user.userprofile.phone_number }}">
+                        {% else %}   
+                        <input class="form-control text animated zoomIn" id="cardelement" name="phone_number">
+                        {% endif  %}
+                        <span id="phone_number_error" class="text-danger"></span>
+
+                        {% endif  %}
+                        
+                    </div>
+                    <div>
+                        {% if user.is_staff %}
+                        <label for="address" id="carde" class="form-label text animated zoomIn">Address:</label>
+                        <hr class=" text animated zoomIn" id="signintext2">
+
+                        <input type="text" class="form-control text animated zoomIn"  id="cardelement" value="{{ user.seller.address }}" name="address">
+                        <span id="address_error" class="text-danger"></span>
+
+                        {% else %}
+                        <label for="address" id="carde" class="form-label text animated zoomIn">Address:</label>
+                        <hr class=" text animated zoomIn" id="signintext2">
+                        {% if user.userprofile.address is not None  %}
+                        <input type="text" class="form-control text animated zoomIn"  id="cardelement" value="{{ user.userprofile.address }}" name="address">
+                        {% else %}
+                        <input type="text" class="form-control text animated zoomIn"  id="cardelement" name="address">
+                        {% endif  %}
+                        <span id="address_error" class="text-danger"></span>
+
+                        {% endif  %}
+                        
+                    </div>
+                    <div>
+                        <label for="address" id="carde" class="form-label text animated zoomIn">Reset Password:</label>
+                        <hr class=" text animated zoomIn" id="signintext2">
+                        <input type="Password" class="form-control text animated zoomIn"  id="cardelement" name="old_password" placeholder="current password">
+                        <input type="Password" class="form-control text animated zoomIn"  id="cardelement" name="reset_password" style="margin-top:20px;" placeholder="new password">
+                        <input type="Password" class="form-control text animated zoomIn"  id="cardelement" name="cpass" style="margin-top:20px;" placeholder="confirm new password">
+                        <span id="pspan" class="text-danger" style="margin-left:50%;"></span>
+                    </div>
+                    <button class=" text animated zoomIn" type="submit" id="signinbtn">Update</button>
+                    {% if messages %}
+                            {% for message in messages %}
+                                <p class="text-danger" style="margin-left:">{{ message }}</p>
+                            {% endfor %}
+                        {% endif %}
+                </div>
+    </form>
+    </div>
+    <div class="col-md-8">
+        <!-- Other content related to user profile -->
+    </div>
+</div>
+<script>
+    
+    $(document).ready(function () {
+      $("input[name='profile_pic']").change(function () {
+        validateProfileImage("input[name='profile_pic']");
+      });
+    
+      $("input[name='name']").keyup(function () {
+        validateName("input[name='name']");
+      });
+    
+      $("input[name='phone_number']").keyup(function () {
+        validatePhoneNumber("input[name='phone_number']");
+      });
+    
+      $("input[name='address']").keyup(function () {
+        validateAddress("input[name='address']");
+      });
+      $("input[name='reset_password']").keyup(function () {
+        validatePassword("input[name='reset_password']");
+    });
+
+    $("input[name='cpass']").keyup(function () {
+        validateConfirmPassword("input[name='cpass']");
+    });
+  });  
+      function validateProfileImage(fieldSelector) {
+        var certificationImage = $(fieldSelector).val().trim();
+        var certificationImageError = $("#profilepicerror");
+        if (certificationImage === "") {
+        $("#profilepicerror").html("Store License Image is required").css("color", "red");
+          certificationImageError.text("Store License Image is required").css("color", "red");
+        } else {
+          $("#profilepicerror").html("").css("color", "red");
+      }
+      }
+    
+      function validateName(fieldSelector) {
+        var ownerName = $(fieldSelector).val().trim();
+        var lettersOnlyPattern = /^[A-Za-z\s]+$/;
+    
+        if (ownerName === "") {
+          $("#owner_name_error").html("Enter your Owner name").css("color", "red");
+        } else if (!lettersOnlyPattern.test(ownerName)) {
+          $("#owner_name_error").html("Owner Name should contain only letters").css("color", "red");
+       } else {
+          $("#owner_name_error").html("");
+      }
+      }
+    
+      function validatePhoneNumber(fieldSelector) {
+        var phoneNumber = $(fieldSelector).val().trim();
+        var phoneNumberPattern = /^(\+91-|0)?[6-9]\d{9}$/; // Adjust the pattern based on your phone number requirements
+    
+        if (phoneNumber === "") {
+            $("#phone_number_error").html("Phone Number is required").css("color", "red");
+        } else if (!phoneNumberPattern.test(phoneNumber)) {
+            $("#phone_number_error").html("Phone Number should be atleast 10 numbers and cannot contain alphabets").css("color", "red");
+        } else {
+            $("#phone_number_error").html(""); // Clear the error message
+        }
+    }
+    
+    function validateAddress(fieldSelector) {
+        var address = $(fieldSelector).val().trim();
+    
+        if (address === "") {
+            $("#address_error").html("Address is required").css("color", "red");
+        } else {
+            $("#address_error").html(""); // Clear the error message
+        }
+    }   
+      // Add other validations if needed
+      function validatePassword() {
+        var oldpassword = $("input[name='old_password']").val().trim();
+        var password = $("input[name='reset_password']").val().trim();
+        var pattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+        var valid = true;
+    
+        if (password === oldpassword) {
+            $("#pspan").html("cannot be the same as the old password").css("color", "red");
+            valid = false;
+        } else if (password.length < 8) {
+            $("#pspan").html("At least 8 characters").css("color", "red");
+            valid = false;
+        } else if (!/[0-9]/.test(password)) {
+            $("#pspan").html("At least 1 number").css("color", "red");
+            valid = false;
+        } else if (!/[!@#$%^&*]/.test(password)) {
+            $("#pspan").html("At least 1 symbol (!@#$%^&*)").css("color", "red");
+            valid = false;
+        } else if (!/[A-Z]/.test(password)) {
+            $("#pspan").html("At least 1 capital letter").css("color", "red");
+            valid = false;
+        } else if (!pattern.test(password)) {
+            $("#pspan").html("Invalid password").css("color", "red");
+            valid = false;
+        }
+    
+        if (valid) {
+            $("#pspan").html("").css("color", "red");
+        }
+    }
+    
+
+    function validateConfirmPassword() {
+        var password = $("input[name='reset_password']").val();
+        var confirmPassword = $("input[name='cpass']").val().trim();
+
+        if (confirmPassword === "") {
+            $("#pspan").html("Enter the password").css("color", "red");
+        } else if (confirmPassword !== password) {
+            $("#pspan").html("Passwords do not match").css("color", "red");
+        } else {
+            $("#pspan").html("");
+        }
+    }
+
+    
+  
+  </script>
+    <script>
+        $(document).ready(function () {
+            $('#search-input').keyup(function () {
+                var query = $(this).val();
+                $.ajax({
+                    type: 'GET',
+                    url: '/live_search/',
+                    data: {
+                        'query': query
+                    },
+                    success: function (data) {
+                        var results = data.products;
+                        var resultsHtml = '';
+                        resultsHtml += '<ul class="list-group">'; // Start the list
+                            if (results.length === 0) {
+                                resultsHtml += '<li class="list-group-item">No products found</li>';
+                            } else {
+                                for (var i = 0; i < results.length; i++) {
+                                    var prod_id = results[i].prod_id;
+                                    resultsHtml += '<li class="list-group-item" style="background-color:black;"><a href="/product_single/' + prod_id + '">' + results[i].name + '</a></li>';
+                                }
+                            }
+                            resultsHtml += '</ul>'; // End the list
+        
+                        if (query) {
+                            $('#search-results').html(resultsHtml);
+                            $('#search-results').show();
+                        } else {
+                            $('#search-results').hide();
+                        }
+        
+                        // Handle click events on the links with data-prod-id attribute
+                        $('.text-truncate[data-prod-id]').on('click', function (e) {
+                            e.preventDefault();
+                            var prodId = $(this).data('prod-id');
+                            // Construct the URL using JavaScript and navigate to it
+                            var url = '/product_single/' + prodId + '/';
+                            window.location.href = url;
+                        });
+                    }
+                });
+            });
+        });
+        
+    </script>
+</body>
+
+
+
+

@@ -1,0 +1,797 @@
+{% extends 'usertems/base.html' %}
+{% load static %}
+{% block content %}
+ <!-- Favicon -->
+ <link href="img/favicon.ico" rel="icon">
+
+ <!-- Google Web Fonts -->
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+ <!-- Icon Font Stylesheet -->
+ <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+ <!-- Libraries Stylesheet -->
+ <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+ <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+ <!-- Customized Bootstrap Stylesheet -->
+ <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+ <!-- Template Stylesheet -->
+ <link href="{% static 'css/style.css' %}" rel="stylesheet">
+ <!-- Spinner End -->
+
+ <div class="container-xxl py-1">
+     <div class="container">
+         <div class="row">
+             <div class="col-lg-6  wow fadeIn" data-wow-delay="0.1s">
+                 <img src="{{ seller.store_image.url }}" style="max-width:500px; max-height:500px; margin-top:50px;">   
+                 <p class="mb-4"></p> 
+             </div>
+             
+             <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                 
+                 {% comment %} <p class="mb-2">Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna. Tempor erat elitr rebum at clita.</p> {% endcomment %}
+                 <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                    <h1 class="display-8 fst-italic text-primary">{{ seller.storename }}</h1>
+                </div>        
+                 <h5 style="font-weight:lighter; margin-top:50px;">Store Details :</h5>        
+                 {% comment %} <a href="" class="btn btn-primary rounded-pill py-3 px-4" style="margin-top:20px;">Read More</a> {% endcomment %}
+                 <div class="col-sm-6">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 btn-lg-square bg-white text-primary rounded-circle me-3">
+                            <i class="bi bi-shop"></i>
+                        </div>
+                        {{ userseller.distance }}
+                        <span class="text-dark"></span>
+                    </div>
+                </div>
+                 <div class="row g-4 mb-5" style="margin-top:10px;">
+                     <div class="col-sm-6">
+                         <div class="d-flex align-items-center">
+                             <div class="flex-shrink-0 btn-lg-square bg-white text-primary rounded-circle me-3">
+                                 <i class="bi bi-geo"></i>
+                             </div>
+                             {{ seller.address }}
+                             {% comment %} Plot No 1 Railway station to Rubber Board Junction Road, Nagampadam, Kottayam Railway Station , Kottayam {% endcomment %}
+                             <span class="text-dark"></span>
+                         </div>
+                     </div>
+                     <div class="col-sm-6">
+                         <div class="d-flex align-items-center">
+                             <div class="flex-shrink-0 btn-lg-square bg-white text-primary rounded-circle me-3">
+                                 <i class="bi bi-clock"></i>
+                             </div>
+                             OPEN ALL
+                             {{ seller.opening_days }}
+                             {{ seller.opening_time }}-{{ seller.closing_time }}
+                            
+                             <span class="text-dark"></span>
+                         </div>
+                     </div>
+                            <div class="col-sm-12 text-center">
+                                <!-- Calculate the number of filled stars based on the average rating -->
+                                {% with avg_rating_rounded=avg_rating|default:0|floatformat:"0" %}
+                                    {% for i in "12345" %}
+                                        {% if i <= avg_rating_rounded %}
+                                            <small class="fa fa-star text-primary" ></small>
+                                        {% else %}
+                                            <small class="fa fa-star text-light" ></small>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endwith %}
+                                <!-- Display the average rating as a number -->
+                                {% comment %} <small>{{ avg_rating }}</small> {% endcomment %}
+                            
+                                <!-- Add a button to show all reviews -->
+                                <button id="show-reviews-button" style="background: none; border: none; color: #9abf69; text-decoration: none; margin-left:20px; cursor: pointer;">
+                                    See reviews
+                                </button>
+
+                            </div>
+                            
+                            <div id="reviews-section" style="display: none; ">
+                                <h5>Reviews for {{ seller.storename }}</h5>
+                                <div style="height: 200px; overflow-y: auto;">
+                                    <ul>
+                                        {% for review in allreviews %}
+                                            <li>
+                                                <div class="review">
+                                                    {% if review.user.userprofile.profile_pic %}
+                                                    <img src="{{ review.user.userprofile.profile_pic.url }}" alt="image" width="30" height="30" style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px; margin-right:20px;" class="rounded-circle animated zoomIn"/>
+                                                    {% else %}
+                                                    <img src="{% static 'images/usericon.png' %}" alt="image" class="rounded-circle" style="margin-right:20px;"/>
+                                                    {% endif %}
+                                                    <!-- Display the review rating as stars -->
+                                                    {% with review_rating=review.rating|stringformat:"d"|default:0 %}
+                                                    {% for i in "12345" %}
+                                                        {% if i <= review_rating %}
+                                                            <small class="fa fa-star text-primary animated zoomIn" ></small>
+                                                        {% else %}
+                                                            <small class="fa fa-star text-light animated zoomIn" ></small>
+                                                        {% endif %}
+                                                        
+                                                    {% endfor %}
+                                                    
+                                                    <p class="animated zoomIn" style="margin-top:10px;">{{ review.user.userprofile.name }}</p>
+                                                    
+                                                    {% endwith %}
+                                                    <!-- Display the review text -->
+                                                    <p class="animated zoomIn">{{ review.description }}</p>
+                                                </div>
+                                            </li>
+                                        {% empty %}
+                                            <li>No reviews available.</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                
+                            </div>
+                            <style>
+                                /* Remove default list styles and add spacing */
+                                ul {
+                                    list-style: none;
+                                    padding: 0;
+                                }
+                            
+                               
+                            
+                                /* Style the review container */
+                                .review {
+                                    border-bottom: 1px solid #ddd;
+                                    padding: 10px;
+                                    
+                                }
+                            
+                               
+                            </style>
+
+                            
+                    
+                     <div class="col-sm-8">
+                       
+                        <a class="btn btn-dark rounded-pill py-2 px-4 m-2" style="text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px; margin-top:-30px;" href="#plants" >More Plants<i style="margin-left:10px;" class="fa fa-arrow-right"></i></a>
+
+
+                        <div class="d-flex align-items-center">
+                            
+                                           
+                            {% comment %} {% if orders.customer_is_approved == 'collected' %}   
+                                {% if review_status == 'Pending' %}
+                                <button id="openReviewModalBtn" class="btn btn-primary rounded-pill py-2 px-4 m-2"  style="text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px; margin-top:-30px;" data-seller-name="{{ seller.storename }}">Add Review<i style="margin-left:10px;" class="fa fa-arrow-right"></i></button>
+                                {% else %}
+                                <button id="openReviewModalBtn" class="btn btn-primary rounded-pill py-2 px-4 m-2"  style=" margin-top:-30px; " data-seller-name="{{ seller.storename }}" data-review-id="{{ review_id }}" data-review-desc="{{ review_desc }}" >Edit Review<i style="margin-left:10px;" class="fa fa-arrow-right"></i></button>
+                                
+                                {% endif %}
+                            {% else %}
+                                
+                            {% endif %} {% endcomment %}
+                
+                        </div>
+                         <div class="d-flex align-items-center">
+                                         {% comment %} <form method="post">
+                                             <button class="btn btn-dark rounded-pill py-2 px-4 m-2" style="text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;" type="submit"><i class="bi bi-cart-fill"></i> Already in Cart</button>
+                                         </form> {% endcomment %}
+                     </div>
+                 </div>
+             
+         </div>
+     </div>
+ </div>
+         <!-- Review Modal -->
+<div id="reviewModal" class="modal">
+    <div class="modal-content" style="margin-top:15%;width:350px;">
+        <div id="div1">
+            <span class="close">&times;</span>
+            <!-- Modal content goes here -->
+            {% if review_status == 'Pending' %}
+            <h2 style="color:white;">Leave a review</h2>
+            {% else %}
+            <h2 style="color:white;">Edit your Review</h2> 
+            {% endif %}         
+        </div>
+        {% comment %} <small>Your email address will not be published. Required fields are marked *</small> {% endcomment %}
+        <div class="d-flex my-3" >
+            <form method="POST" action="{% url 'submit_review_storeproduct' %}" style="width:350px;">
+                {% csrf_token %}
+                <input type="hidden" id="review_id" name="review_id" value="">
+                <input type="hidden" id="seller_id" name="seller_id" value="">
+                    
+                <div class="form-group">
+                    <label for="message">Your Review </label>
+                    <textarea id="message" name="description" cols="30" rows="5" class="form-control" required style="border:1px black solid;"></textarea>
+                </div>
+                <div class="form-group mb-0 text-center">
+                    <input type="submit" value="Submit Review" class="btn btn-primary px-3" id="review_btn">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+ <div class="container-xxl py-5" id="plants" style="margin-top:50px;">
+    <div class="container">
+        <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+            <p class="fs-5 fw-medium fst-italic text-primary">Plant Collection</p>
+            <h3 class="display-8">Plants in {{ seller.storename }}</h3>
+        </div>
+        <div class="row g-4">
+            {% for product in seller.products.all %}
+            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="store-item position-relative text-center">
+                    {% if product.product_image.url %}
+                    <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}"  class="img-fluid" style="height: 150px;">                      
+                    {% else %}
+                    <img src="{% static 'images/noim2.png' %}" alt="No Image"  class="img-fluid" style="height: 400px;">                      
+                    {% endif %}
+                    <div class="p-4">
+                        {% comment %} <div class="text-center mb-3">
+                            <small class="fa fa-star text-primary"></small>
+                            <small class="fa fa-star text-primary"></small>
+                            <small class="fa fa-star text-primary"></small>
+                            <small class="fa fa-star text-primary"></small>
+                            <small class="fa fa-star text-primary"></small>
+                        </div> {% endcomment %}
+                        <h4 class="mb-3">{{ product.product_name }}</h4>
+                        {% if product.product_stock > 0 %}
+                        <p>Stock Left</p>
+                        <h4 class="text-primary">{{ product.product_stock }}</h4>
+                        {% else %}
+                        <p>_ _ _ _</p>
+                        <h4 class="text" style="color:red;">OUT OF STOCK</h4>
+                        {% endif %}
+                    </div>
+                    <div class="store-overlay">
+                        <a href="{% url 'seller_detail' seller.id product.pk%}" class="btn rounded-pill py-2 px-4 m-2" id="anybtn">More Details<i class="fa fa-arrow-right ms-2"></i></a>
+                    {% comment %} {% if user.is_authenticated %}
+
+
+                    <form method="post" style="margin-top:20px; ">
+                        {% csrf_token %}
+                        {% if product_summary.in_wishlist %}
+                            <p style="text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px; background-color:#88B44E; padding-top:12px;padding-bottom:12px;width:70px;border-radius:180px;" ><i class="bi bi-heart-fill" style="color:white;"></i></p>
+                        {% else %}
+                            <p style="text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;  background-color:#88B44E; padding-top:12px;padding-bottom:12px;width:70px;border-radius:180px;"><i class="bi bi-heart" style="color:white;"></i></p>
+                        {% endif %}
+                    </form>
+                    {% endif %}   {% endcomment %}
+                        {% comment %} <a href="" class="btn btn-dark rounded-pill py-2 px-4 m-2">Add to Cart <i class="fa fa-cart-plus ms-2"></i></a> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+   
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Get references to the modal and the open button
+    var modal = document.getElementById("myModal");
+    var btn = document.getElementById("openModalBtn");
+    
+    // Get the close button inside the modal
+    var closeBtn = modal.querySelector(".close");
+    
+    // When the user clicks the button, open the modal
+    btn.addEventListener("click", function() {
+        modal.style.display = "block";
+    });
+    
+    // When the user clicks the close button or outside the modal, close it
+    closeBtn.addEventListener("click", function() {
+        modal.style.display = "none";
+    });
+    
+    window.addEventListener("click", function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+        const plus = document.querySelector(".plus");
+        const minus = document.querySelector(".minus");
+        const input = document.querySelector(".num");
+        const quantityInput = document.getElementById("quantity");
+        const increaseProductPriceInput = document.getElementById("increase_product_price");
+        
+        // Get the initial product price as a numeric value
+        const productPrice = parseFloat("{{ product.product_price }}");
+        const maxQuantity = parseInt("{{ product.product_stock }}", 10); 
+        quantityInput.setAttribute("max", maxQuantity); 
+        // Set the initial value of increase_product_price
+        increaseProductPriceInput.value = productPrice.toFixed(2);
+    
+        plus.addEventListener("click", () => {
+            let a = parseInt(input.value);
+            if (a < maxQuantity) {
+                a++;
+                input.value = a < 10 ? "0" + a : a;
+                updateTotalPrice();
+            }
+        });
+    
+        minus.addEventListener("click", () => {
+            let a = parseInt(input.value);
+            if (a > 1) {
+                a--;
+                input.value = a < 10 ? "0" + a : a;
+                updateTotalPrice();
+            }
+        });
+    
+        input.addEventListener("input", () => {
+            let a = parseInt(input.value);
+            if (isNaN(a) || a < 1) {
+                input.value = "01";
+            } else if (a > maxQuantity) {
+                input.value = maxQuantity;
+            } else {
+                input.value = a < 10 ? "0" + a : a;
+            }
+            updateTotalPrice();
+        });
+    
+        function updateTotalPrice() {
+            const quantity = parseInt(input.value, 10);
+            const totalPrice = productPrice * quantity;
+            increaseProductPriceInput.value = totalPrice.toFixed(2);
+        }
+    
+        // Add an initial call to updateTotalPrice
+        updateTotalPrice();
+    });
+    </script>
+     <script>
+        $(document).ready(function() {
+            $("#show-reviews-button").click(function() {
+                // Check the current display state of the reviews section
+                var reviewsSection = $("#reviews-section");
+                var isDisplayed = reviewsSection.is(":visible");
+        
+                // Toggle the display state (show if hidden, hide if shown)
+                reviewsSection.toggle();
+        
+                // If the section was hidden, make an AJAX request to load the reviews
+                if (!isDisplayed) {
+                    $.ajax({
+                        url: "{% url 'load_reviews' seller.id %}",  // Replace with your URL pattern
+                        method: "GET",
+                        dataType: "html",
+                        success: function(response) {
+                            // Display the loaded reviews in the reviews section
+                            reviewsSection.html(response);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading reviews:", error);
+                        }
+                    });
+                }
+            });
+        });
+        
+    </script>
+    <!-- ... -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        // Get references to the modals and the open buttons
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("openModalBtn");
+        var reviewModal = document.getElementById("reviewModal");
+        var reviewModalBtn = document.getElementById("openReviewModalBtn");
+        var reviewStatus = "{{ review_status }}";
+        var reviewButton = document.getElementById("openReviewModalBtn");   
+        // Get the close buttons inside the modals
+        var closeBtn = modal.querySelector(".close");
+        var reviewModalCloseBtn = reviewModal.querySelector(".close");
+        var reviewIdInput = $("#review_id");
+        var sellerIdInput = $("#seller_id");
+    
+        $("#openReviewModalBtn").click(function() {
+            // Get the review_id from your data source, e.g., data-review-id="{{ review_id }}"
+            var reviewId = $(this).data('review-id');
+            var sellerId = $(this).data("seller");
+            var sellerName = $(this).data("seller-name");
+            var reviewDesc = $(this).data("review-desc"); 
+            // Set the value of the modal's review_id input field
+            $("#review_id").val(reviewId);
+            $("#message").val(reviewDesc);
+            $("#seller_id").val(sellerId);
+            
+            // Open the review modal
+            openReviewModal();
+        });
+        
+        // Function to open the modal
+        function openModal() {
+            modal.style.display = "block";
+        }
+    
+        // Function to close the modal
+        function closeModal() {
+            modal.style.display = "none";
+        }
+    
+        // Function to open the review modal
+        function openReviewModal() {
+            reviewModal.style.display = "block";
+        }
+    
+        // Function to close the review modal
+        function closeReviewModal() {
+            reviewModal.style.display = "none";
+        }
+    
+        // Event listener to open the modal when the button is clicked
+        btn.addEventListener("click", openModal);
+    
+        // Event listener to close the modal when the close button is clicked
+        closeBtn.addEventListener("click", closeModal);
+    
+        // Event listener to close the modal when clicking outside
+    
+        // Event listener to open the review modal when the button is clicked
+        reviewModalBtn.addEventListener("click", openReviewModal);
+    
+        reviewButton.addEventListener("click", function() {
+            // You can open the review modal and implement edit functionality here
+            openReviewModal();
+        });
+        // Event listener to close the review modal when the close button is clicked
+        reviewModalCloseBtn.addEventListener("click", closeReviewModal);
+    
+        // Event listener to close the review modal when clicking outside
+       // Event listener to close modals when clicking outside
+        window.addEventListener("click", function(event) {
+            if (event.target == modal) {
+                closeModal();
+            } else if (event.target == reviewModal) {
+                closeReviewModal();
+            }
+        });
+    
+        $('.star-rating i').click(function () {
+            const clickedRating = parseInt($(this).data('rating'));
+    
+            // You can update the selected rating in a hidden input field if needed
+            // $('#selected_rating').val(clickedRating);
+    
+            $('.star-rating i').each(function () {
+                const starRating = parseInt($(this).data('rating'));
+                if (starRating <= clickedRating) {
+                    $(this).removeClass('far').addClass('fas text-success'); // Change color to green for selected stars
+                } else {
+                    $(this).removeClass('fas text-success').addClass('far'); // Change color to default for unselected stars
+                }
+            });
+        });
+    });
+    </script>
+    <!-- ... -->
+    
+    <style>
+        /* The Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.2);
+            
+            
+        }
+    
+        #div1
+        {
+            padding:20px;
+            color:white;
+            background-color:#27350F;
+        }
+        #div2
+        {
+            padding-left:40px;
+            padding-top:30px;
+            margin-top:30px;
+            color:#27350F;
+            border-top:1px solid black;
+            
+        }
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            
+            border:6px solid white;
+            width: 80%;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            top:-70;
+        }
+        
+        /* Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        /* Media Query for Small Screens */
+        @media screen and (max-width: 600px) {
+            .modal-content {
+    
+                top:15;
+            }
+        }
+        
+        /* Media Query for Large Screens */
+        @media screen and (min-width: 601px) {
+            .modal-content {
+                margin: 10% auto;
+                width: 30%;
+            }
+        }
+        .wrapper{
+            height:40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #FFF;
+            border-radius: 12px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            margin-left:50px;
+          }
+          .wrapper span{
+            width: 35px;
+            text-align: center;
+            font-size: medium;
+            font-weight:bold;
+            cursor: pointer;
+            user-select: none;
+          }
+          .wrapper .num{
+            font-size:25px;
+            width:40px;
+            padding-bottom:5px;
+            padding-left:5px;
+            color:#9abf69;
+            border-color:#9abf69;
+            border-right: 2px solid rgba(0,0,0,0.2);
+            border-left: 2px solid rgba(0,0,0,0.2);
+            border-top:none;
+            border-bottom:none;
+            pointer-events: none;
+          }  
+    
+          #cartadd_btn{
+            align-items: center;
+      appearance: none;
+      background-image: radial-gradient(100% 100% at 100% 0, #27350F 0, #27350F 100%);
+      border: 0;
+      border-radius: 6px;
+      box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+      box-sizing: border-box;
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      height: 48px;
+      justify-content: center;
+      line-height: 1;
+      list-style: none;
+      overflow: hidden;
+      padding-left: 16px;
+      padding-right: 16px;
+      position: relative;
+      text-align: left;
+      text-decoration: none;
+      transition: box-shadow .15s,transform .15s;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      white-space: nowrap;
+      will-change: box-shadow,transform;
+      font-size: 18px;
+          }
+    
+          #checkout_btn {
+            margin-left:270px;
+            margin-top:-70px;
+      align-items: center;
+      appearance: none;
+      background-image: radial-gradient(100% 100% at 100% 0, #27350F 0, #27350F 100%);
+      border: 0;
+      border-radius: 6px;
+      box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+      box-sizing: border-box;
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      height: 48px;
+      justify-content: center;
+      line-height: 1;
+      list-style: none;
+      overflow: hidden;
+      padding-left: 16px;
+      padding-right: 16px;
+      position: relative;
+      text-align: left;
+      text-decoration: none;
+      transition: box-shadow .15s,transform .15s;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      white-space: nowrap;
+      will-change: box-shadow,transform;
+      font-size: 18px;
+    
+    }
+    
+    #checkout_btn:focus ,#cartadd_btn:focus,#review_btn:focus{
+      box-shadow: #27350F 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #27350F 0 -3px 0 inset;
+    }
+    
+    #checkout_btn:hover ,#cartadd_btn:hover, ,#review_btn:hover{
+      box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #27350F 0 -3px 0 inset;
+      transform: translateY(-2px);
+    }
+    
+    #checkout_btn:active ,#cartadd_btn:active,,#review_btn:active{
+      box-shadow: #3c4fe0 0 3px 7px inset;
+      transform: translateY(2px);
+    }
+        /* Review Modal */
+        #reviewModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            overflow: auto;
+        }
+    
+        .review-form {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+         
+            text-align: center;
+            position: relative;
+        }
+    
+        .star-rating {
+            margin-bottom: 20px;
+        }
+    
+        .star-rating i {
+            font-size: 24px;
+            color: #FFD700; /* Gold color for selected stars */
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+    
+        .star-rating i:hover {
+            color: #FFB200; /* Darker gold color on hover */
+        }
+    
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #777;
+            cursor: pointer;
+        }
+    
+        .close:hover {
+            color: #333;
+        }
+    
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+        #review_btn
+        {
+            align-items: center;
+      appearance: none;
+      background-image: radial-gradient(100% 100% at 100% 0, #27350F 0, #27350F 100%);
+      border: 0;
+      border-radius: 6px;
+      box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+      box-sizing: border-box;
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      height: 48px;
+      justify-content: center;
+      line-height: 1;
+      list-style: none;
+      overflow: hidden;
+      padding-left: 16px;
+      padding-right: 16px;
+      position: relative;
+      text-align: left;
+      text-decoration: none;
+      transition: box-shadow .15s,transform .15s;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      white-space: nowrap;
+      will-change: box-shadow,transform;
+      font-size: 18px;
+        }
+    
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9998; /* Place it below the modal */
+        }
+    
+        /* Modal Styles */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+            max-width: 400px;
+            width: 80%; /* Adjust the width as needed */
+            text-align: center; /* Center the content */
+        }
+    
+        .custom-modal img {
+            width: 100%;
+            max-width: 300px; /* Adjust the max-width as needed */
+            height: auto;
+        }
+    
+        .custom-modal .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+        {% endblock %}
+    
+    <!-- Your HTML footer code here -->
+    
+    
+    

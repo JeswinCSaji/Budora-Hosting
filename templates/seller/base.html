@@ -1,0 +1,419 @@
+{% load static %}
+
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/sellerstyle.css' %}" rel="stylesheet">
+<!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Instascan library -->
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+
+</head>
+<body style="font-family:  sans-serif; background-image: url({% static 'images/20.jpg' %}); background-repeat: no-repeat; background-size: cover;">
+    <div class="container-fluid sticky-top">
+        <div class="container">
+        <nav class="navbar navbar-expand-lg py-2 py-lg-2 ">
+            <a href="" class="navbar-brand animated rubberBand" id="budoralogo" >
+                <img class="img-fluid" id="logotext" src="{% static 'images/8.png' %}" alt="Logo" style="margin-left:23px;">
+                <a id="logoname" class="animated rubberBand" href="#">BUDORA </a>
+            </a>
+            <p style="margin-left: 8%; margin-top: 1.5%; color: white; background-color: #27350F; padding:7;box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;" class="text animated rubberBand">SELLER</p>
+            <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="fa fa-bars" ></span>
+            </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    
+                    <div class="navbar-nav ms-auto" style="text-decoration: none;
+                            text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;">
+                            <a href="{% url 'seller_index' %}" class="nav-item nav-link  text animated pulse" style="font-weight: lighter;">Dashboard</a>
+                            <a href="{% url 'addproducts' %}" class="nav-item nav-link text animated pulse" style="font-weight: lighter;">Add Plants</a>
+                            <a href="{% url 'viewaddproduct' %}" class="nav-item nav-link text animated pulse" style="font-weight: lighter;">View Plants</a>
+                            <a href="{% url 'sellerorder' %}" class="nav-item nav-link text animated pulse" style="font-weight: lighter;">View Orders</a>
+                           
+                            <a href="#" onclick="openQrScannerModal()" id="scanQrCodeBtn" class="nav-item nav-link text animated pulse" style="font-weight: lighter;"><i class="fas fa-qrcode"></i></a>
+                                                
+
+
+                                {% if user.is_authenticated %}
+                                <div class="nav-item dropdown text animated pulse" style="margin-left: 50px;">
+                                {% if user.userprofile.profile_pic %}
+					            <img src="{{ user.userprofile.profile_pic.url }}" alt="" width="35" height="35" style="margin-top:20px" class="rounded-circle">
+
+
+					            {% else %}
+                                <a href="#" class="nav-link dropdown-toggle text animated zoomIn"  data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle"></i></a>
+  
+					            {% endif %}
+                                    <div class="dropdown-menu bg-dark rounded-0 m-0">
+                                       <p class="dropdown-item" >{{ user.seller.name }}</p>
+                                        <a href="{% url 'profile' %}"   style="color:grey;" class="dropdown-item">Profile</a>
+                                        <a  onclick="confirmLogout();"   style="color:grey;" class="dropdown-item">Logout</a>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <a  class="nav-item nav-link text animated pulse" href="{% url 'loginu' %}" style="font-weight: lighter;">Login <i class="fa fa-arrow-right"></i></a>
+                                {% endif %} 
+                    </div>
+                </div>
+                
+                
+        </nav>
+        </div>
+        </div>
+    {% if qr_error_message %}
+        <div class="error-message" style=" border-style:groove; border-color:red; border-width: 2px; box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; margin-left:33%; height:5%; width:27%; margin-top:-20px; ">
+            <p style="color: red; margin-left: 20px; margin-top:5px; font-size:larger;">
+                {{ qr_error_message }}      
+            </p>
+        </div>
+    {% endif %}      
+<div class="container mt-4">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<div id="qrScannerModal" class="modal">
+    <div class="modal-content" style="width: 500px; margin: 0 auto; margin-top:100px;">
+        <button class="close-modal" onclick="closeQrScannerModal()">&times;</button>
+        <h5>Place the QR Code in this space</h5>
+        
+        <video id="qrScanner" width="100%" height="100%"></video>
+    </div>
+</div>
+
+<!-- <div class="tab-content mt-4">
+    <div class="tab-pane fade show active" id="certification">
+    <div class="certification-content">
+      <h2>Store Licence Approval</h2>
+      {% if existing_certification %}
+    <p>You have already entered your certification details.</p>
+  {% else %}
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p|safe }} 
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  {% endif %}
+    </div>
+</div> -->
+
+    <!-- <div class="tab-pane fade" id="add-products">
+    <div class="add-products-content">
+      <h2>Add Products</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group mb-3" style="margin-top: 30px;">
+            <label for="product_name">Product Name:</label>
+            <input type="text" id="product_name" name="product_name" class="form-control">
+        </div>
+        <div class="form-group mb-3" style="margin-top: 10px;">
+            <label for="product_description">Product Description:</label>
+            <textarea id="product_description" name="product_description" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="form-group mb-3" style="margin-top: 10px;">
+          <label for="product_price">Product Price:</label>
+                  {# Use the first category's default product price as the default value #}
+                  <input type="text" id="product_price" name="product_price" class="form-control" value="{{ category.product_price }}" >
+      </div>        
+        
+      <div class="form-group mb-3" style="margin-top: 10px;">
+        <label for="select_category">Select Category:</label>
+        <select id="select_category" name="select_category" class="form-control" required>
+          <option value="">Select Category</option>
+          {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.category_name }}</option>
+          {% endfor %}
+      </select>
+      
+    </div>      
+        <div class="form-group mb-3" style="margin-top: 10px;">
+          <label for="product_image">Category Image:</label>
+          <input type="file" id="product_image" name="product_image" accept="image/*">
+      </div>
+        <input type="hidden" name="product_form" value="1">
+        <button type="submit" style="margin-top: 30px;" class="btn btn-primary" id="add-product-button">Add Product</button>
+    </form>      
+    {% comment %} <button type="submit" style="margin-top: 30px;" class="btn btn-primary" id="add-product-button-{{ application.id }}" disabled>Add Product</button> {% endcomment %}
+  </div>
+  </div>
+  </div>
+</div> -->
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var qrScannerModal = document.getElementById('qrScannerModal');
+    var qrScanner = document.getElementById('qrScanner');
+    var mediaStream;
+    
+    function openQrScannerModal() {
+        // Show the modal
+        qrScannerModal.style.display = 'block';
+
+        // Access the camera
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                var scanner = new Instascan.Scanner({ video: qrScanner });
+                scanner.addListener('scan', function (content) {
+                    handleScannedContent(content);
+                    closeQrScannerModal();
+                });
+                scanner.start(cameras[0]);
+                mediaStream = cameras[0];
+            } else {
+                alert('No cameras found.');
+                closeQrScannerModal();
+            }
+        });
+    }
+    function scanQRCodeFromFile() {
+        var fileInput = document.getElementById('fileInput');
+        var file = fileInput.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                // Perform logic with the scanned QR code content
+                var scannedContent = e.target.result;
+                // ...
+
+                // Close the modal and reset file input
+                handleScannedContent(scannedContent);
+                closeQrScannerModal();
+                fileInput.value = null;
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please select a file.');
+        }
+    }
+
+    function closeQrScannerModal() {
+        // Hide the modal and stop the camera stream
+        qrScannerModal.style.display = 'none';
+        if (mediaStream) {
+            var tracks = mediaStream.getTracks();
+            tracks.forEach(track => track.stop());
+            mediaStream = null;
+        }
+    }
+
+    function handleScannedContent(content) {
+        var pattern = /^Order ID: (\d+)\nProduct: (.+)\nUser: (.+)\n$/;
+
+    // Check if the scanned content matches the pattern
+        var match = content.match(pattern);
+        
+
+
+        if (match) {
+        // Extract relevant information from the match
+            var orderId = match[1];
+            var productName = match[2];
+            var user = match[3];
+            // Customize this function to handle the scanned content
+            alert('Scanned content: ' + content);
+            // You can perform actions based on the scanned content
+            // For example, make an AJAX request to validate the order ID
+            // and update the UI accordingly.
+            window.location.href = "{% url 'qrscan' order_id=0 %}".replace('0', orderId);
+            // If the content doesn't match the expected format, show an alert or handle accordingly
+            alert('Invalid QR code content. Please scan a valid QR code.');
+        }
+    // Perform any additional logic here, e.g., make an AJAX request to validate the order ID
+
+    // Redirect to the sellerorder URL
+   
+    }
+
+    $(document).ready(function () {
+        // Get the button and create a new instance of Instascan
+        var scanQrCodeBtn = $('#scanQrCodeBtn');
+        var scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+
+        // Handle the scan event
+        scanner.addListener('scan', function (content) {
+            // Call the handleScannedContent function with the scanned content
+            handleScannedContent(content);
+            // Stop the scanner after a successful scan
+            scanner.stop();
+        });
+
+        // Handle the click event on the scan button
+        scanQrCodeBtn.click(function () {
+            // Start the QR code scanner
+            Instascan.Camera.getCameras().then(function (cameras) {
+                if (cameras.length > 0) {
+                    scanner.start(cameras[0]);
+                } else {
+                    alert('No cameras found.');
+                }
+            });
+        });
+    });
+</script>
+    <script>
+        function confirmLogout() {
+            // Create a custom styled confirmation dialog
+            var confirmation = confirm("Are you sure you want to logout?");
+            
+            // Style the confirmation dialog
+            if (confirmation) {
+                // If the user confirms, redirect to the logout URL
+                window.location.href = "{% url 'seller_loggout' %}";
+            } else {
+                // If the user cancels, do nothing
+            }
+            
+            // Apply custom styles to the confirmation dialog
+            var dialogBox = document.querySelector('.confirm-dialog');
+            if (confirmation && dialogBox) {
+                dialogBox.style.backgroundColor = 'green'; // Change the background color
+                dialogBox.style.color = 'white'; // Change the text color
+                // Add more custom styles as needed
+            }
+        }
+        </script>
+        
+        
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    #budoralogo
+{
+    margin-left: 4.6%;
+    margin-top: 0.4%;
+}
+
+    @media (max-width: 991.98px) {
+        #budoralogo
+    {
+        margin-top: 12px;
+        margin-left: 10.5%;
+        height: 10px; 
+        width: 33px;
+    }
+    #logoname
+    {
+        font-size: medium;
+    }
+    }
+    .nav-tabs {
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+       margin-top: 15px;
+       height: 40px;
+       padding-left: 40px;
+        font-weight: lighter;/* Change to your desired color */
+        align-items: center;
+        align-content: center;
+    }
+
+    .nav-tabs .nav-link {
+       
+        color: #fff; /* Change to your desired text color */
+    }
+
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    
+    
+    padding-top: 5px;
+    border-radius: 0px;
+    padding-bottom: 4px;
+    box-shadow: black 0px 3px 0px;
+    
+    }
+
+    .nav-tabs .nav-link {
+        
+    border: none; /* Remove the default border */
+    }
+
+    .nav-tabs .nav-item {
+    margin-right: 10px; /* Adjust as needed */
+    }
+
+    .nav-tabs .nav-link:hover {
+        padding-top: 5px;
+    border-radius: 0px;
+    padding-bottom: 2px;
+    
+    color: #fff; 
+    }
+
+    /* Style the Certification Approval content */
+.certification-content {
+    align-items: center; 
+    width: 35%;        
+    border-width: 2px;
+    margin-left: 5%;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; 
+    padding-left: 5%; 
+    padding-top: 5%; 
+                padding-bottom: 5%;
+                margin-right: 5%;
+                
+}
+
+/* Style the Add Products content */
+.add-products-content {
+    align-items: center; 
+    width: 35%;        
+    border-width: 2px;
+    margin-left: 5%;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; 
+    padding-left: 2%; 
+    padding-right: 2%; 
+    padding-top: 2%; 
+                padding-bottom: 2%;
+                margin-right: 5%;
+}
+
+
+.certification-content h2,
+.add-products-content h2 {
+    color: #27350F; /* Change to your desired title color */
+}
+
+.certification-content p {
+    color: #555; /* Change to your desired text color */
+}
+
+/* Customize buttons within the content */
+.certification-content button,
+.add-products-content button {
+    background-color: #27350F;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.certification-content button:hover,
+.add-products-content button:hover {
+    background-color: #456731; /* Change to your desired hover color */
+}
+
+
+@media (max-width: 991.98px) {
+    .certification-content {
+    width: 90%; 
+                
+}
+.add-products-content {
+    width: 90%; 
+}
+
+    }
+
+</style>
+</html>

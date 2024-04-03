@@ -1,0 +1,127 @@
+{% extends 'seller/base1.html' %}
+{% load static %}
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  
+{% block content %}  
+
+<div class="container mt-4">
+  <div class="col-lg-12 grid-margin stretch-card" >
+    <div class="card">
+      <div class="card-body">
+            <h4 class="card-title">Your Plants</h4>
+            <p class="card-description">
+              <div class="col-md-9">
+              <div class="form-group row">
+              <label for="role-filter" class="filter-label col-sm-3 col-form-label">Filter by Category :</label>
+              <div class="col-sm-9">
+                <select id="role-filter" class="filter-select form-control" style="border:1px solid black;">
+                  <option value="all">All</option>
+                  <option value="tabletop plants">TableTop Plants</option>
+                  <option value="floor plants">Floor Plants</option>
+                  <option value="hanging plants">Hanging Plants</option>
+                  <option value="shelving plants">Shelving Plants</option>
+
+                </select>
+              </div>
+              </div>
+          </p>
+      </div>
+          <!-- Search form -->
+          <form class="search-form" id="searchform">
+            <input type="text" id="username" name="username" class="search-input form-control" placeholder="Search Plant Name">
+        </form>
+        </div>
+        <p id="no-user-message" style="display: none;">No such Plant</p>
+        <div class="table-responsive">
+              <table class="user-list table table-hover">
+                  <thead>
+                    <tr>
+                      <th >Plant Name</th>
+                      <th>Category</th>
+                      <th>Price</th>
+                      <th>Stock</th>
+                      <th>Image</th>
+                      <th colspan="2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for product in user_products %}
+                    <tr>
+                      <td>{{ product.product_name }}</td>
+                      <td>{{ product.category }}</td>
+                      <td>{{ product.product_price }}</td>
+                      {% if product.product_stock > 10 %}
+                      <td>{{ product.product_stock }}</td>                                    
+                      {% else %}
+                      <td class="text-danger">{{ product.product_stock }}</td> 
+                      {% endif %}
+                      <td>
+                        {% if product.product_image %}
+                            <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>                
+                    <td>
+                        <a href="{% url 'edit_product' product.id %}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="{% url 'delete_add_product' product.id %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                    </tr>
+                  {% empty %}
+                          <tr>
+                              <td colspan="6">No products available.</td>
+                          </tr>
+                  {% endfor %}
+                  </tbody>
+              </table>       
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function () {
+          const input = document.querySelector('#username');
+          const roleFilter = document.querySelector('#role-filter');
+          const rows = document.querySelectorAll('.user-list tbody tr');
+          const noUserMessage = document.querySelector('#no-user-message');
+      
+          input.addEventListener('input', filterUsers);
+          roleFilter.addEventListener('change', filterUsers);
+      
+          function filterUsers() {
+              const searchTerm = input.value.toLowerCase();
+              const selectedRole = roleFilter.value;
+              let found = false; // Flag to track if a matching user is found
+      
+              rows.forEach(function (row) {
+                  const username = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+                  const role = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+      
+                  // Check if the user matches the selected role (or if all roles are selected)
+                  if ((selectedRole === 'all' || role.includes(selectedRole)) &&
+                      (searchTerm.length === 0 || username.includes(searchTerm))) {
+                      row.style.display = 'table-row';
+                      found = true; // Matching user found
+                  } else {
+                      row.style.display = 'none';
+                  }
+              });
+      
+              // Show/hide "No such user" message
+              if (found) {
+                  noUserMessage.style.display = 'none';
+              } else {
+                  noUserMessage.style.display = 'block';
+              }
+          }
+      });
+  </script>
+  {% endblock %}
+</body>
+</html>

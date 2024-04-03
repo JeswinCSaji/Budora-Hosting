@@ -1,0 +1,456 @@
+{% load static %}
+
+<head>
+    <title>Budora Delivery Agent</title>
+    <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/jvectormap/jquery-jvectormap.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/flag-icon-css/css/flag-icon.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+</head>
+<body>
+    <div class="container-scroller">
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        
+         
+          <ul class="nav">
+            <li class="nav-item profile">
+              <div class="profile-desc">
+                <div class="profile-pic">
+                  <div class="count-indicator">
+                    <img class="img-xs rounded-circle " src="{% static 'assets/images/Budoralat.png' %}" alt="">                 
+                  </div>
+                  <div class="profile-name">
+                    <h5 class="mb-0 font-weight-normal">BUDORA</h5>          
+                  </div>
+                </div>
+                
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item profile">
+              <div class="profile-desc">
+                <div class="profile-pic">
+                  <div class="count-indicator">
+                    {% if user.userprofile.profile_pic %}
+                    <img class="img-xs rounded-circle " src="{{ user.userprofile.profile_pic.url }}" alt="">
+                    <span class="count bg-success"></span>
+                    {% endif %}
+                  
+                  </div>
+                  <div class="profile-name">
+                    <h5 class="mb-0 font-weight-normal">{{ user.userprofile.name }}</h5>
+                    <span>Delivery Agent</span>
+                  </div>
+                </div>
+                <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
+                <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list" aria-labelledby="profile-dropdown">
+                  <a href="{% url 'agentprofile' %}" class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-account text-primary"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject ellipsis mb-1 text-small">Profile</p>
+                    </div>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                   <a onclick="confirmLogout();"  class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-logout  text-info"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject ellipsis mb-1 text-small">Logout</p>
+                    </div>
+                  </a>
+                  {% comment %}
+                  <div class="dropdown-divider"></div>
+                  <a href="#" class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-calendar-today text-success"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject ellipsis mb-1 text-small">To-do list</p>
+                    </div>
+                  </a> {% endcomment %}
+                </div>
+              </div>
+            </li>
+            {% endif %}
+            <li class="nav-item menu-items">
+              <a class="nav-link" href="{% url 'agent_index' %}">
+                <span class="menu-icon">
+                  <i class="mdi mdi-speedometer"></i>
+                </span>
+                <span class="menu-title">Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-item menu-items">
+              <a class="nav-link"  href="{% url 'agentorder' %}">
+                <span class="menu-icon">
+                  <i class="mdi mdi-shopping"></i>
+                </span>
+                <span class="menu-title">Orders</span>
+              </a>
+            </li>
+            
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+          <!-- partial:partials/_navbar.html -->
+          <nav class="navbar p-0 fixed-top d-flex flex-row">
+            <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+              <a class="navbar-brand brand-logo-mini" href="index-2.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
+            </div>
+            <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+              <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                <span class="mdi mdi-menu"></span>
+              </button>
+              {% comment %} <ul class="navbar-nav w-100">
+                <li class="nav-item w-100">
+                  <form class="nav-link mt-2 mt-md-0 d-none d-lg-flex search">
+                    <input type="text" class="form-control" placeholder="Search products">
+                  </form>
+                </li>
+              </ul> {% endcomment %}
+              <ul class="navbar-nav navbar-nav-right">
+                <li class="nav-item nav-settings d-none d-lg-block">
+                  <a class="nav-link" onclick="openQrScannerModal()" id="scanQrCodeBtn">
+                    <i class="mdi mdi-qrcode-scan"></i>
+                  </a>
+                </li>
+                
+                <li class="nav-item dropdown">
+                  <a class="nav-link" id="notificationDropdown" href="#" data-toggle="dropdown">
+                      <i class="mdi mdi-bell"></i>
+                      <span class="count"></span>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown" id="notificationDropdownContent">
+                      <h6 class="p-3 mb-0">Notifications</h6>
+                      <div class="dropdown-divider"></div>
+                      <!-- Notifications will be dynamically added here -->
+                  </div>
+              </li>
+                
+                <li class="nav-item dropdown">
+                  <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
+                    <div class="navbar-profile">
+                      {% if user.userprofile.profile_pic %}
+                      <img class="img-xs rounded-circle" src="{{ user.userprofile.profile_pic.url }}" alt="">
+                      {% endif %}
+                      {% if user.userprofile.name %}
+                      <p class="mb-0 d-none d-sm-block navbar-profile-name">{{ user.userprofile.name }}</p>
+                      <i class="mdi mdi-menu-down d-none d-sm-block"></i>
+                      {% else %}
+                      <p class="mb-0 d-none d-sm-block navbar-profile-name">Delivery Agent</p>
+                      <i class="mdi mdi-menu-down d-none d-sm-block"></i>
+                      {% endif %}
+                    </div>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
+                    <h6 class="p-3 mb-0">Account</h6>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item preview-item" href="{% url 'agentprofile' %}">
+                      <div class="preview-thumbnail">
+                        <div class="preview-icon bg-dark rounded-circle">
+                          <i class="mdi mdi-account text-success"></i>
+                        </div>
+                      </div>
+                      <div class="preview-item-content">
+                        <p class="preview-subject mb-1">Profile</p>
+                      </div>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item preview-item"  onclick="confirmLogout();">
+                      <div class="preview-thumbnail">
+                        <div class="preview-icon bg-dark rounded-circle">
+                          <i class="mdi mdi-logout text-danger"></i>
+                        </div>
+                      </div>
+                      <div class="preview-item-content">
+                        <p class="preview-subject mb-1">Log out</p>
+                      </div>
+                    </a>
+                    
+                  </div>
+                </li>
+              </ul>
+              <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                <span class="mdi mdi-format-line-spacing"></span>
+              </button>
+            </div>
+          </nav>
+          
+          <div class="main-panel">
+            <div class="content-wrapper">
+              <div id="qrScannerModal" class="modal">
+     
+                <div class="modal-content" style="width: 500px; margin: 0 auto; margin-top:100px;">
+                    <button class="close-modal btn btn-danger" onclick="closeQrScannerModal()" >&times;</button>
+                    <h5 class="card-title" style="margin-top:10px;">Place the QR Code in this space</h5>
+                  
+                    <video id="qrScanner" width="100%" height="100%"></video>
+                </div>
+            </div>
+            {% block content %}
+            {% endblock %}
+        </div>
+<!-- main-panel ends -->
+</div>
+<!-- page-body-wrapper ends -->
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
+<script src="{% static 'assets/vendors/chart.js/Chart.min.js' %}"></script>
+<script src="{% static 'assets/vendors/progressbar.js/progressbar.min.js' %}"></script>
+<script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
+<script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+<script src="{% static 'assets/vendors/owl-carousel-2/owl.carousel.min.js' %}"></script>
+<script src="{% static 'assets/js/off-canvas.js' %}"></script>
+<script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'assets/js/misc.js' %}"></script>
+<script src="{% static 'assets/js/settings.js' %}"></script>
+<script src="{% static 'assets/js/todolist.js' %}"></script>
+<script src="{% static 'assets/js/dashboard.js' %}"></script>
+<script src="{% static 'assets/vendors/typeahead.js/typeahead.bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/file-upload.js' %}"></script>
+<script src="{% static 'assets/js/typeahead.js' %}"></script>
+<script src="{% static 'assets/js/select2.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      var qrScannerModal = document.getElementById('qrScannerModal');
+      var qrScanner = document.getElementById('qrScanner');
+      var mediaStream;
+      
+      function openQrScannerModal() {
+          // Show the modal
+          qrScannerModal.style.display = 'block';
+  
+          // Access the camera
+          Instascan.Camera.getCameras().then(function (cameras) {
+              if (cameras.length > 0) {
+                  var scanner = new Instascan.Scanner({ video: qrScanner });
+                  scanner.addListener('scan', function (content) {
+                      handleScannedContent(content);
+                      closeQrScannerModal();
+                  });
+                  scanner.start(cameras[0]);
+                  mediaStream = cameras[0];
+              } else {
+                  alert('No cameras found.');
+                  closeQrScannerModal();
+              }
+          });
+      }
+      function scanQRCodeFromFile() {
+          var fileInput = document.getElementById('fileInput');
+          var file = fileInput.files[0];
+  
+          if (file) {
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                  // Perform logic with the scanned QR code content
+                  var scannedContent = e.target.result;
+                  // ...
+  
+                  // Close the modal and reset file input
+                  handleScannedContent(scannedContent);
+                  closeQrScannerModal();
+                  fileInput.value = null;
+              };
+  
+              reader.readAsDataURL(file);
+          } else {
+              alert('Please select a file.');
+          }
+      }
+  
+      function closeQrScannerModal() {
+          // Hide the modal and stop the camera stream
+          qrScannerModal.style.display = 'none';
+          if (mediaStream) {
+              var tracks = mediaStream.getTracks();
+              tracks.forEach(track => track.stop());
+              mediaStream = null;
+          }
+      }
+  
+      function handleScannedContent(content) {
+        var pattern = /^Order ID: (\d+)\nProduct ID: (\d+)\nProduct: (.+)\nUser: (.+)\n$/;  
+    // Check if the scanned content matches the pattern
+        var match = content.match(pattern);
+        
+
+
+        if (match) {
+        // Extract relevant information from the match
+            var orderId = match[1];
+            var productId = match[2];
+            var productName = match[3];
+            var user = match[4];
+            // Customize this function to handle the scanned content
+            
+            // You can perform actions based on the scanned content
+            // For example, make an AJAX request to validate the order ID
+            // and update the UI accordingly.
+            window.location.href = "{% url 'deliveryqrscan' order_id=0 product_id=0 %}".replace('0', orderId).replace('0', productId);
+              // If the content doesn't match the expected format, show an alert or handle accordingly
+          }
+      // Perform any additional logic here, e.g., make an AJAX request to validate the order ID
+  
+      // Redirect to the sellerorder URL
+     
+      }
+  
+      $(document).ready(function () {
+          // Get the button and create a new instance of Instascan
+          var scanQrCodeBtn = $('#scanQrCodeBtn');
+          var scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+  
+          // Handle the scan event
+          scanner.addListener('scan', function (content) {
+              // Call the handleScannedContent function with the scanned content
+              handleScannedContent(content);
+              // Stop the scanner after a successful scan
+              scanner.stop();
+          });
+  
+          // Handle the click event on the scan button
+          scanQrCodeBtn.click(function () {
+              // Start the QR code scanner
+              Instascan.Camera.getCameras().then(function (cameras) {
+                  if (cameras.length > 0) {
+                      scanner.start(cameras[0]);
+                  } else {
+                      alert('No cameras found.');
+                  }
+              });
+          });
+      });
+      function confirmLogout() {
+            // Create a custom styled confirmation dialog
+            var confirmation = confirm("Are you sure you want to logout?");
+            
+            // Style the confirmation dialog
+            if (confirmation) {
+                // If the user confirms, redirect to the logout URL
+                window.location.href = "{% url 'agent_loggout' %}";
+            } else {
+                // If the user cancels, do nothing
+            }
+            
+            // Apply custom styles to the confirmation dialog
+            var dialogBox = document.querySelector('.confirm-dialog');
+            if (confirmation && dialogBox) {
+                dialogBox.style.backgroundColor = 'green'; // Change the background color
+                dialogBox.style.color = 'white'; // Change the text color
+                // Add more custom styles as needed
+            }
+      }
+        </script>
+        <script>
+          $(document).ready(function () {
+            var notificationDropdownContent = $("#notificationDropdownContent");
+            var notificationsLoaded = false;
+        
+            // Function to load notifications asynchronously
+            function loadNotifications() {
+              $.get("{% url 'notifications' %}", function (data) {
+                $("#notificationDropdown .count").text(data.notification_count);
+        
+                // Clear existing notifications
+                notificationDropdownContent.empty();
+        
+                if (data.notifications.length === 0) {
+                  // If there are no notifications, hide the notification section
+                  notificationDropdownContent.hide();
+                } else {
+                  // If there are notifications, show the notification section and add new notifications
+                  notificationDropdownContent.show();
+        
+                  for (var i = 0; i < data.notifications.length; i++) {
+                    var notification = data.notifications[i];
+                    var notificationHtml = `
+                      <a class="dropdown-item preview-item" data-notification-id="${notification.id}">
+                        <div class="preview-item-content custom-max-width" style="max-width: 200px; /* Set the maximum width as needed */
+                          white-space: nowrap;
+                          overflow: auto;
+                          text-overflow: ellipsis;">
+                          <p class="preview-subject mb-1">${notification.title}</p>
+                          <p class="text-muted mb-1">${notification.message}</p>
+                        </div>
+                      </a>
+                      <div class="dropdown-divider"></div>`;
+                    notificationDropdownContent.append(notificationHtml);
+                  }
+        
+                  // Attach click event to mark notifications as read
+                  notificationDropdownContent.find(".preview-item").click(function () {
+                    var notificationId = $(this).data("notification-id");
+                    // Show a confirmation dialog
+                    var confirmed = confirm("Mark as read?");
+                    if (confirmed) {
+                      // Mark the notification as read
+                      markNotificationAsRead(notificationId);
+                    }
+                  });
+                }
+              });
+            }
+        
+            // Function to mark notification as read
+            function markNotificationAsRead(notificationId) {
+              $.ajax({
+                type: 'POST',
+                url: '{% url "mark_notification_as_read" %}',
+                data: {
+                  'notification_id': notificationId,
+                  csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (response) {
+                  // Reload notifications after marking as read
+                  loadNotifications();
+                },
+                error: function (error) {
+                  console.error('Error marking notification as read:', error);
+                }
+              });
+            }
+        
+            // Toggle visibility of notifications dropdown when clicking on the notifications icon
+            $("#notificationDropdown").click(function () {
+              if (!notificationsLoaded) {
+                // Load notifications only if they haven't been loaded before
+                loadNotifications();
+                notificationsLoaded = true;
+              }
+              notificationDropdownContent.toggle();
+            });
+          });
+        </script>
+        
+        
+        
+</body>
+<style>
+
+  .preview-item-content::-webkit-scrollbar {
+      height: 2px; /* Set the width of the scrollbar */
+    }
+  
+    .preview-item-content::-webkit-scrollbar-thumb {
+      background-color: black; /* Set the color of the scrollbar thumb */
+    }
+  
+</style>
+</html>

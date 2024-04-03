@@ -1,0 +1,527 @@
+{% extends 'usertems/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+
+    .table {
+        width: 100%; /* Set the table width to 100% of its container */
+    }
+
+    .text-center {
+        text-align: center; /* Center-align text within table cells */
+    }
+
+    .product-thumbnail img {
+        max-width: 100px; /* Limit the width of product thumbnail images */
+        height: auto; /* Automatically adjust the height to maintain aspect ratio */
+    }
+
+    .product-name h3 {
+        font-size: 1.2rem; /* Adjust font size for product names */
+    }
+
+    .wrapper{
+        height:30px;
+        width:70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #FFF;
+        margin-left:1px;
+   
+      }
+      .wrapper span{
+        width: 35px;
+        text-align: center;
+        font-size: medium;
+        font-weight:bold;
+        cursor: pointer;
+        user-select: none;
+        
+   
+      }
+      .wrapper .num{
+        width:25px;
+        
+   
+        padding-bottom:5px;
+        padding-left:5px;
+        color:#9abf69;
+        border-color:#9abf69;
+        border-right: 1px solid rgba(0,0,0,0.2);
+        border-left: 1px solid rgba(0,0,0,0.2);
+        border-top:none;
+        border-bottom:none;
+        pointer-events: none;
+      } 
+      #logoname
+{
+    font-family: sans-serif;
+                    color:#27350F;
+                    text-decoration: none;
+                    text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+                font-size: larger;
+                margin-top:-37px;
+                
+}
+@media (max-width: 991.98px) {
+    #logoname
+    {
+        font-size: medium;
+        margin-top:0px;
+    }
+}
+
+    /* You can add more CSS styles to further customize the table appearance */
+</style>
+<link href="{% static 'css/tablestyle.css' %}" rel="stylesheet">
+
+<section class="ftco-section ftco-cart">
+    <div class="row">
+    <div class="col-lg-8 grid-margin stretch-card">
+        <div class=".card-inverse-success">
+          <div class="card-body">
+                <div class="table-responsive" >
+                    <hr  class="text animated zoomIn" id="usern2">
+                    <h2 style="margin-left:5px;margin-bottom:50px;margin-left:50px;text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;">Your Cart</h2>
+                    
+                    <table class="table table-hover" >
+                  <thead class="thead-primary">
+                      <tr class="text-center">
+                          <th style="color:black;font-weight:bolder;" >Product</th>
+                          <th style="color:black;font-weight:bolder;" >Product name</th>
+                          <th style="color:black;font-weight:bolder;" >Price</th>
+                          <th style="color:black;font-weight:bolder;" >Quantity</th>
+                          <th style="color:black;font-weight:bolder;" >Seller Name</th>
+                          <th style="color:black;font-weight:bolder;" >Total</th>
+                          <th style="color:black;font-weight:bolder;" >Remove from Cart</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% if cart_items %}
+                      {% for cart_item in cart_items %}
+                      <tr class="text-center">
+                          <td class="product-thumbnail">
+                              <img src="{{ cart_item.product.product_image.url }}" alt="{{ cart_item.product.product_name }}" class="img-fluid">
+                          </td>
+                          <td class="product-name">
+                              <p>{{ cart_item.product.product_name }}</p>
+                          </td>
+                          <td class="price">RS {{ cart_item.product.product_price }}</td>
+                          <td class="quantity">
+                            <form id="update-cart-form" action="{% url 'update_cart_item' cart_item.id %}" method="post">
+                                {% csrf_token %}
+                               
+                                    <h6>
+                                        <div class="wrapper">
+                                            <button type="submit" style="border-style:none;background-color:white;" >
+                                            <span class="minus">-</span>
+                                            </button>
+                                            <input type="text" id="quantity" name="quantity" class="num" value="{{ cart_item.quantity }}" min="1" max="100">
+                                            <button type="submit"  style="border-style:none; background-color:white;">
+                                                <span class="plus">+</span>
+                                            </button>
+                                        </div>
+                                    </h6>
+                                    
+                              
+                            </form>
+                            
+                          </td>
+                          <td class="seller-name">
+                            <p>{{ cart_item.seller.storename }}</p>
+                        </td>
+                          <td class="total">RS {{ cart_item.price }}</td>
+                          <input type="hidden" name="total_price" value="{{ total_price }}">
+                          <td class="remove-from-cart">
+                            <form action="{% url 'remove_from_cart' cart_item.id %}" method="post" class="remove-from-cart-form">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-remove-from-cart" >
+                                    <i class="fas fa-trash"></i> <!-- FontAwesome trash icon -->
+                                </button>
+                            </form>
+                          </td>
+                      </tr><!-- END TR-->
+                      {% endfor %}
+                      {% else %}
+                      <tr>
+                          <td colspan="6" class="text-center">Your cart is empty.</td>
+                      </tr>
+                      {% endif %}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="col-lg-4 grid-margin stretch-card">
+      {% if cart_items %}
+      
+      <div class="card text-center" style="    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; margin-top:10%;">
+        <div class="card-body " >
+        <div style="background-color:#88B44E; width:100%;height:100px;border-radius:5px;padding:30px;">
+            <h3 class="text-light">Cart Total</h3>
+
+        </div>
+          <div class="cart-total mb-3 " style="background-color:white;">
+              <p style="margin-top:10%;">
+                  <span class="text-primary">Subtotal : </span>
+                  <span> RS {{ total_price|floatformat:2 }}</span>
+              </p>
+              {% comment %} <p>
+                  <span class="text-primary">Delivery : </span>
+                  <span>RS 0.00</span>
+              </p>
+              <p>
+                  <span class="text-primary">Discount : </span>
+                  <span>RS 0.00</span>
+              </p> {% endcomment %}
+              <hr style="margin-top:10%;">
+              <p class="total-price">
+                  <span style="font-weight:bolder;">Total Amount: </span>
+                  <span id="total-amount">RS {{ total_price|floatformat:2 }}</span>
+              </p>
+          </div>
+          <!-- Link to proceed to checkout -->
+          <p style="margin-top:10%;"><a href="#" id="checkoutBtn" class="btn btn-outline-primary btn-fw py-3 px-4">Proceed to Checkout</a></p>
+          <div id="overlay" class="overlay" style="display: none;">
+            <div id="checkoutModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <button class="close-modal" onclick="closeCheckoutModal()">&times;</button>
+                    <a id="reserveBtn" class="btn btn-success" style="margin-top:20px;margin-bottom:15px;">Reserve</a>
+                    <!-- Form initially hidden -->
+                    <form id="reserve-form" action="{% url 'reserve' %}" method="post" style="display: none; box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;padding:15px;">
+                        {% csrf_token %}
+                        <label>Pick a date</label>
+                        <label>
+                            <input type="date"  id="selectedDate" name="selected_date" class="dateselect" required="required"/>
+                        </label>
+                        <button type="submit">Submit</button>
+                    </form>
+                    <a id="orderBtn" href="{% url 'checkout' %}" class="btn btn-primary">Order</a>
+                </div>
+            </div>
+          </div>
+        
+      </div>
+      
+      {% endif %}
+  </div>
+</div>
+</div>
+</section>
+<script>
+    // Add an event listener to the "Proceed to Checkout" button
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('#checkoutBtn').addEventListener('click', function () {
+            // Show the overlay and the modal with the reserve and order buttons
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('checkoutModal').style.display = 'block';
+        });
+
+        // Add event listener to the reserve button
+        document.querySelector('#reserveBtn').addEventListener('click', function () {
+            // Handle reserve button click
+            console.log('Reserve button clicked');
+            // Toggle the display of the reserve form
+            var reserveForm = document.getElementById('reserve-form');
+            if (reserveForm.style.display === 'block') {
+                reserveForm.style.display = 'none';
+            } else {
+                reserveForm.style.display = 'block';
+            }
+        });
+
+        // Add event listener to the order button
+        document.querySelector('#orderBtn').addEventListener('click', function () {
+            // Handle order button click
+            console.log('Order button clicked');
+        });
+
+        // Add event listener to validate the selected date
+        document.getElementById('selectedDate').addEventListener('change', function () {
+            var selectedDate = new Date(this.value);
+            var currentDate = new Date();
+            var maxDate = new Date();
+            maxDate.setMonth(maxDate.getMonth() + 1); // Set max date to one month from now
+            
+            if (selectedDate < currentDate || selectedDate > maxDate) {
+                alert('Please select a date within a month, starting from today.');
+                this.value = ''; // Clear the invalid date
+            }
+        });
+    });
+
+    // Function to close the checkout modal and overlay
+    function closeCheckoutModal() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('checkoutModal').style.display = 'none';
+    }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var deleteButton = document.getElementById("deleteButton");
+        var removeFromCartForm = document.getElementById("removeFromCartForm");
+    
+        deleteButton.addEventListener("click", function() {
+            var confirmDelete = confirm("Are you sure you want to remove this product from your cart?");
+            
+            if (confirmDelete) {
+                removeFromCartForm.submit(); // If confirmed, submit the form to remove the product from the cart
+            }
+        });
+    });
+    </script>
+    
+<script>
+// Function to handle the delete action
+// Function to handle the delete action
+function handleDelete() {
+    // Display a confirmation dialog
+    var confirmed = window.confirm('Are you sure you want to delete?');
+
+    // Check if the user confirmed
+    if (confirmed) {
+        // Perform the delete action
+        // You should implement the actual delete action here
+    } else {
+        // User canceled the deletion
+        alert('Deletion canceled.');
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Select all the minus buttons, plus buttons, and quantity input fields
+    const minusButtons = document.querySelectorAll(".minus");
+    const plusButtons = document.querySelectorAll(".plus");
+    const quantityInputs = document.querySelectorAll(".num");
+    var deleteButtons = document.querySelectorAll(".btn-remove-from-cart");
+    var removeFromCartForms = document.querySelectorAll(".remove-from-cart-form");
+
+    // Add event listeners to each set of buttons
+    minusButtons.forEach((minusButton, index) => {
+        minusButton.addEventListener("click", function () {
+            let currentValue = parseInt(quantityInputs[index].value);
+            if (currentValue > 1) {
+                currentValue--;
+                quantityInputs[index].value = currentValue;
+            }
+        });
+    });
+
+    plusButtons.forEach((plusButton, index) => {
+        plusButton.addEventListener("click", function () {
+            let currentValue = parseInt(quantityInputs[index].value);
+            currentValue++;
+            quantityInputs[index].value = currentValue;
+        });
+    });
+
+    // Add an event listener to each quantity input field to detect changes
+    quantityInputs.forEach((input, index) => {
+        input.addEventListener('change', function () {
+            // Submit the corresponding form when the quantity changes
+            const form = input.closest("form");
+            if (form) {
+                form.submit();
+            }
+        });
+    });
+    deleteButtons.forEach(function(deleteButton, index) {
+        deleteButton.addEventListener("click", function() {
+          var confirmDelete = confirm("Are you sure you want to remove this product from your cart?");
+          
+          if (confirmDelete) {
+            removeFromCartForms[index].submit();
+          }
+        });
+    });
+});
+
+</script>
+<style>
+
+    .overlay2 {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9998; /* Place it below the modal */
+    }
+    .modal {
+        display: none;
+        position: fixed;
+         /* Adjust the top value to shift the modal down */
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+                    max-width: 400px;
+        margin: 0 auto;
+        margin-top: 18%;
+    }
+    .checkoutModal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+                    max-width: 400px;
+        margin: 0 auto;
+        margin-top: 10%;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+    label {
+        position: relative;
+        display: block;
+      }
+      label > input {
+        position: relative;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #9e9e9e;
+        border-radius: 0;
+        outline: none;
+        height: 45px;
+        width: 100%;
+        font-size: 16px;
+        margin: 0 0 30px 0;
+        padding: 0;
+        box-shadow: none;
+        box-sizing: content-box;
+        transition: all .3s;
+      }
+      label > input:valid + span {
+        transform: translateY(-25px) scale(0.8);
+        transform-origin: 0;
+      }
+      label > input:valid {
+        border-bottom: 1px solid #3F51B5;
+        box-shadow: 0 1px 0 0 #3F51B5;
+      }
+      label > span {
+        color: #9e9e9e;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 16px;
+        cursor: text;
+        transition: .2s ease-out;
+      }
+      label > input:focus + span {
+        transform: translateY(-25px) scale(0.8);
+        transform-origin: 0;
+        color: #3F51B5;
+      }
+      label > input:focus {
+        border-bottom: 1px solid #3F51B5;
+        box-shadow: 0 1px 0 0 #3F51B5;
+      }
+      
+      
+      
+      
+      /*Bootstrap Calendar*/
+      .datepicker {
+          border-radius: 0;
+          padding: 0;
+      }
+      .datepicker-days table thead, .datepicker-days table tbody, .datepicker-days table tfoot {
+          padding: 10px;
+          display: list-item;
+      }
+      .datepicker-days table thead, .datepicker-months table thead, .datepicker-years table thead, .datepicker-decades table thead, .datepicker-centuries table thead {
+          background: #3546b3;
+          color: #ffffff;
+          border-radius: 0;
+      }
+      .datepicker-days table thead tr:nth-child(2n+0) td, .datepicker-days table thead tr:nth-child(2n+0) th {
+          border-radius: 3px;
+      }
+      .datepicker-days table thead tr:nth-child(3n+0) {
+          text-transform: uppercase;
+          font-weight: 300 !important;
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.7);
+      }
+      .table-condensed > tbody > tr > td, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > td, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > thead > tr > th {
+          padding: 11px 13px;
+      }
+      .datepicker-months table thead td, .datepicker-months table thead th, .datepicker-years table thead td, .datepicker-years table thead th, .datepicker-decades table thead td, .datepicker-decades table thead th, .datepicker-centuries table thead td, .datepicker-centuries table thead th {
+          border-radius: 0;
+      }
+      .datepicker td, .datepicker th {
+          border-radius: 50%;
+          padding: 0 12px;
+      }
+      .datepicker-days table thead, .datepicker-months table thead, .datepicker-years table thead, .datepicker-decades table thead, .datepicker-centuries table thead {
+          background: #3546b3;
+          color: #ffffff;
+          border-radius: 0;
+      }
+      .datepicker table tr td.active, .datepicker table tr td.active:hover, .datepicker table tr td.active.disabled, .datepicker table tr td.active.disabled:hover {
+          background-image: none;
+      }
+      .datepicker .prev, .datepicker .next {
+          color: rgba(255, 255, 255, 0.5);
+          transition: 0.3s;
+          width: 37px;
+          height: 37px;
+      }
+      .datepicker .prev:hover, .datepicker .next:hover {
+          background: transparent;
+          color: rgba(255, 255, 255, 0.99);
+          font-size: 21px;
+      }
+      .datepicker .datepicker-switch {
+          font-size: 24px;
+          font-weight: 400;
+          transition: 0.3s;
+      }
+      .datepicker .datepicker-switch:hover {
+          color: rgba(255, 255, 255, 0.7);
+          background: transparent;
+      }
+      .datepicker table tr td span {
+          border-radius: 2px;
+          margin: 3%;
+          width: 27%;
+      }
+      .datepicker table tr td span.active, .datepicker table tr td span.active:hover, .datepicker table tr td span.active.disabled, .datepicker table tr td span.active.disabled:hover {
+        background-color: #3546b3;
+        background-image: none;
+      }
+      .dropdown-menu {
+          border: 1px solid rgba(0,0,0,.1);
+          box-shadow: 0 6px 12px rgba(0,0,0,.175);
+      }
+      .datepicker-dropdown.datepicker-orient-top:before {
+          border-top: 7px solid rgba(0,0,0,.1);
+      }
+</style>
+{% endblock %}

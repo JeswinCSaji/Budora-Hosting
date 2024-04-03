@@ -1,0 +1,185 @@
+body{
+    font-family: sans-serif; }
+
+#regtitle
+{
+    color: white;  
+    text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+    font-size: xx-large;
+    margin-left: 2%;
+}   
+ table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        
+    }
+    
+    table, th, td {
+        border: 1px solid #ccc;
+    }
+    
+    th, td {
+        padding: 12px 15px; /* Increased padding for better readability */
+        text-align: left;
+    }
+    td img {
+      max-width: 100px;
+      max-height: 100px;
+  }
+    
+    thead {
+        background-color: #27350F; /* Heading background color */
+        color: #fff; /* Heading text color */
+    }
+
+/*     
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    } */
+    
+    /* tr:hover {
+        background-color: #ddd;
+    } */
+/* Add this to your CSS stylesheet */
+#indiv
+{
+    display:flex;
+    padding-left: 20%;
+    padding-top: 2%;
+}
+.filter-label {
+  font-weight: bolder;
+  font-size: large;
+  padding-right: 2%;
+  color: #333;
+  text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+
+   /* Text color */
+}
+
+.filter-select {
+  padding: 5px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    border: 1px solid ;
+  border-radius: 4px;
+  font-size: 14px;
+  width:120px;
+  height: 32px;
+  background-color: white;
+  color: #333; /* Text color */
+}
+
+/* Style for the dropdown arrow */
+.filter-select::after {
+  content: "\25BC"; /* Unicode down arrow character */
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-color: #27350F;
+
+  background-color: #f7f7f7; 
+  pointer-events: none; /* Disable click on the arrow */
+}
+
+/* Hover effect for the dropdown */
+.filter-select:hover {
+  border-color: #27350F;
+  background-color: #f7f7f7; /* Border color on hover */
+}
+
+/* Focus effect for the dropdown */
+.filter-select:focus {
+  outline: none;
+  background-color: #f7f7f7; 
+  border-color: #27350F; /* Border color on focus */
+}
+/* Add this to your CSS stylesheet */
+#searchform
+{
+    width:60%; 
+}
+.search-label {
+    font-weight: bolder;
+    font-size: large;
+
+  margin-right: 10px;
+  margin-left: 5%;
+  color: #333; /* Text color */
+}
+
+.search-input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #f7f7f7;
+  color: #333; /* Text color */
+  width: 200px; /* Adjust the width as needed */
+}
+
+.search-button {
+  padding: 5px 10px;
+  background-color: #27350F;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #27350F; /* Hover color */
+}
+
+/* Focus effect for the search input */
+.search-input:focus {
+  outline: none;
+  border-color: #27350F; /* Border color on focus */
+}
+/* Add these styles to your CSS file */
+.btn-edit {
+  display: inline-block;
+ 
+  background-color: #27350F; /* Button background color */
+  color: #fff; /* Button text color */
+  /* border: none; */
+  border-radius: 4px;
+  width: 80px;
+  height: 37px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-edit:hover {
+  background-color: white; 
+
+  border-color: #27350F;
+  border-width: 2px;/* Button background color on hover */
+}
+@media (max-width: 768px) {
+    #indiv
+    {
+        display:block;
+        padding-left: 0%;
+    }
+    #searchform
+{
+    width:100%; 
+}
+.search-label {
+
+    margin-right: 10px;
+    margin-left: 0%;
+
+  }
+  .search-input {
+    width: 100px; /* Adjust the width as needed */
+  }
+
+}

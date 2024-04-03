@@ -1,0 +1,124 @@
+{% extends 'admin/base1.html' %}
+{% block content %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+          <div class="container mt-4">
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                      <h4 class="card-title">View Stock</h4>
+                      <p class="card-description">
+                        <div class="col-md-9">
+                        <div class="form-group row">
+                        <label for="role-filter" class="filter-label col-sm-3 col-form-label">Filter by status:</label>
+                        <div class="col-sm-9">
+                          <select id="role-filter" class="filter-select form-control">
+                            <option value="all">All</option>
+                            <option value="approved">Approved</option>
+                            <option value="reject">Pending</option>
+                          </select>
+                        </div>
+                        </div>
+                    </p>
+                </div>
+                    <!-- Search form -->
+                    <form class="search-form" id="searchform">
+                      <input type="text" id="username" name="username" class="search-input form-control" placeholder="Search by Plantname">
+                  </form>
+                  </div>
+                  <p id="no-user-message" style="display: none;">No such Plant</p>
+                  <div class="table-responsive">
+    <table class="user-list table table-hover">
+        <thead>
+            <tr>
+                <th style="font-weight: bold;">Plant Name</th>
+                <th style="font-weight: bold;">Scientific Name</th>
+                <th style="font-weight: bold;">Category</th>
+                <th style="font-weight: bold;">Plant Image</th>
+                <th style="font-weight: bold;">Total Stock</th>
+                <th style="font-weight: bold;">Action</th>  <!-- Add this column -->
+                <th style="font-weight: bold;">Status</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for summary in product_summaries %}
+                <tr>
+                    <td>{{ summary.product_name }}</td>
+                    <td>{{ summary.product_sci_name }}</td>
+                    <td>{{ summary.category.category_name }}</td>
+                    <td>{% if summary.product_image %}
+                          <img src="{{ summary.product_image.url }}" alt="{{ summary.product_name }}" width="100">
+                        {% else %}
+                           No image available
+                        {% endif %}
+                    </td>
+                    
+                    {% if summary.total_stock > 10 %}
+                      <td>{{ summary.total_stock }}</td>                                    
+                    {% else %}
+                      <td class="text-danger" >{{ summary.total_stock }}</td> 
+                    {% endif %}
+                  
+                    <td>
+                        <a href="{% url 'edit_product_stock' summary.pk %}" class="btn btn-inverse-info btn-fw">Edit</a><br>
+                    </td>
+                    <td>
+                    {% if summary.stock_is_approved == 'pending' %}
+                        <form method="post" action="{% url 'stock_approve' summary.id %}">
+                        {% csrf_token %}
+                        <p style="display:none;">reject</p>
+                        <button class="btn btn-inverse-success btn-fw" type="submit" id="approvestock" >Approve</button>
+                        </form>
+                    {% else %}
+                        <label class="badge badge-success">Approved</label>
+                    {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+</div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const input = document.querySelector('#username');
+      const roleFilter = document.querySelector('#role-filter');
+      const rows = document.querySelectorAll('.user-list tbody tr');
+      const noUserMessage = document.querySelector('#no-user-message');
+  
+      input.addEventListener('input', filterUsers);
+      roleFilter.addEventListener('change', filterUsers);
+  
+      function filterUsers() {
+        const searchTerm = input.value.toLowerCase();
+        const selectedRole = roleFilter.value;
+        let found = false; // Flag to track if a matching user is found
+  
+        rows.forEach(function (row) {
+          const username = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+          const role = row.querySelector('td:nth-child(7)').textContent.toLowerCase();
+  
+          // Check if the user matches the selected role (or if all roles are selected)
+          if ((selectedRole === 'all' || role.includes(selectedRole)) &&
+            (searchTerm.length === 0 || username.includes(searchTerm))) {
+            row.style.display = 'table-row';
+            found = true; // Matching user found
+          } else {
+            row.style.display = 'none';
+          }
+        });
+  
+        // Show/hide "No such user" message
+        if (found) {
+          noUserMessage.style.display = 'none';
+        } else {
+          noUserMessage.style.display = 'block';
+        }
+      }
+    });
+  </script>
+
+{% endblock %}

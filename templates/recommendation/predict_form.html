@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Predictor</title>
+</head>
+<body>
+    <h1>Symptom Predictor</h1>
+    <form method="post" action="">
+            {% csrf_token %}
+        <label for="s1">Symptom 1:</label>
+        <select name="s1" id="s1">
+            {% for symptom in list_a %}
+                <option value="{{ symptom }}">{{ symptom }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="s2">Symptom 2:</label>
+        <select name="s2" id="s2">
+            {% for symptom in list_a %}
+                <option value="{{ symptom }}">{{ symptom }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="s3">Symptom 3:</label>
+        <select name="s3" id="s3">
+            {% for symptom in list_a %}
+                <option value="{{ symptom }}">{{ symptom }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="s4">Symptom 4:</label>
+        <select name="s4" id="s4">
+            {% for symptom in list_a %}
+                <option value="{{ symptom }}">{{ symptom }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="s5">Symptom 5:</label>
+        <select name="s5" id="s5">
+            {% for symptom in list_a %}
+                <option value="{{ symptom }}">{{ symptom }}</option>
+            {% endfor %}
+        </select><br>
+
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if result %}
+    <h2>Prediction Result</h2>
+    <p>The predicted result is: {{ result }}</p>
+    {% endif %}
+</body>
+</html>

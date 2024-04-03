@@ -1,0 +1,503 @@
+{% extends 'deliveryagent/base1.html' %}
+{% load static %}
+{% block content %}
+
+{% if deliveryagent.is_approved == 'updated' %}
+<div class="container mt-4" >
+    <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+    <div class="card-body">
+        <h4 class="card-title">View Orders</h4>
+        {% if qr_error_message %}
+                <div class="alert alert-danger">
+                    {{ qr_error_message }}
+                </div>
+        {% endif %}
+          <p class="card-description">
+            <div class="col-md-9">
+            <div class="form-group row">
+            <label for="role-filter" class="filter-label col-sm-3 col-form-label">Filter by Customer status:</label>
+            <div class="col-sm-9">
+              <select id="role-filter" class="filter-select form-control">
+                <option value="all">All</option>
+                <option value="success">Success</option>
+                <option value="pending">Pending</option>
+              </select>
+            </div>
+            </div>
+        </p>
+    </div>
+        <!-- Search form -->
+        <form class="search-form" id="searchform">
+          <input type="text" id="username" name="username" class="search-input form-control" placeholder="Search User name">
+      </form>
+      </div>
+      <p id="no-user-message" style="display: none;">No orders available.</p>
+      <div class="table-responsive">
+        <table class="user-list table table-hover">
+            <thead>
+                <tr>
+                    
+                    <th data-toggle="modal" data-target="#orderProductDetailsModal">Product</a></th>
+                    <th>Seller</th>
+                    <th>Location</th>
+                    <th data-toggle="modal" data-target="#billingDetailsModal">Customer</a></th>
+                    <th>Location</th>
+                    {% comment %} <th>Payment</th> {% endcomment %}
+                    <th>Order Status</th>
+                    <th>Customer Status</th>
+                    <th>Product Delivered</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order, itemorder ,billing in order_items %}
+                    <tr>
+               
+                        <td><a href="#" class="order-product-details-link" data-toggle="modal" data-target="#orderProductDetailsModal" data-order-id="{{ order.order.id }}">{{ order.product.product_name }}</a></td>
+                        <td><a href="#" class="seller-details-link" data-toggle="modal" data-target="#sellerDetailsModal" data-seller-details="{{ order.seller.id }}">{{ order.seller.name }}</a></td>
+                      
+                        <td>
+                           
+                            <a href="#" class="openMapModal" data-billing-latitude="{{ order.seller.latitude }}" data-billing-longitude="{{ order.seller.longitude }}">
+                                Location
+                            </a>
+                        </td>
+                      
+                        
+                        <td><a href="#" class="billing-details-link" data-toggle="modal" data-target="#billingDetailsModal" data-billing-details="{{ billing.id }}">{{ order.order.user.userprofile.name }}</a></td>
+                        <td>
+                           
+                            <a href="#" class="openMapModal" data-billing-latitude="{{ billing.latitude }}" data-billing-longitude="{{ billing.longitude }}">
+                                Location
+                            </a>
+                        </td>
+                        {% comment %} <td>
+                            
+                            {% if order.order.get_payment_status_display == 'Successful' %}
+                                <label class="badge badge-success">Success</label>
+                            {% else %}
+                                <label class="badge badge-warning">Pending</label>
+                            {% endif %}
+                        </td> {% endcomment %}
+                        <td>
+                          
+                                
+                                {% if order.delivery_choice == 'reserve' %}         
+                                    {% if order.agent_approve_order == 'pending' %}
+                                    <form method="post" action="{% url 'agent_approve_order' order.id %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-inverse-success btn-fw" type="submit" >Confirm</button>
+                                    </form>
+                                    {% else %}
+                                    <label class="badge badge-success">Approved</label>
+                                    {% endif %}
+                                {% else %}
+                                    {% if order.order_confirmed and order.order_processed and order.order_qualitycheck and order.product_dispatched and order.delivery_order_confirmed %}
+                                        <label class="badge badge-success">Confirmed</label>
+                                    {% elif order.order_confirmed and order.order_processed and order.order_qualitycheck and order.product_dispatched %}
+                                        <form method="post" action="{% url 'agent_confirm_order' order.id %}">
+                                            {% csrf_token %}
+                                            <button class="btn btn-outline-success btn-fw" type="submit" >Confirm Order</button>
+                                        </form>
+                                    {% else %}
+                                        <label class="badge badge-warning">Pending</label>
+                                    {% endif %}
+                                {% endif %}
+                           
+                        </td>
+                        <td>
+                            {% if order.customer_is_approved == 'notcollected' %}
+                                <label class="badge badge-warning">Pending</label>
+                            {% else %}
+                                <label class="badge badge-success">Success</label>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if order.agent_is_approved == 'notdelivered' %}
+                            <form method="post" action="{% url 'agent_approve_order' order.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-inverse-success btn-fw" type="submit" >Confirm</button>
+                            </form>
+                            {% else %}
+                            <label class="badge badge-success">Approved</label>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    
+                {% empty %}
+                    <tr>
+                        <td colspan="5">No orders available.</td>
+                    </tr>
+                {% endfor %}
+                
+            </tbody>
+            
+        </table>
+       <!-- Modify your overlay and modal HTML -->
+       <div class="overlay" id="overlay">
+        <div id="mapmodal" class="custom-modal" style="display: none;"> <!-- Hide the modal initially -->
+            <div class="modal-content" style="max-width: 400px; max-height: 400px;">
+                <button class="close-modal" onclick="closeMapModal()">&times;</button>
+                <div id="myMap" style="height: 200px;margin-top:20px;"></div> <!-- Map container -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="billingDetailsModal" tabindex="-1" role="dialog" aria-labelledby="billingDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="billingDetailsModalLabel">Billing Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="billingDetailsModalBody">
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr>
+                                <th scope="row">First Name</th>
+                                <td id="billingFirstName"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Last Name</th>
+                                <td id="billingLastName"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">State</th>
+                                <td id="billingState"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Street Address</th>
+                                <td id="billingStreetAddress"></td>
+                            </tr>
+                           
+                            <tr>
+                                <th scope="row">Town/City</th>
+                                <td id="billingCity"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Postcode/ZIP</th>
+                                <td id="billingPostcode"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Phone</th>
+                                <td id="billingPhone"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Email</th>
+                                <td id="billingEmail"></td>
+                            </tr>
+    
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="sellerDetailsModal" tabindex="-1" role="dialog" aria-labelledby="sellerDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sellerDetailsModalLabel">Seller Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="sellerDetailsModalBody">
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Name</th>
+                                <td id="sellerName"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Store Name</th>
+                                <td id="sellerStoreName"></td>
+                            </tr>
+                        
+                            <tr>
+                                <th scope="row">Address</th>
+                                <td id="sellerAddress"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Landmark</th>
+                                <td id="sellerLandmark"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Phone</th>
+                                <td id="sellerPhone"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Email</th>
+                                <td id="sellerEmail"></td>
+                            </tr>
+                            {% comment %} <tr>
+                                <th scope="row">opening days</th>
+                                <td id="sellerdays"></td>
+                            </tr> {% endcomment %}
+                            <tr>
+                                <th scope="row">opening time</th>
+                                <td id="selleropeningtime"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">closing time</th>
+                                <td id="sellerclosingtime"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Order Product Details Modal -->
+    <div class="modal fade" id="orderProductDetailsModal" tabindex="-1" role="dialog" aria-labelledby="orderProductDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderProductDetailsModalLabel">Order Product Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="orderProductDetailsModalBody">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total Price</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody id="orderProductDetailsTableBody">
+                            <!-- Order product details will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?key=Agyr0UQGWTFzP3Fwb3PDJ_ahP24jx9jRgpUWwBD_37B8MXu1oql6WCs6J-vgU1YT&callback=loadMapScenario" async defer></script>
+<script>
+    function loadMapScenario() {
+        $(document).ready(function() {
+            $(".openMapModal").click(function() {
+                var latitude = $(this).data("billing-latitude");
+                var longitude = $(this).data("billing-longitude");
+                displayMap(latitude, longitude);
+                $("#overlay").show();
+                $("#mapmodal").show();
+            });
+        
+            $(".close-modal").click(function() {
+                closeModal();
+            });
+        
+            $("#overlay").click(function() {
+                closeModal();
+            });
+        
+            function closeModal() {
+                $("#mapmodal").hide();
+                $("#overlay").hide();
+            }
+        });
+    }
+
+    function displayMap(latitude, longitude) {
+        var mapOptions = {
+            credentials: "Au3Blei_Uhp8WxG4OPh-ZutbAHXmqrN3vEc-UkASaaTY6adPoJEo2QHBLTyNNvhB",
+            center: new Microsoft.Maps.Location(latitude, longitude),
+            zoom: 10
+        };
+
+        var map = new Microsoft.Maps.Map(document.getElementById("myMap"), mapOptions);
+
+        var center = map.getCenter();
+
+        var pushpin = new Microsoft.Maps.Pushpin(center, null);
+        map.entities.push(pushpin);
+    }
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.billing-details-link').click(function() {
+            var billingDetailsId = $(this).data('billing-details');
+            $.ajax({
+                url: '/get-billing-details/' + billingDetailsId + '/',
+                success: function(data) {
+                    $('#billingFirstName').text(data.first_name);
+                    $('#billingLastName').text(data.last_name);
+                    $('#billingState').text(data.state);
+                    $('#billingStreetAddress').text(data.street_address);
+                  
+                    $('#billingCity').text(data.town_city);
+                    $('#billingPostcode').text(data.postcode_zip);
+                    $('#billingPhone').text(data.phone);
+                    $('#billingEmail').text(data.email);
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.seller-details-link').click(function() {
+            var sellerDetailsId = $(this).data('seller-details');
+            $.ajax({
+                url: '/get-seller-details/' + sellerDetailsId + '/',
+                success: function(data) {
+                    $('#sellerName').text(data.name);
+                    $('#sellerStoreName').text(data.storename);    
+                    $('#sellerAddress').text(data.address);
+                    $('#sellerLandmark').text(data.landmark);
+                    $('#sellerPhone').text(data.phone);
+                    $('#sellerEmail').text(data.email);
+                    $('#sellerdays').text(data.opening_days);
+                    $('#selleropeningtime').text(data.opening_time);
+                    $('#sellerclosingtime').text(data.closing_time);
+
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('.order-product-details-link').click(function() {
+            var orderId = $(this).data('order-id');
+            $.ajax({
+                url: '/get-order-product-details/' + orderId + '/',
+                success: function(data) {
+                    displayOrderProductDetails(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching order product details:', error);
+                }
+            });
+        });
+
+        function displayOrderProductDetails(data) {
+            var tableBody = $('#orderProductDetailsTableBody');
+            tableBody.empty(); // Clear previous content
+            
+            if (data.length === 0) {
+                tableBody.append('<tr><td colspan="5">No order product details found</td></tr>');
+                return;
+            }
+            
+            $.each(data, function(index, item) {
+                var row = $('<tr>');
+                row.append('<td>' + item.product + '</td>');
+                row.append('<td>' + item.price + '</td>');
+                row.append('<td>' + item.quantity + '</td>');
+                row.append('<td>' + item.total_price + '</td>');
+                
+                tableBody.append(row);
+            });
+        }
+    });
+</script>
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    const input = document.querySelector('#username');
+    const roleFilter = document.querySelector('#role-filter');
+    const rows = document.querySelectorAll('.user-list tbody tr');
+    const noUserMessage = document.querySelector('#no-user-message');
+
+    input.addEventListener('input', filterUsers);
+    roleFilter.addEventListener('change', filterUsers);
+
+    function filterUsers() {
+        const searchTerm = input.value.toLowerCase();
+        const selectedRole = roleFilter.value;
+        let found = false; // Flag to track if a matching user is found
+
+        rows.forEach(function (row) {
+            const username = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+            const role = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
+
+            // Check if the user matches the selected role (or if all roles are selected)
+            if ((selectedRole === 'all' || role.includes(selectedRole)) &&
+                (searchTerm.length === 0 || username.includes(searchTerm))) {
+                row.style.display = 'table-row';
+                found = true; // Matching user found
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Show/hide "No such user" message
+        if (found) {
+            noUserMessage.style.display = 'none';
+        } else {
+            noUserMessage.style.display = 'block';
+        }
+    }
+});
+</script>
+{% else %}
+
+{% endif %}
+<style>
+    /* Modify your CSS to make the overlay cover the entire screen */
+    .overlay {
+        display: none;
+    position: fixed;
+   
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9998;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+         /* Adjust the top value to shift the modal down */
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+                  
+        margin: 0 auto;
+        margin-top: 10%;
+    }
+    .mapmodal-content {
+        
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+                   
+        margin: 0 auto;
+        margin-top: 10%;
+    }
+</style>
+{% endblock %}

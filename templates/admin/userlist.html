@@ -1,0 +1,135 @@
+{% extends 'admin/base1.html' %}
+{% load static %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+          <h4 class="card-title">Registered Users</h4>
+          <p class="card-description">
+            <div class="col-md-9">
+            <div class="form-group row">
+            <label for="role-filter" class="filter-label col-sm-3 col-form-label">Filter by status:</label>
+            <div class="col-sm-9">
+              <select id="role-filter" class="filter-select form-control">
+                <option value="all">All</option>
+                <option value="seller">Seller</option>
+                <option value="customer">Customer</option>
+              </select>
+            </div>
+            </div>
+        </p>
+    </div>
+        <!-- Search form -->
+        <form class="search-form" id="searchform">
+          <input type="text" id="username" name="username" class="search-input form-control" placeholder="Search by username">
+      </form>
+      </div>
+      <p id="no-user-message" style="display: none;">No such user</p>
+      <div class="table-responsive">
+      <table class="user-list table table-hover">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Change Status</th>
+            {% comment %} <th>Delete</th> {% endcomment %}
+            {% comment %} <th>Edit details</th> {% endcomment %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+            {% if not user.is_superuser %} {# Exclude superuser #}
+              <tr>
+                <td>
+                  {% if user.is_staff %}
+                    {{ user.seller.name }}
+                  {% else %}
+                    {{ user.userprofile.name }}
+                  {% endif %}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                  {% if user.is_staff %}
+                    Seller
+                  {% else %}
+                    Customer
+                  {% endif %}
+                </td>
+                <td>
+                  {% if user.is_active == True %}
+                  <span class="badge badge-success">Active</span>
+                  {% else %}
+                  <span class="badge badge-danger">Inactive</span>
+                  {% endif %}
+                </td>
+                <td style="padding-left:6%;">
+                  <div class="approval-status">                   
+                    {% if user.is_active == True %}
+                    <form method="post" action="{% url 'deactivate_user' user.id %}">
+                      {% csrf_token %}
+                      <button class="btn btn-inverse-danger btn-fw" type="submit" >Deactivate</button>
+                  </form>
+                  {% else %}
+                  <form method="post" action="{% url 'activate_user' user.id %}">
+                      {% csrf_token %}
+                      <button class="btn btn-inverse-success btn-fw" type="submit">Activate</button>
+                  </form>                       
+                    {% endif %}                 
+                </td>
+                {% comment %} <td>
+                    <a href="{% url 'delete_user' user.id %}" class="btn btn-edit">Delete</a>               
+                </td> {% endcomment %}
+                
+                
+                {% comment %} <td> <a href="{% url 'edit_user' user.id %}" class="btn btn-edit">Edit</a></td> {% endcomment %}
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const input = document.querySelector('#username');
+    const roleFilter = document.querySelector('#role-filter');
+    const rows = document.querySelectorAll('.user-list tbody tr');
+    const noUserMessage = document.querySelector('#no-user-message');
+
+    input.addEventListener('input', filterUsers);
+    roleFilter.addEventListener('change', filterUsers);
+
+    function filterUsers() {
+      const searchTerm = input.value.toLowerCase();
+      const selectedRole = roleFilter.value;
+      let found = false; // Flag to track if a matching user is found
+
+      rows.forEach(function (row) {
+        const username = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+        const role = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+
+        // Check if the user matches the selected role (or if all roles are selected)
+        if ((selectedRole === 'all' || role.includes(selectedRole)) &&
+          (searchTerm.length === 0 || username.includes(searchTerm))) {
+          row.style.display = 'table-row';
+          found = true; // Matching user found
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      // Show/hide "No such user" message
+      if (found) {
+        noUserMessage.style.display = 'none';
+      } else {
+        noUserMessage.style.display = 'block';
+      }
+    }
+  });
+</script>
+
+{% endblock %}

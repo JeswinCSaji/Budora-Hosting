@@ -1,0 +1,22 @@
+{% extends 'usertems/base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container">
+    <h1>{{ seller.storename }}</h1>
+    <p><i class="bi bi-geo"></i> {{ seller.address }}</p>
+    {% comment %} <p><i class="bi bi-geo"></i> {{ certification_details.owner_name }}</p> {% endcomment %}
+    <p><i class="bi bi-geo"></i> {{ product.product_name }}</p>
+
+    <!-- Loop through the seller's products to calculate total stock -->
+    <h2>Total Stock: {{ total_stock }}</h2>
+    
+    <!-- Display the products related to this seller -->
+    <h3>Products:</h3>
+    <ul>
+      {% for product in seller.products.all %}
+        <li>{{ product.product_name }} - Stock: {{ product.product_stock }}- Price: {{ product.product_price }}- Category: {{ product.category }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

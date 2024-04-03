@@ -1,0 +1,95 @@
+{% load static %}
+{% load socialaccount %}
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+
+<body style="background-image: url({% static 'images/20.jpg' %}); background-repeat: no-repeat; background-size: cover;">
+    <nav class="Logo">
+        <div class="container">
+            <img id="logoimg" src="{% static 'images/8.png' %}">
+            <a id="logoname" href="#">BUDORA </a>
+        </div>
+    </nav>
+    <div class="signin">
+
+        <div id="signintext">
+            <p id="signintext1" style="color: white;">sign in</p>
+            <hr id="signintext2">
+            <h2 id="signintext3" style=" color: #c70ca1;">SELLER</h2>
+        </div>
+        <form class="signin-form" method="post">
+            {% if messages %}
+            {% endif %}            
+            {% csrf_token %}
+
+            <div class="error-message" style=" border-style:groove; border-color:white; border-width: 2px; box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; margin-left:5%; width:210px; margin-top:10%; ">
+                <p style="color: red; margin-top:5px; font-size:x-large; margin-left: 8%;">Seller request submitted. Please wait for approval.
+                            {% for message in messages %}
+                                {{ message }}
+                             {% endfor %}
+                         </p>
+                    </div>
+           
+            
+
+            <p id="signinelement3" style="color: #c70ca1; margin-left: 24px; margin-top:20%; margin-bottom:18px; font-size: medium;">Don't have an account? <a href="{% url 'seller_register' %}" style="color: white; text-decoration: none">Signup</a></p>
+            <a style="color: #c70ca1; text-decoration: none; font-size: large;text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px; margin-left: 25px;" href="{% url 'loginu' %}">
+                Login as Customer<i style="color:green; margin-left: 10px;" class="fa fa-arrow-right" ></i></a>
+        </form>
+        <div class="signinimg">
+            <img id="img1" src="{% static 'images/25.jpg' %}">
+        </div>
+        
+    
+    </div>
+    
+    
+</body>
+<style>
+    .signinbtn
+    {
+        background-color: #c70ca1;
+    }
+    .signinbtn:focus {
+    color: #c70ca1;
+    background-color: white;
+    border-width: 1px;
+    border-style: groove;
+    border-color: #c70ca1;
+    fill: white;
+}
+
+.signinbtn:hover {
+    color: #c70ca1;
+    background-color: white;
+    border-width: 1px;
+    border-style: groove;
+    border-color: #c70ca1;
+    fill: white;
+}
+.signinbtn:not([disabled]):focus {
+    box-shadow:  0 0 0.5rem #c70ca1;
+  }
+  
+  .signinbtn:not([disabled]):hover {
+    box-shadow: 0 0 0.5rem #c70ca1;
+  }
+.signinbtn:active {
+  
+    color: #c70ca1;
+    background-color: white;
+    border-width: 1px;
+    border-style: groove;
+    border-color: #c70ca1;
+    fill: white;
+}
+</style>
+</html>
+

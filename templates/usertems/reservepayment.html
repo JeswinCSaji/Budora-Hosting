@@ -1,0 +1,92 @@
+{% extends 'usertems/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    #logoname
+    {
+        font-family: sans-serif;
+                        color:#27350F;
+                        text-decoration: none;
+                        text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+                    font-size: larger;
+                    margin-top:-37px;
+                    
+    }
+    @media (max-width: 991.98px) {
+        #logoname
+        {
+            font-size: medium;
+            margin-top:0px;
+        }
+    }
+</style>
+<link href="{% static 'css/tablestyle.css' %}" rel="stylesheet">
+<form method="post">
+    {% csrf_token %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="payment-container">
+                    <hr  class="text animated zoomIn" id="usern2">
+                    
+                    <h2 >Payment Details</h2><br><br>
+                    <!-- Display the name of the current user -->
+                    <p><strong>{{ user.userprofile.name }}</strong>, Your Order is Ready</p>
+                    
+                    <!-- Display the list of products and their details in a table -->
+                    <table class="table table-hover" style="margin-top:20px;">
+                        <thead>
+                            <tr>
+                                <th style="color:black;">Product Name</th>
+                                <th style="color:black;" >Quantity</th>
+                                <th style="color:black;" >Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cart_item in cart_items %}
+                                <tr>
+                                    <td>{{ cart_item.product.product_name }}</td>
+                                    <td>{{ cart_item.quantity }}</td>
+                                    <td>RS {{ cart_item.product.product_price|floatformat:2 }}</td>
+                                   
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- Display the total amount -->
+                    <p style="margin-top:10px;">Total Amount: <strong>RS {{ total_price|floatformat:2 }}</strong></p><br>
+                    <button type="submit" id="pay-btn" class="btn btn-dark">Place Order</button>
+                    
+               
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        // Enter the Key ID generated from the Dashboard
+        key: "{{ razorpay_merchant_key }}",
+        // Amount is in currency subunits.
+        // Default currency is INR. Hence,
+        // 50000 refers to 50000 paise
+        amount: "{{ razorpay_amount }}",
+        currency: "{{ currency }}",
+        // Your/store name.
+        name: "Dj Razorpay",
+        // Pass the `id` obtained in the response of Step 1
+        order_id: "{{ razorpay_order_id }}",
+        callback_url: "{{ callback_url }}",
+    };
+    // initialise razorpay with the options.
+    var rzp1 = new Razorpay(options);
+    // add event listener to the payment button.
+    document.getElementById("pay-btn").onclick = function (e) {
+        rzp1.open();
+        e.preventDefault();
+    };
+</script>
+
+{% endblock %}

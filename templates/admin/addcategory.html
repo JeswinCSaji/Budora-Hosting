@@ -1,0 +1,86 @@
+{% extends 'admin/base1.html' %}
+{% load static %}
+<html>
+<head>
+  <title>Admin Dashboard</title>
+</head>
+
+<body>
+  {% block content %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title fw-semibold mb-4">Add Plant Category</h5>
+                    {% if error_message %}
+                    <div class="alert alert-danger">
+                        {{ error_message }}
+                    </div>
+                    {% endif %}
+            <form method="post" enctype="multipart/form-data" onsubmit="return validateForm()">       
+              {% csrf_token %}
+              <div class="form-group" style="margin-top: 30px;">
+                  <label for="category_name">Category Name:</label>
+                  <input type="text" id="category_name" name="category_name" class="form-control" required>
+                  <span id="category_name_error" class="text-danger"></span>
+              </div>
+              <div class="form-group" style="margin-top: 10px;">
+                  <label for="category_description">Category Description:</label>
+                  <textarea id="category_description" name="category_description" class="form-control"></textarea>
+                  <span id="category_description_error" class="text-danger"></span>
+              </div>
+              {% if form_error_message %}
+                <div id="form_error_message" class="text-danger">{{ form_error_message }}</div> <!-- Display form error message from the view if it's not None -->
+              {% endif %}
+              <button type="submit" class="btn btn-primary">Create</button>
+              <a class="btn btn-dark" style="margin-left:20px" href="{% url 'addcategory' %}">Cancel</a>
+          </form>
+          
+          <script>
+            function validateCategoryName() {
+              const categoryNameInput = document.getElementById('category_name');
+              const categoryNameError = document.getElementById('category_name_error');
+              const categoryNameValue = categoryNameInput.value.trim();
+          
+              // Use a regular expression to check for the desired format
+              const categoryFormatRegex = /^[A-Z][a-zA-Z\s]*$/;
+          
+              if (categoryNameValue === "") {
+                  categoryNameError.textContent = 'Category Name is required.';
+              } else if (!categoryFormatRegex.test(categoryNameValue)) {
+                  categoryNameError.textContent = 'Category Name should start with a capital letter and contain only alphabets and spaces.';
+              } else {
+                  categoryNameError.textContent = '';
+              }
+          }          
+          
+              function validateForm() {
+                  validateCategoryName(); // Call the category name validation function
+          
+                  // Check if there are any validation errors
+                  const errorElements = document.querySelectorAll('.text-danger');
+                  for (const errorElement of errorElements) {
+                      if (errorElement.textContent !== '') {
+                          return false; // Prevent form submission if there are validation errors
+                      }
+                  }
+          
+                  return true; // Submit the form if there are no validation errors
+              }
+          
+              // Add an event listener to validate the category name when the input changes
+              const categoryNameInput = document.getElementById('category_name');
+              categoryNameInput.addEventListener('input', validateCategoryName);
+          </script>
+          
+          
+          
+          </div>
+        </div>
+      </div>
+  {% endblock %}
+</body>
+</html>

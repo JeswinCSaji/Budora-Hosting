@@ -1,0 +1,193 @@
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <!-- Add any additional styling you need -->
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+
+<body style="background-image: url({% static 'images/5.png' %}); background-repeat: no-repeat; background-size: cover;">
+    <div class="container">
+        {% if messages %}
+    <div class="error-message" style=" border-style:groove; border-color:red; border-width: 2px; box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;   width:300px;margin-left:23px; ">
+        <p style="color: red; margin-left: 20px; margin-top:5px; font-size:larger;">
+                    {% for message in messages %}
+                        {{ message }}
+                     {% endfor %}
+        </p>
+    </div>
+    {% endif %}
+    <br>
+    <h1>OTP Verification</h1>
+    <br><br>
+     
+        <form method="post" action="{% url 'verify_seller_otp' %}">
+            {% csrf_token %}
+            <label for="otp">Enter OTP:</label>
+            <input type="text" name="otp" id="otp" required>
+            <br><br>
+            <span id="timer"></span>
+            <button type="submit" id="subbtn">Verify OTP</button>
+        </form>
+        <p>Didn't recieve an otp? 
+           <u> <a onclick="resendOTP()" style="color:blue;">Resend OTP</a></p></u>
+    </div>   
+    
+    
+</body>
+<script>
+    function resendOTP() {
+        window.location.href = "{% url 'resend_seller_otp' %}";
+    }
+    function updateTimer(initialSeconds) {
+        var timerElement = document.getElementById("timer");
+        var seconds = initialSeconds;
+
+        // Update the timer every second
+        var countdown = setInterval(function () {
+            timerElement.textContent = "Time remaining: " + formatTime(seconds);
+
+            if (seconds <= 0) {
+                clearInterval(countdown);
+                timerElement.textContent = "OTP has expired. Click on resend otp ";
+                
+                resendLink.onclick = function () {
+                    resendOTP();
+                    return false;
+                };
+                timerElement.appendChild(resendLink);
+            } else {
+                seconds--;
+            }
+        }, 1000);
+    }
+
+    // Format the time as MM:SS
+    function formatTime(seconds) {
+        var minutes = Math.floor(seconds / 60);
+        var remainingSeconds = seconds % 60;
+        return minutes + ":" + (remainingSeconds < 10 ? "0" : "") + remainingSeconds;
+    }
+
+    // Call the updateTimer function with the initial value when the page loads
+    document.addEventListener("DOMContentLoaded", function () {
+        // Set the initial timer value in seconds (e.g., 120 seconds)
+        var initialSeconds = 120;
+        updateTimer(initialSeconds);
+    });
+</script>
+<script>
+    // Assuming you're using vanilla JavaScript
+    document.addEventListener("DOMContentLoaded", function () {
+        var invalidOtp = "{{ invalid_otp|default:'' }}";
+
+        if (invalidOtp === 'true') {
+            // Display the invalid OTP message on the page
+            var errorElement = document.createElement("p");
+            errorElement.style.color = "red";
+            errorElement.textContent = "Invalid OTP. Please try again.";
+
+            // Append the error element to the error container
+            var errorContainer = document.getElementById("error-container");
+            errorContainer.appendChild(errorElement);
+        }
+    });
+</script>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 350px;
+    margin: 250 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+h1 {
+    margin-left: 25%;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    margin-left: 10%;
+
+}
+
+form {
+    margin-top: 10px;
+    margin-left: 16%;
+}
+
+#subbtn
+{
+    
+    background-color: #27350F;
+    border-radius: 100px;
+    margin-top: 10px;
+    margin-left: 20%;
+
+    
+    color: white;
+    width: 100px;
+    transition: 0.5s;
+    height: 35px;
+    border-style: none;
+}
+#subbtn:focus {
+    color: #27350F;
+    background-color: white;
+    border-width: 1px;
+    border-style: groove;
+    border-color: #27350F;
+    fill: #27350F;
+}
+
+#subbtn:hover {
+    background-color: white;
+    border-width: 1px;
+    border-style: groove;
+
+    border-color: #27350F;
+    color: #27350F;
+    fill: #27350F;
+}
+#subbtn:not([disabled]):focus {
+    box-shadow:  0 0 0.5rem #27350F;
+  }
+  
+  #subbtn:not([disabled]):hover {
+    box-shadow: 0 0 0.5rem #27350F;
+  }
+  #subbtn:active {
+  
+    color: #27350F;
+    border-style: groove;
+
+    background-color: white;
+    border-width: 1px;
+    border-color: #27350F;
+    fill: #27350F;
+}
+
+</style>
+
+
+
+</style>
+
+</html>

@@ -1,0 +1,105 @@
+{% extends 'usertems/base.html' %}
+
+{% load static %}
+
+<body style="background-image: url({% static 'images/5.png' %}); padding-bottom: 80px;">
+    {% block content %}
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s">
+                <p class="fs-5 fw-medium fst-italic text-primary">Recommended Indoor Plants</p>
+                <h2 class="display-8">Explore Our In-Store Plant Recommendations</h2>
+            </div>
+            
+            <div class="row g-4">
+                {% for plant in matching_plants %}
+                {% if plant.stock_is_approved == 'approved'%}
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="store-item position-relative text-center">
+                       
+                        {% if plant.product_image %}
+                        <img src="{{ plant.product_image.url }}" alt="{{ plant.product_name }}"  class="img-fluid" style="height: 220px;">                      
+                        {% else %}
+                        <img src="{% static 'images/noim2.png' %}" alt="No Image"  class="img-fluid" style="height: 250px;">                      
+                        {% endif %}
+                        <div class="p-4">
+                            {% comment %} <div class="text-center mb-3">
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                            </div> {% endcomment %}
+                            <h4 class="mb-1">{{ plant.product_name }}</h4>
+                            {% comment %} {% if plant.total_stock > 0 %}
+                            <p class="text-primary">Stock Left - {{ plant.total_stock }}</p>
+                           
+                            {% else %}
+                            <p>_ _ _ _</p>
+                            <h4 style="color:red;">OUT OF STOCK</h4>
+                            {% endif %} {% endcomment %}
+                        </div>
+                        <div class="store-overlay">
+                            <a href="{% url 'product_single' plant.id %}" class="rounded-pill py-2 px-4 m-2" id="anybtn">More Details<i class="fa fa-arrow-right ms-2"></i></a>
+                        {% comment %} {% if user.is_authenticated %}
+                            {% if is_in_wishlist|default:''|yesno:"Yes,No" %}
+                                <form method="post" action="{% url 'remove_recommwishlist' plant.id %}">
+                                    {% csrf_token %}
+                                    <button style="text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px; background-color:#88B44E; padding-top:7px;padding-bottom:7px;width:50px;border-radius:180px;border-style:none;" type="submit"><i class="bi bi-heart-fill" style="color:white;"></i></button>
+                                </form>
+                            {% else %}
+                            <form method="post" action="{% url 'add_recommwishlist' plant.id %}">
+                                {% csrf_token %}
+                                <button  style="text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;  background-color:#88B44E; padding-top:7px;padding-bottom:7px;width:50px;border-radius:180px;border-style:none;" type="submit"><i class="bi bi-heart" style="color:white;"></i></button>
+                            </form>
+                            {% endif %}
+                        {% endif %} {% endcomment %}
+                        
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s">
+                <p class="fs-5 fw-medium fst-italic text-primary">Recommended Indoor Plants</p>
+                <h2 class="display-8">Our Machine Learning-Enhanced Recommendations of Indoor Plants</h2>
+            </div>
+            
+            <div class="row g-4">
+                {% for plant in recommended_plants %}
+                {% comment %} {% if plant not in matching_plants %} {% endcomment %}
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="store-item position-relative text-center">
+                        <div class="p-4">
+                            {% comment %} <div class="text-center mb-3">
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                            </div> {% endcomment %}
+                            <h4 class="mb-1">{{ plant }}</h4>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                {% comment %} {% endif %} {% endcomment %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- Store End -->
+        {% comment %} <div>
+            <h2>Model Accuracy:</h2>
+            <p>{{ accuracy }}</p>
+        </div> {% endcomment %}
+    </div>
+    </body>
+    {% endblock %}
+</html>

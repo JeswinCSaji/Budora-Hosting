@@ -1,0 +1,10 @@
+Light Requirements,Watering Frequency,Humidity Tolerance,Temperature Range,Maintenance Difficulty,Toxicity to Pets,Aesthetic Appeal,Air-Purifying,Indoor Space,Price Range,Recommended For,Plant Name
+1,0,0,1,0,0,1,1,1,0,1,Snake Plant
+1,1,1,1,0,0,1,1,1,0,1,Spider Plant
+1,1,1,1,0,1,1,1,1,1,1,Peace Lily
+1,0,0,1,0,1,1,0,1,1,1,ZZ Plant
+1,1,1,1,1,1,1,1,1,1,1,Rubber Plant
+1,1,1,1,0,1,1,1,1,0,1,Pothos
+0,1,1,1,0,1,1,1,1,0,1,Monstera Deliciosa
+1,0,0,1,0,0,1,0,1,0,1,Parlor Palm
+1,0,0,1,0,0,1,1,1,1,1,Fiddle Leaf Fig

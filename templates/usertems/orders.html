@@ -1,0 +1,947 @@
+{% extends 'usertems/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Lightbox CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" integrity="sha384-QYzhST3rEMvU6oXmzFu8l3F+tgPO4ZbDTu8K8b5/7S6cV6nOql83qU9RkgUWpnEK" crossorigin="anonymous">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Lightbox JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js" integrity="sha384-zIBLXzhgWq2gLMp5g8foP2zxzTNfn7eCwCF3j1xnnps5BsK9b9eZEhlKFGLUZdeI" crossorigin="anonymous"></script>
+
+
+
+    
+</style>
+<link href="{% static 'css/tablestyle.css' %}" rel="stylesheet">
+
+<section class="ftco-section ftco-cart">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class=".card-inverse-success">
+          <div class="card-body">
+                <div class="table-responsive">
+                    <hr  class="text animated zoomIn" id="usern2">
+                    <h2 style="margin-left:5px;margin-bottom:50px;margin-left:50px;text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;">Order Details</h2>
+                    <p class="card-description">
+                        <div class="col-md-9">
+                        <div class="form-group row">
+                        <label for="status-filter" class="filter-label col-sm-3 col-form-label">Filter by Order type:</label>
+                        <div class="col-sm-9">
+                        <select id="status-filter" class="filter-select form-control">
+                            <option value="all">All</option>
+                            <option value="order">Order</option>
+                            <option value="reservation">Reservation</option>
+                     
+                        </select>
+                        </div>
+                        </div>
+                    </p>
+                </div>
+                        <!-- Search form -->
+                        <form class="search-form" id="searchform">
+                            <input type="text" id="name" name="name" class="search-input form-control" placeholder="Search by plantname">
+                        </form>
+                    <table class="application-list table table-hover">
+                        <thead class="thead-primary">
+                            <tr class="text-center" >
+                                <th style="color:black;font-weight:bolder;">Order Date</th>
+                                <th style="color:black;font-weight:bolder;">Order Type</th>
+                                <th style="color:black;font-weight:bolder;">Pickup Date</th>
+
+                                <th style="color:black;font-weight:bolder;" >Product Name</th>
+                                <th style="color:black;font-weight:bolder;" >Quantity</th>
+                                <th style="color:black;font-weight:bolder;" >Image</th>
+                                <th style="color:black;font-weight:bolder;" >Price</th>
+                                <th style="color:black;font-weight:bolder;" >Seller Name</th>
+                                <th style="color:black;font-weight:bolder;" >Status</th>
+                              
+                                {% comment %} <th style="color:black;font-weight:bolder;" >Product Recieved</th> {% endcomment %}
+                                <th style="color:black;font-weight:bolder;" >Download</th>
+                                <th style="color:black;font-weight:bolder;" >QR Code</th>
+                                <th style="color:black;font-weight:bolder;" >Review</th>
+                                <th style="color:black;font-weight:bolder;" >Delivery Review</th>
+                                <th style="color:black;font-weight:bolder;" >Tracking</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order, item, review_status, agent_review_status in order_items %}
+
+                            <tr class="text-center">
+                                <td>{{ order.order_date|date:"d-m-Y" }}</td>
+                                <td> 
+                                {% if item.delivery_choice == 'reserve' %}         
+                                    Reservation
+                                {% else %}
+                                    Order
+                                {% endif %}
+                                </td>
+                                <td>
+                                {% if item.order_not_valid  %} 
+                                     
+                                    <label class="badge badge-danger">Expired</label>
+                                   
+                                {% else %}
+                                    {% if item.delivery_choice == 'reserve' %}         
+                                        {{ item.selected_date }}
+                                    {% else %}
+                                        <label class="badge badge-danger">Not Applicable</label>
+                                    {% endif %}
+                                {% endif %}
+                                </td>
+
+                                <td>
+                                    
+                                    {{ item.product.product_name }}
+                                    
+                                </td>
+                                <td>{{ item.quantity }}</td>
+                                <td>
+                                    <img src="{{ item.product.product_image.url }}" alt="{{ item.product.name }}" width="100">
+                                    <br>
+                                </td>
+                                <td>
+                                    {{ item.price }}
+                                    <br>
+                                </td>
+                                <td>
+                                    <a href="{% url 'store_detail' item.product.seller.id %}">{{ item.product.seller.storename }}</a>                 
+                                </td>
+                                <td> 
+                                    {% if order.get_payment_status_display == 'Pending' %}
+                                    <label class="badge badge-dark">Pending</label>
+                                    {% else %}
+                                    <label class="badge badge-dark">Paid<i style="margin-left:5px;height:1px;" class="fas fa-check"></i></label>
+                                    {% endif %}
+                                </td>
+                              
+                                {% comment %} <td>
+                                    {% if item.customer_is_approved == 'notcollected' %}
+                                    <form method="post" action="{% url 'customer_approve_order' item.id %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-inverse-success btn-fw"  type="submit" >Confirm</button>
+                                    </form>
+                                    {% else %}
+                                    <label class="badge badge-success">Recieved</label>
+                                    {% endif %}
+                                </td> {% endcomment %}
+                                <td >
+                                    <a href="{% url 'generate_pdf' order.id %}" target="_blank">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                   
+                                </td>
+                                <td>
+                                    <a href="#" class="openQrCodeModal" id="openQrCodeModal" data-order-id="{{ order.id }}" data-order-id="{{ item.id }}" data-qr-code-data="{{ item.qr_code_data }}">
+                                        <img src="data:image/png;base64,{{ item.qr_code_data }}" alt="QR Code" width="100">
+                                    </a>
+                                </td>
+                                
+                                <td >
+                                   
+                                {% if item.customer_is_approved == 'collected' %}       
+                                    {% if review_status == 'Pending' %}
+                                        <button class="btn btn-outline-success btn-fw openModalBtn" data-seller="{{ item.product.seller.id }}" data-seller-name="{{ item.product.seller.storename }}" type="button" >Review</button>
+                                    {% else %}
+                                        <button class="btn btn-outline-warning openModalBtn" data-seller="{{ item.product.seller.id }}" data-seller-name="{{ item.product.seller.storename }}" data-review-id="{{ item.review_id }}" data-review-desc="{{ item.review_desc }}" type="button" >Edit Review</button>                                                
+                                    {% endif %}        
+                                {% else %}
+                                    <label class="badge badge-success">Not Allowed</label>
+                                {% endif %}
+                                
+
+
+                                </td>
+                                <td >
+                                {% if item.delivery_choice == 'order' %}         
+                                    {% if item.customer_is_approved == 'collected' %}       
+                                        {% if agent_review_status == 'Pending' %}
+                                            <button class="btn btn-outline-success btn-fw openreviewModalBtn" data-agent="{{ item.deliveryagent.id }}" data-agent-name="{{ item.deliveryagent.name }}" type="button" >Review</button>
+                                        {% else %}
+                                            <button class="btn btn-outline-warning openreviewModalBtn" data-agent="{{ item.deliveryagent.id }}" data-agent-name="{{ item.deliveryagent.name }}" data-agent-review-id="{{ item.delivery_review_id }}" data-agent-review-desc="{{ item.delivery_review_desc }}" type="button" >Edit Review</button>                                                
+                                        {% endif %}        
+                                    {% else %}
+                                        <label class="badge badge-success">Not Allowed</label>
+                                    {% endif %}
+                                {% else %}
+                                    <label class="badge badge-danger">Not Applicable</label>
+                                {% endif %}
+                                
+
+
+                                </td>
+                                <td>
+                                    {% if item.delivery_choice == 'order' %}  
+                                        <a href="#" class="openTrackModal" id="openTrackModal">
+                                            <img src="{% static 'images/on the way.png' %}" data-order-id="{{ item.id }}" alt="order tracking" width="100">
+                                        </a>
+                                    {% else %}
+                                        <a href="#" class="openReserveTrackModal" id="openReserveTrackModal">
+                                            <img src="{% static 'images/outfordelivery.png' %}" data-order-id="{{ item.id }}" alt="order tracking" width="100">
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                         
+                        </tbody>
+                    </table>
+                   
+                    <div class="overlay" id="agentoverlay">
+                    <!-- Add this modal to your HTML template -->
+                    <div id="agentreviewModal" class="modal">
+                        <div class="agentmodal-content" style="background-color:white;">
+                            <form id="agentreviewForm" method="post" action="{% url 'submit_deliveryreview' %}">
+                                {% csrf_token %}
+                                <h2 id="agentmodalTitle">Add Review</h2>
+                                
+                                <label for="agentdescription">Review:</label>
+                                <textarea name="agentdescription" id="agentdescription" rows="4" required></textarea>
+                                <input type="hidden" id="agent_id" name="agent_id" value="">
+                                <input type="hidden" id="agentreview_id" name="agentreview_id" value="">
+                                <button class="btn btn-inverse-success btn-fw" type="submit" id="agentsubmitBtn"  style="margin-top:40px;">Submit Review</button>
+                            </form>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="overlay" id="overlay">
+                        <!-- Add this modal to your HTML template -->
+                        <div id="reviewModal" class="modal">
+                            <div class="modal-content" style="background-color:white;">
+                                <form id="reviewForm" method="post" action="{% url 'submit_review' %}">
+                                    {% csrf_token %}
+                                    <h2 id="modalTitle">Add Review</h2>
+                                    
+                                    <label for="description">Review:</label>
+                                    <textarea name="description" id="description" rows="4" required></textarea>
+                                    <input type="hidden" id="seller_id" name="seller_id" value="">
+                                    <input type="hidden" id="review_id" name="review_id" value="">
+                                    <button class="btn btn-inverse-success btn-fw" type="submit" id="submitBtn"  style="margin-top:40px;">Submit Review</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <div class="overlay2" id="overlay2">
+                        <!-- Add this modal to your HTML template -->
+                        <div id="qrModal" class="custom-modal">
+                            <div class="modal-content">
+                                <button class="close-modal" onclick="closeQrCodeModal()">&times;</button>
+                                <img src="data:image/png;base64,${qrCodeData}" alt="QR Code" class="img-fluid">
+                            </div>
+                        </div>
+                   
+                </div>
+            </div>
+            <div class="overlay4" id="overlay4">
+                <!-- Add this modal to your HTML template -->
+                <div id="reservetrackModal" class="custom-modal">
+                    <div class="row col-sm-10 reservetrackmodalcontent"  style="margin-top:20%;">
+                        <div class="col-xl-3 col-sm-6 grid-margin stretch-card" >
+                            <div class="card" style="box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                        <div class="d-flex align-items-center align-self-start">
+                                        
+                                            <img src="{% static 'images/orderready.png' %}" alt="order tracking" width="100">
+                                    
+                                        </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div id="orderConfirmedIcon">
+                                                <span class=" icon-item" id="faorderConfirmedIcon"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h6 class="text-muted font-weight-normal">Order Confirmed</h6>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                    <div class="card" style="box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;">
+                                        <div class="card-body">
+                                        <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                            
+                                            <img src="{% static 'images/productchecking.png' %}" alt="order tracking" width="100">
+                                        
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="icon" id="productDispatchedIcon">
+                                                <span class=" icon-item" id="faproductDispatchedIcon"></span>                                    </div>
+                                     
+                                        </div>
+                                        </div>
+                                        <h6 class="text-muted font-weight-normal">Order Ready</h6>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                    <div class="card" style="box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;">
+                                        <div class="card-body">
+                                        <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                            
+                                            <img src="{% static 'images/outfordelivery.png' %}" alt="order tracking" width="100">
+                                        
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="icon" id="deliveryOrderConfirmedIcon">
+                                                <span class=" icon-item" id="fadeliveryOrderConfirmedIcon"></span>                                    </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <h6 class="text-muted font-weight-normal">Waiting For Pickup</h6>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                    <div class="card" style="box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;">
+                                        <div class="card-body">
+                                        <div class="row">
+                                        <div class="col-9">
+                                            <div class="d-flex align-items-center align-self-start">
+                                            
+                                            <img src="{% static 'images/delivered.png' %}" alt="order tracking" width="100">
+                                        
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="icon" id="agentApprovalIcon">
+                                                <span class=" icon-item" id="faagentApprovalIcon"></span>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <h6 class="text-muted font-weight-normal">Delivered</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="overlay3" id="overlay3">
+                <!-- Add this modal to your HTML template -->
+                <div id="trackModal" class="custom-modal">
+                    <div class="row col-sm-10 trackmodalcontent"  style="margin-top:20%;">
+                        <div class="col-xl-3 col-sm-6 grid-margin stretch-card" >
+                        <div class="card" style="box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;">
+                            <div class="card-body">
+                            <div class="row">
+                                <div class="col-9">
+                                <div class="d-flex align-items-center align-self-start">
+                                
+                                    <img src="{% static 'images/orderready.png' %}" alt="order tracking" width="100">
+                            
+                                </div>
+                                </div>
+                                <div class="col-3">                 
+                                    <div id="oorderConfirmedIcon">
+                                        <span class=" icon-item" id="ofaorderConfirmedIcon"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <h6 class="text-muted font-weight-normal">Order Confirmed</h6>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                            <div class="card" style="box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;">
+                                <div class="card-body">
+                                <div class="row">
+                                <div class="col-9">
+                                    <div class="d-flex align-items-center align-self-start">
+                                    
+                                    <img src="{% static 'images/orderdispatched.png' %}" alt="order tracking" width="100">
+                                
+                                    </div>
+                                </div>
+                                <div class="col-3">                 
+                                    <div class="icon" id="oproductDispatchedIcon">
+                                        <span class=" icon-item" id="ofaproductDispatchedIcon"></span>                                    </div>
+                                </div>
+                                </div>
+                                <h6 class="text-muted font-weight-normal">Order Dispatched</h6>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                            <div class="card" style="box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;">
+                                <div class="card-body">
+                                <div class="row">
+                                <div class="col-9">
+                                    <div class="d-flex align-items-center align-self-start">
+                                    
+                                    <img src="{% static 'images/on the way.png' %}" alt="order tracking" width="100">
+                                
+                                    </div>
+                                </div>
+                                <div class="col-3">                 
+                                    <div class="icon" id="odeliveryOrderConfirmedIcon">
+                                        <span class=" icon-item" id="ofadeliveryOrderConfirmedIcon"></span>                                    </div>
+                                </div>
+                                </div>
+                                <h6 class="text-muted font-weight-normal">On The Way</h6>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                            <div class="card" style="box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;">
+                                <div class="card-body">
+                                <div class="row">
+                                <div class="col-9">
+                                    <div class="d-flex align-items-center align-self-start">
+                                    
+                                    <img src="{% static 'images/delivered.png' %}" alt="order tracking" width="100">
+                                
+                                    </div>
+                                </div>
+                                <div class="col-3">                 
+                                    <div class="icon" id="oagentApprovalIcon">
+                                        <span class=" icon-item" id="ofaagentApprovalIcon"></span>
+                                    </div>
+                                </div>
+                                </div>
+                                <h6 class="text-muted font-weight-normal">Delivered</h6>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+        </div>
+    </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const input = document.querySelector('#name');
+      const roleFilter = document.querySelector('#status-filter');
+      const rows = document.querySelectorAll('.application-list tbody tr');
+      const noUserMessage = document.querySelector('#no-application-message');
+  
+      input.addEventListener('input', filterUsers);
+      roleFilter.addEventListener('change', filterUsers);
+  
+      function filterUsers() {
+          const searchTerm = input.value.toLowerCase();
+          const selectedRole = roleFilter.value;
+          let found = false; // Flag to track if a matching user is found
+  
+          rows.forEach(function (row) {
+              const username = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+              const role = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+  
+              // Check if the user matches the selected role (or if all roles are selected)
+              if ((selectedRole === 'all' || role.includes(selectedRole)) &&
+                  (searchTerm.length === 0 || username.includes(searchTerm))) {
+                  row.style.display = 'table-row';
+                  found = true; // Matching user found
+              } else {
+                  row.style.display = 'none';
+              }
+          });
+  
+          // Show/hide "No such user" message
+          if (found) {
+              noUserMessage.style.display = 'none';
+          } else {
+              noUserMessage.style.display = 'block';
+          }
+      }
+  });
+  </script>
+<script>
+$(document).ready(function() {
+    $(".openTrackModal").click(function() {
+        // Show modal and overlay
+        $("#trackModal").show();
+        $("#overlay3").show();
+        
+        // Get the item's data
+        var itemId = $(this).find('img').data('order-id');
+        getItemData(itemId);
+    });
+
+    $("#trackModal").click(function() {
+        closeModal();
+    });
+
+    $("#overlay3").click(function() {
+        closeModal();
+    });
+
+    function closeModal() {
+        $("#trackModal").hide();
+        $("#overlay3").hide();
+    }
+
+    // Function to fetch item data
+    function getItemData(itemId) {
+        $.ajax({
+            url: `/get_item_data/${itemId}/`, // Assuming the URL is defined correctly in your urls.py
+            method: 'GET',
+            success: function(data) {
+                updateModalContent(data);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching item data:', error);
+            }
+        });
+    }
+
+    // Function to update modal content based on item data
+    function updateModalContent(item) {
+        // Update order confirmed icon
+        if (item.order_confirmed) {
+            $("#oorderConfirmedIcon").removeClass("icon icon-box-warning").addClass("icon icon-box-success");
+            $("#ofaorderConfirmedIcon").removeClass("fa fa-clock").addClass("fa fa-check");
+        } else {
+            $("#oorderConfirmedIcon").removeClass("icon icon-box-success").addClass("icon icon-box-warning");
+            $("#ofaorderConfirmedIcon").removeClass("fa fa-check").addClass("fa fa-clock");
+        }
+
+        // Update product dispatched icon
+        if (item.product_dispatched) {
+            $("#oproductDispatchedIcon").removeClass("icon icon-box-warning").addClass("icon icon-box-success");
+            $("#ofaproductDispatchedIcon").removeClass("fa fa-clock").addClass("fa fa-check");
+        } else {
+            $("#oproductDispatchedIcon").removeClass("icon icon-box-success").addClass("icon icon-box-warning");
+            $("#ofaproductDispatchedIcon").removeClass("fa fa-check").addClass("fa fa-clock");
+        }
+
+        // Update delivery order confirmed icon
+        if (item.delivery_order_confirmed) {
+            $("#odeliveryOrderConfirmedIcon").removeClass("icon icon-box-warning").addClass("icon icon-box-success");
+            $("#ofadeliveryOrderConfirmedIcon").removeClass("fa fa-clock").addClass("fa fa-check");
+        } else {
+            $("#odeliveryOrderConfirmedIcon").removeClass("icon icon-box-success").addClass("icon icon-box-warning");
+            $("#ofadeliveryOrderConfirmedIcon").removeClass("fa fa-check").addClass("fa fa-clock");      
+        }
+
+        // Update agent approval icon
+        if (item.agent_is_approved === 'delivered') {
+            $("#oagentApprovalIcon").removeClass("icon icon-box-warning").addClass("icon icon-box-success");
+            $("#ofaagentApprovalIcon").removeClass("fa fa-clock").addClass("fa fa-check");
+        } else {
+            $("#oagentApprovalIcon").removeClass("icon icon-box-success").addClass("icon icon-box-warning");
+            $("#ofaagentApprovalIcon").removeClass("fa fa-check").addClass("fa fa-clock");
+
+        }
+    }
+});
+
+    
+</script>
+<script>
+   
+    $(document).ready(function() {
+        $(".openReserveTrackModal").click(function() {
+            // Show modal and overlay
+            $("#reservetrackModal").show();
+            $("#overlay4").show();
+            
+            // Get the item's data
+            var itemId = $(this).find('img').data('order-id');
+            getItemData(itemId);
+        });
+    
+        $("#reservetrackModal").click(function() {
+            closeModal();
+        });
+    
+        $("#overlay4").click(function() {
+            closeModal();
+        });
+    
+        function closeModal() {
+            $("#reservetrackModal").hide();
+            $("#overlay4").hide();
+        }
+    
+        // Function to fetch item data
+        function getItemData(itemId) {
+            $.ajax({
+                url: `/get_reserve_item_data/${itemId}/`, // Assuming the URL is defined correctly in your urls.py
+                method: 'GET',
+                success: function(data) {
+                    updateModalContent(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching item data:', error);
+                }
+            });
+        }
+    
+        // Function to update modal content based on item data
+        function updateModalContent(item) {
+            // Update order confirmed icon
+            if (item.order_confirmed) {
+                $("#orderConfirmedIcon").removeClass("icon icon-box-warning").addClass("icon icon-box-success");
+                $("#faorderConfirmedIcon").removeClass("fa fa-clock").addClass("fa fa-check");
+            } else {
+                $("#orderConfirmedIcon").removeClass("icon icon-box-success").addClass("icon icon-box-warning");
+                $("#faorderConfirmedIcon").removeClass("fa fa-check").addClass("fa fa-clock");
+            }
+    
+            // Update product dispatched icon
+            if (item.order_processed) {
+                $("#productDispatchedIcon").removeClass("icon icon-box-warning").addClass("icon icon-box-success");
+                $("#faproductDispatchedIcon").removeClass("fa fa-clock").addClass("fa fa-check");
+            } else {
+                $("#productDispatchedIcon").removeClass("icon icon-box-success").addClass("icon icon-box-warning");
+                $("#faproductDispatchedIcon").removeClass("fa fa-check").addClass("fa fa-clock");
+            }
+    
+            // Update delivery order confirmed icon
+            if (item.delivery_order_confirmed) {
+                $("#deliveryOrderConfirmedIcon").removeClass("icon icon-box-warning").addClass("icon icon-box-success");
+                $("#fadeliveryOrderConfirmedIcon").removeClass("fa fa-clock").addClass("fa fa-check");
+            } else {
+                $("#deliveryOrderConfirmedIcon").removeClass("icon icon-box-success").addClass("icon icon-box-warning");
+                $("#fadeliveryOrderConfirmedIcon").removeClass("fa fa-check").addClass("fa fa-clock");      
+            }
+    
+            // Update agent approval icon
+            if (item.agent_is_approved === 'delivered') {
+                $("#agentApprovalIcon").removeClass("icon icon-box-warning").addClass("icon icon-box-success");
+                $("#faagentApprovalIcon").removeClass("fa fa-clock").addClass("fa fa-check");
+            } else {
+                $("#agentApprovalIcon").removeClass("icon icon-box-success").addClass("icon icon-box-warning");
+                $("#faagentApprovalIcon").removeClass("fa fa-check").addClass("fa fa-clock");
+    
+            }
+        }
+    });
+    
+</script>
+    <script>
+        $(document).ready(function() {
+            var agentreviewModal = $("#agentreviewModal");
+            var agentoverlay = $("#agentoverlay");
+            var agentmodalContent = $(".agentmodal-content"); // Select the modal content container
+            var agentmodalTitle = $("#agentmodalTitle");
+            var agentratingInput = $("#agentrating");
+            var agentdescriptionInput = $("#agentdescription");
+            var agentIdInput = $("#agent_id");
+            var agentreviewIdInput = $("#agentreview_id");
+            var agentsubmitBtn = $("#agentsubmitBtn");
+    
+            $(".openreviewModalBtn").click(function() {
+                var agentId = $(this).data("agent");
+                var agentName = $(this).data("agent-name");
+                var reviewId = $(this).data("agent-review-id");
+                var reviewDesc = $(this).data("agent-review-desc"); 
+                
+                if (reviewId) {
+                    agentmodalTitle.text("Edit Review for " + agentName);
+                    agentsubmitBtn.text("Edit Review");
+                    var rating = $(this).data("rating");
+                    var description = $(this).data("description");
+                    agentratingInput.val(rating);
+                    agentdescriptionInput.val(reviewDesc);
+                    agentreviewIdInput.val(reviewId);
+                } else {
+                    agentmodalTitle.text("Add Review for " + agentName);
+                    agentsubmitBtn.text("Submit Review");
+                    agentratingInput.val("");
+                    agentdescriptionInput.val("");
+                    agentreviewIdInput.val("");
+                }
+            
+                agentIdInput.val(agentId);
+                agentreviewModal.css("display", "block");
+                agentoverlay.css("display", "block");
+            });
+    
+            agentmodalContent.click(function(event) {
+                event.stopPropagation(); // Stop event propagation
+            });
+        
+            // Close the modal when the user clicks the close button
+            $("#agentreviewModal .close").click(function() {
+                closeModal();
+            });
+        
+            // Close the modal and overlay when the user clicks outside the modal
+            agentoverlay.click(function() {
+                closeModal();
+            });
+        
+            // Submit the review form when it's submitted
+            $("#agentreviewForm").submit(function() {
+                // You can add validation or other logic here if needed
+                return true; // Allow the form to be submitted
+            });
+        
+            // Function to close the modal
+            function closeModal() {
+                agentreviewModal.css("display", "none");
+                agentoverlay.css("display", "none");
+            }
+        });
+    </script>
+    
+
+
+<script>
+    $(document).ready(function() {
+        var reviewModal = $("#reviewModal");
+        var overlay = $("#overlay");
+        var modalContent = $(".modal-content"); // Select the modal content container
+        var modalTitle = $("#modalTitle");
+        var ratingInput = $("#rating");
+        var descriptionInput = $("#description");
+        var sellerIdInput = $("#seller_id");
+        var reviewIdInput = $("#review_id");
+        var submitBtn = $("#submitBtn");
+    
+        $(".openModalBtn").click(function() {
+            var sellerId = $(this).data("seller");
+            var sellerName = $(this).data("seller-name");
+            var reviewId = $(this).data("review-id");
+            var reviewDesc = $(this).data("review-desc"); 
+            
+            if (reviewId) {
+                modalTitle.text("Edit Review for " + sellerName);
+                submitBtn.text("Edit Review");
+                var rating = $(this).data("rating");
+                var description = $(this).data("description");
+                ratingInput.val(rating);
+                descriptionInput.val(reviewDesc);
+                reviewIdInput.val(reviewId);
+            } else {
+                modalTitle.text("Add Review for " + sellerName);
+                submitBtn.text("Submit Review");
+                ratingInput.val("");
+                descriptionInput.val("");
+                reviewIdInput.val("");
+            }
+    
+            sellerIdInput.val(sellerId);
+            reviewModal.css("display", "block");
+            overlay.css("display", "block");
+        });
+    
+        // Prevent closing the modal when clicking inside the modal content
+        modalContent.click(function(event) {
+            event.stopPropagation(); // Stop event propagation
+        });
+    
+        // Close the modal when the user clicks the close button
+        $("#reviewModal .close").click(function() {
+            closeModal();
+        });
+    
+        // Close the modal and overlay when the user clicks outside the modal
+        overlay.click(function() {
+            closeModal();
+        });
+    
+        // Submit the review form when it's submitted
+        $("#reviewForm").submit(function() {
+            // You can add validation or other logic here if needed
+            return true; // Allow the form to be submitted
+        });
+    
+        // Function to close the modal
+        function closeModal() {
+            reviewModal.css("display", "none");
+            overlay.css("display", "none");
+        }
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $(".openQrCodeModal").click(function() {
+            var orderId = $(this).data("order-id");
+            var productId = $(this).data("product-id");
+            var qrCodeData = $(this).data("qr-code-data");
+            $("#qrModal img").attr("src", "data:image/png;base64," + qrCodeData);
+            $("#qrModal").show();
+            $("#overlay2").show();
+        });
+    
+        $("#qrModal .close-modal").click(function() {
+            closeModal();
+        });
+    
+        $("#overlay2").click(function() {
+            closeModal();
+        });
+    
+        function closeModal() {
+            $("#qrModal").hide();
+            $("#overlay2").hide();
+        }
+    });
+    
+</script>
+
+<style>
+    #logoname
+    {
+        font-family: sans-serif;
+                        color:#27350F;
+                        text-decoration: none;
+                        text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+                    font-size: larger;
+                    margin-top:-37px;
+                    
+    }
+    @media (max-width: 991.98px) {
+        #logoname
+        {
+            font-size: medium;
+            margin-top:0px;
+        }
+    }
+
+    /* Background Overlay Styles */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9998; /* Place it below the modal */
+}
+.overlay2 {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9998; /* Place it below the modal */
+}
+.overlay3 {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    z-index: 9998; /* Place it below the modal */
+}
+.overlay4 {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    z-index: 9998; /* Place it below the modal */
+}
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+             /* Adjust the top value to shift the modal down */
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .trackmodal {
+            display: none;
+            position: fixed;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .reservetrackModal {
+            display: none;
+            position: fixed;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+                        max-width: 400px;
+            margin: 0 auto;
+            margin-top: 10%;
+        }
+        
+        .agentmodal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+                        max-width: 400px;
+            margin: 0 auto;
+            margin-top: 10%;
+        }
+    
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+    
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+    
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            
+        }
+    
+        button:hover {
+            background-color: #0056b3;
+        }
+        @media screen and (orientation: landscape) and (min-device-aspect-ratio: 16/9) {
+            .trackmodalcontent {
+                margin-left: 9%;
+            }
+            .reservetrackmodalcontent {
+                margin-left: 9%;
+            }
+        }
+    </style>
+
+{% endblock %}

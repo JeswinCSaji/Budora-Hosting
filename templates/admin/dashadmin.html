@@ -1,0 +1,160 @@
+{% extends 'admin/base1.html' %}
+{% load static %}
+{% block content %}
+<script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?key=Agyr0UQGWTFzP3Fwb3PDJ_ahP24jx9jRgpUWwBD_37B8MXu1oql6WCs6J-vgU1YT"></script>
+  <div class="row">
+    <div class="col-sm-4 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-8 col-sm-12 col-xl-8 my-auto">
+              <div class="d-flex d-sm-block d-md-flex align-items-center">
+                <h2 class="mb-0">Users</h2>
+              </div>
+              <h6 class="text-muted font-weight-normal">Manage Seller approvals and registered users</h6>
+              <a class="text-success" style="text-decoration: none;" href="{% url 'dashlegal' %}">Seller Approval</a><br>
+              <a class="text-success" style="text-decoration: none;" href="{% url 'user_list' %}">Manage Registered Users</a>
+            </div>
+            <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+              <i class="icon-lg mdi mdi-account text-primary ml-auto"></i>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-8 col-sm-12 col-xl-8 my-auto">
+              <div class="d-flex d-sm-block d-md-flex align-items-center">
+                <h2 class="mb-0">Products</h2>
+              </div>
+              <h6 class="text-muted font-weight-normal">Manage stock and view product listings</h6>
+              <a class="text-success" style="text-decoration: none;" href="{% url 'viewstock' %}" id="stock">View Stock</a><br>
+              <a class="text-success" style="text-decoration: none;" href="{% url 'viewproducts' %}">View Products</a>
+            </div>
+            <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+              <i class="icon-lg mdi mdi-store text-primary ml-auto"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-8 col-sm-12 col-xl-8 my-auto">
+              <div class="d-flex d-sm-block d-md-flex align-items-center">
+                <h2 class="mb-0">Category</h2>
+              </div>
+              <h6 class="text-muted font-weight-normal">Manage product categories and view existing categories</h6>
+              <a class="text-success" style="text-decoration: none;" href="{% url 'addcategory' %}">Add Category</a><br>
+              <a class="text-success" style="text-decoration: none;" href="{% url 'viewcategory' %}">View Category</a>
+            </div>
+            <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+              <i class="icon-lg mdi mdi-folder text-primary ml-auto"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Location</h4>
+          <div class="row">
+            <div class="col-md-12">
+              
+                <div class="map" id="myMap" style="height: 400px"></div>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      var map;
+      var searchManager;
+  
+      function initMap() {
+          map = new Microsoft.Maps.Map("#myMap", {
+              credentials: "Au3Blei_Uhp8WxG4OPh-ZutbAHXmqrN3vEc-UkASaaTY6adPoJEo2QHBLTyNNvhB",
+              zoom: 10,
+          });
+  
+          var sellers = [
+              {% for record in seller %}
+              {
+                  latitude: {{ record.latitude }},
+                  longitude: {{ record.longitude }},
+                  store: "{{ record.storename }}",
+                  place: "{{ record.address }}",
+                  type: "seller"
+              },
+              {% endfor %}
+          ];
+  
+          var agents = [
+              {% for record in agents %}
+              {
+                  latitude: {{ record.latitude }},
+                  longitude: {{ record.longitude }},
+                  name: "{{ record.name }}",
+                  
+                  type: "agent"
+              },
+              {% endfor %}
+          ];
+  
+          // Function to create markers
+          function createMarkers(locations, color) {
+              for (var i = 0; i < locations.length; i++) {
+                  var location = locations[i];
+                  var marker = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(location.latitude, location.longitude), {
+                      title: location.store || location.name,
+                      subTitle: location.place,
+                      color: color // Set color based on type
+                  });
+  
+                  // Add label for seller or agent
+                  var label = location.type === 'seller' ? 'Seller' : 'Delivery Agent';
+                  var infobox = new Microsoft.Maps.Infobox(marker.getLocation(), {
+                      visible: false,
+                      offset: new Microsoft.Maps.Point(0, 15),
+                      htmlContent: '<div style="background-color: white; color: black; padding: 5px; border: 1px solid black;">' + label + '</div>'
+                  });
+                  marker.metadata = {
+                      description: label
+                  };
+  
+                  Microsoft.Maps.Events.addHandler(marker, 'click', function () {
+                      infobox.setOptions({ visible: true });
+                  });
+  
+                  Microsoft.Maps.Events.addHandler(map, 'click', function () {
+                      infobox.setOptions({ visible: false });
+                  });
+  
+                  map.entities.push(marker);
+                  map.entities.push(infobox);
+              }
+          }
+  
+          // Call createMarkers function for sellers and agents
+          createMarkers(sellers, "blue"); // Mark sellers in blue
+          createMarkers(agents, "red");   // Mark agents in red
+      }
+  
+      // Call the initMap function once the page is loaded
+      window.onload = initMap;
+  </script>
+  
+  
+
+    {% endblock %}
+

@@ -1,0 +1,228 @@
+{% extends 'usertems/base.html' %}
+{% load static %}
+{% block content %}
+    <link href="img/favicon.ico" rel="icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?callback=loadMapScenario&key=Agyr0UQGWTFzP3Fwb3PDJ_ahP24jx9jRgpUWwBD_37B8MXu1oql6WCs6J-vgU1YT"></script>
+                
+    
+    <div class="container-xxl py-5">
+      <div class="container">        
+        <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s">
+            <p class="fs-5 fw-medium fst-italic text-primary">Explore stores near you</p>
+            <h2 class="display-8">Your Perfect Green Companions Await</h2>  
+        </div>
+          {% comment %} {{ user.userprofile.latitude}}
+          {{ user.userprofile.longitude}} {% endcomment %}
+            <div class="row g-4 wow fadeInUp" >
+              <button id="changelocation-button" style="background: none; border: none; color: #9abf69; text-decoration: none; margin-left:20px; cursor: pointer;">
+                {% if user.userprofile.latitude is not None and user.userprofile.longitude is not None and user.userprofile.latitude|default:0.0 != 0.0 and user.userprofile.longitude|default:0.0 != 0.0 %}
+                  Change Location
+                {% else %}
+                  Add Location
+                {% endif %}
+              </button>     
+            </div>
+              <form id="location-section" class="row g-4" style="display: none; margin-top:10px;"  method="post" onsubmit="return validateForm()" >     
+              {% csrf_token %}                 
+              <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="form-group">
+                    {% if user.userprofile.latitude and user.userprofile.longitude %}
+                        <input class="form-control text animated zoomIn" value="{{ user.userprofile.latitude }}" type="text" id="lat"  class="cardelement" placeholder="Latitude" name="latitude" required>
+                    {% else %}
+                        <input class="form-control text animated zoomIn" type="text" id="lat"  class="cardelement" placeholder="Latitude" name="latitude" required>
+                    {% endif %}
+                    <span id="latspan" class="text-danger error-message"></span> <!-- Add error message span -->
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">   
+                <div class="form-group">
+                    {% if user.userprofile.latitude and user.userprofile.longitude %}
+                        <input class="form-control text animated zoomIn" value="{{ user.userprofile.longitude }}" type="text" id="long"  name="longitude" placeholder="Longitude"class="cardelement" required>
+                    {% else %}
+                        <input class="form-control text animated zoomIn" type="text" id="long"  name="longitude" placeholder="Longitude"class="cardelement" required>
+                    {% endif %}
+                    <span id="longspan" class="text-danger error-message"></span> <!-- Add error message span -->
+                </div>
+            </div>            
+                <div class="col-lg-2 col-md-6 wow fadeInUp" data-wow-delay="0.1s">  
+                  <button onclick="getCoordinates()" style="background: none; border: none; text-decoration: none; margin-left:20px; cursor: pointer;">
+                    Get Coordinates
+                  </button> 
+                </div>
+                <div class="col-lg-2 col-md-6 wow fadeInUp" data-wow-delay="0.1s">  
+                  <button  class="btn btn-dark rounded-pill py-2 px-6 " style="text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;" type="submit" id="signinbtn">Save Location</button>
+                </div>
+              </form> 
+
+        {% if user.userprofile.latitude is not None and user.userprofile.longitude is not None and user.userprofile.latitude|default:0.0 != 0.0 and user.userprofile.longitude|default:0.0 != 0.0 %}
+        <div class="row g-4" style="margin-top:30px;">
+          {% for seller in nearby_sellers %}
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+              <div class="store-item position-relative text-center">
+                <img src="{{ seller.seller.store_image.url }}" alt="{{ seller.seller.storename }}"  class="img-fluid" style="height:200px;">                      
+                <div class="p-4">
+                  <h5 class="mb-3 text-primary">{{ seller.seller.storename }}</h5> 
+                  {% comment %} <p class="mb-3"><strong>Distance:</strong> {{ seller.distance }} m</p> <!-- Display distance here --> {% endcomment %}
+                  <div class="text-center mb-3">
+                  </div>
+                  <p class="mb-3"><i class="bi bi-telephone text-primary" style="margin-right:10px;"></i>{{ seller.seller.contact }}</p>
+                  <p class="mb-3"><i class="bi bi-geo text-primary" style="margin-right:10px;"></i>{{ seller.seller.address }}</p>
+                  <p class="mb-3">
+                  {% with avg_rating_rounded=seller.seller.avgrating|default:0|floatformat:"0" %}
+                  {% for i in "12345" %}
+                      {% if i <= avg_rating_rounded %}
+                          <small class="fa fa-star text-primary" ></small>
+                      {% else %}
+                          <small class="fa fa-star text-light" ></small>
+                      {% endif %}
+                  {% endfor %}
+                {% endwith %}
+            </p>
+                </div>
+                <div class="store-overlay">
+                  {% comment %} <p style="text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;  background-color:#88B44E; padding-top:12px;padding-bottom:12px;width:120px;border-radius:30px;"><i class="bi bi-tree" style="color:white;">{{ seller.distance }}</i></p>
+                  <p style="text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;  background-color:#88B44E; padding-top:12px;padding-bottom:12px;width:120px;border-radius:30px;"><i style="color:white;">Price : {{ seller.seller.closing_time }}</i> </p> {% endcomment %}
+                  <a href="{% url 'store_detail' seller.seller.id %}" class="btn rounded-pill py-2 px-4 m-2" id="anybtn">More Details<i class="fa fa-arrow-right ms-2"></i></a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        {% else %}
+                 
+        {% endif %}
+      </div>
+    </div>
+    <script>
+      $(document).ready(function() {
+        $("#changelocation-button").click(function() {
+            // Check the current display state of the reviews section
+            var locationSection = $("#location-section");
+            var isDisplayed = locationSection.is(":visible");
+      
+            // Toggle the display state (show if hidden, hide if shown)
+            locationSection.toggle();
+      
+            // If the section was hidden, make an AJAX request to load the reviews
+           
+        });
+      });
+      
+        function getCoordinates() {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+              alert("Geolocation is not supported by this browser.");
+            }
+          }
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+          
+            // Populate the latitude and longitude input fields with the obtained values
+            document.getElementById('lat').value = latitude;
+            document.getElementById('long').value = longitude;
+          }
+    </script>
+    <script>
+    $(document).ready(function () {
+      $("#lat").change(function () {
+        validatelat();
+    });
+
+    $("#long").change(function () {
+        validatelong();
+    });
+  });
+  function validateForm() {
+    // Check if there are any error messages for latitude and longitude
+    const latError = $("#latspan").text().trim();
+    const longError = $("#longspan").text().trim();
+
+    if (latError !== '' || longError !== '') {
+        return false; // Prevent form submission if there are validation errors
+    }
+
+    return true; // Submit the form if there are no validation errors
+}
+
+  function validatelat() {
+    var latitude = $("#lat").val().trim();
+    var latError = $("#latspan");
+    var latPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/; // Regex for latitude
+
+    if (latitude === "") {
+        latError.html("Latitude is required").css("color", "red");
+    } else if (!latPattern.test(latitude)) {
+        latError.html("Invalid latitude format").css("color", "red");
+    } else {
+        latError.html("").css("color", "red");
+    }
+}
+
+function validatelong() {
+    var longitude = $("#long").val().trim();
+    var longError = $("#longspan");
+    var longPattern = /^[-+]?(180(\.0+)?|((1[0-7]\d)|(\d{1,2}))(\.\d+)?)$/; // Regex for longitude
+
+    if (longitude === "") {
+        longError.html("Longitude is required").css("color", "red");
+    } else if (!longPattern.test(longitude)) {
+        longError.html("Invalid longitude format").css("color", "red");
+    } else {
+        longError.html("").css("color", "red");
+    }
+} 
+    </script>
+{% endblock %}
+<style>
+.cardelement
+    {
+        border-color: #27350F;
+        background-color: white;
+        border-style:solid;
+        border-width: 1px;
+        
+        width: 250px;
+        height: 40px;
+        padding: 10px;
+    }
+
+
+.cardelement:focus {
+   
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+  }
+  
+.cardelement:hover {
+    border-color: darkgreen;
+  background-color: white;
+  border-style: hidden;
+  fill: darkgreen;
+  }
+  
+.carde
+{
+    
+    color:#27350F; 
+    margin-top: 20px;
+}
+
+</style>
+
+
+
+
+
+  
+

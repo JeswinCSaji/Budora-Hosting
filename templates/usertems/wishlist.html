@@ -1,0 +1,184 @@
+{% extends 'usertems/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+body
+{
+    background-color:#f3f6ec;
+}
+#logoname
+{
+    font-family: sans-serif;
+                    color:#27350F;
+                    text-decoration: none;
+                    text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+                font-size: larger;
+                margin-top:-20px;
+                
+}
+@media (max-width: 991.98px) {
+    #logoname
+    {
+        font-size: medium;
+        margin-top:0px;
+    }
+}
+</style>
+
+            <div class="container-xxl py-5">
+                <div class="container">
+                    <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px; margin-top:-40px;">
+                        <h1 class="display-6">Your Wishlist</h1>
+                    </div>
+                    
+                    <div class="row g-4">
+                        {% for wishlist_item in wishlist_items %}
+                        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="store-item position-relative text-center">
+                                {% if wishlist_item.product.product_image %}
+                                <img src="{{ wishlist_item.product.product_image.url }}" class="img-fluid" style="height: 100px;">                      
+                                {% else %}
+                                <img src="{% static 'images/noim2.png' %}" alt="No Image"  class="img-fluid" style="height: 100px;">                      
+                                {% endif %}
+                                <div class="p-4">
+                                    {% comment %} <div class="text-center mb-3">
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                    </div> {% endcomment %}
+                                    <a class="mb-3" href="{% url 'product_single' wishlist_item.product.id %}" >{{ wishlist_item.product.product_name }}</a>
+                                    {% if wishlist_item.product.total_stock > 0 %}
+                                    <p style="margin-top:15px;">Stock Left - {{ wishlist_item.product.total_stock }}</p>
+                                    {% else %}
+                                    <p class="text" style="color:red;">OUT OF STOCK</p>
+                                    {% endif %}
+                                </div>
+                                
+                                <form action="{% url 'remove_from_wishlist' wishlist_item.id %}" method="post" class="remove-from-wishlist-form">
+                                    {% csrf_token %}
+                                    <button type="button" class="remove-from-wishlist-button" style="border-style:none; ">
+                                        <i class="fas fa-trash-alt"></i> <!-- FontAwesome trash icon -->
+                                    </button>
+                                </form>
+                                
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="cart-summary text-center wow fadeInUp">
+                            <p>Items in wishlist : <span style="color:green;">{{ total_items }}</span></p>
+                            <a class="remove-button btn btn-dark rounded-pill py-2 px-4 m-2" href="{% url 'remove_all_from_wishlist' %}" id="removeAllButton"><i class="fas fa-trash-alt" style="margin-right:10px;" ></i>Remove all</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Store End -->
+       
+    </div>
+    <!-- Products End -->
+  {% comment %} <div class="cart-container">
+    
+    <h1>Your Wishlist</h1>
+    <table>
+        <thead>
+            <tr class="text-center">
+                <th>Product</th>
+                <th>Scientific Name</th>
+                <th>Stock</th>
+                <th>Remove from Wishlist</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for wishlist_item in wishlist_items %}
+            <tr class="cards text-center">
+                <td href="{% url 'product_single' wishlist_item.product.id %}">
+                <div class="product-info">
+                   <a href="{% url 'product_single' wishlist_item.product.id %}"> <img src="{{ wishlist_item.product.product_image.url }}" alt="{{ wishlist_item.product.product_name }}" class="img-fluid" style="height:100px;"></a>  
+                    <p>{{ wishlist_item.product.product_name }}<p>
+                </div>
+                </td>
+                <td>
+                    <div class="product-info">
+                        <p>{{ wishlist_item.product.product_sci_name }}<p>
+                    </div>
+                </td>
+                <td>
+                    {% if wishlist_item.product.total_stock > 0 %}
+                    <div class="product-info">
+                        <p>{{ wishlist_item.product.total_stock }}<p>
+                    </div>
+                    {% else %}
+                    <div class="product-info">
+                        <p style="color:red;">OUT OF STOCK<p>
+                    </div>
+                    {% endif %}
+                    
+                </td>
+                <td class="remove-from-wishlist">
+                    <form action="{% url 'remove_from_wishlist' wishlist_item.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="remove-button btn btn-dark rounded-pill py-2 px-4 m-2"  type="submit"><i class="fas fa-trash-alt" style="margin-right:10px;"></i>Remove</button>
+                        
+                    </form>
+                </td>
+            </tr><!-- END TR-->
+            {% endfor %}
+            <!-- Repeat this row for each item in the cart -->
+        </tbody>
+    </table>
+    <div class="cart-summary">
+        <p>Items in wishlist : <span style="color:green;">{{ total_items }}</span></p>
+        <a class="remove-button btn btn-dark rounded-pill py-2 px-4 m-2" href="{% url 'remove_all_from_wishlist' %}"><i class="fas fa-trash-alt" style="margin-right:10px;"></i>Remove all</a>
+    </div>
+</div>
+</div> {% endcomment %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'lib/wow/wow.min.js' %}"></script>
+<script src="{% static 'lib/easing/easing.min.js' %}"></script>
+<script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+<script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+
+<!-- Template Javascript -->
+<script src="{% static 'js/main.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var removeAllButton = document.getElementById("removeAllButton");
+        
+        removeAllButton.addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent the default hyperlink behavior
+            
+            var confirmRemoveAll = confirm("Are you sure you want to remove all products from your wishlist?");
+            
+            if (confirmRemoveAll) {
+                // If confirmed, navigate to the "remove_all_from_wishlist" URL
+                window.location.href = removeAllButton.getAttribute("href");
+            }
+        });
+    });
+    </script>
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var removeFromWishlistButtons = document.querySelectorAll(".remove-from-wishlist-button");
+        
+        removeFromWishlistButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                var removeFromWishlistForm = button.parentElement; // Get the form associated with the clicked button
+                var confirmRemove = confirm("Are you sure you want to remove this product from your wishlist?");
+                
+                if (confirmRemove) {
+                    removeFromWishlistForm.submit(); // If confirmed, submit the form to remove the product from the wishlist
+                }
+            });
+        });
+    });
+    </script>
+    
+    
+   
+{% endblock %}

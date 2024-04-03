@@ -1,0 +1,557 @@
+{% extends 'usertems/base.html' %}
+{% load static %}
+{% block content %}
+
+<form method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+    {% csrf_token %}
+    <div id="divout" >
+        <h5 id="usern" class=" text animated rubberBand"> User </h5>
+    <!-- {{ user.profile.profile_picture.url }} -->
+    {% if user.userprofile.profile_pic %}
+  <img id="propic" src="{{user.userprofile.profile_pic.url }}" alt="profile pic" class="card-img-top text animated rubberBand"/>
+  {% else %}
+<!-- Display a default profile picture or a message if no profile picture is available -->
+  <img id="propic" src="{% static 'images/usericon.png' %}" class="card-img-top text animated rubberBand" />
+  {% endif %}
+    <h5 id="proname" class="text animated zoomIn" >{{ user.userprofile.name }}</h5>
+
+    </div>
+            <div id="divout2">
+                {% csrf_token %}
+                <hr  class="text animated zoomIn" id="usern2">
+                <h5  class=" text animated zoomIn" id="usern1"> USERPROFILE </h5>
+                
+
+                <!-- <div>
+                    <label for="profile_picture" class="form-label">Profile Picture:</label>
+                    <input type="file"  class="form-control"  id="cardelement" name="profile_picture" style="border-color: #27350F;
+                    border-style:solid;
+                    border-width: 1px;
+                    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                    width: 300px;
+                    height: 40px;
+                    padding: 10px;">
+                </div> -->
+                <div>
+                  
+                        <label for="name" id="carde" class="form-label text animated zoomIn">Full Name:</label>
+                        <hr class=" text animated zoomIn" id="signintext2">
+                        <input type="text" class="form-control text animated zoomIn" value="{{ user.userprofile.name }}" name="name" id="cardelement" >
+                        <span id="owner_name_error" class="text-danger"></span>
+
+                
+                    
+                </div>
+                <div>
+                    <label for="profile_pic"  id="carde"  class="form-label text animated zoomIn">Profile Picture:</label><br>
+                    <hr class=" text animated zoomIn" id="signintext2">
+                    <input type="file"  class="form-control text animated zoomIn"  id="cardelement" name="profile_pic" >
+                    <span id="profilepicerror" class="text-danger"></span>
+
+                </div>
+                <div>
+                    <label for="email" id="carde" class="form-label text animated zoomIn">Email:</label>
+                    <hr class=" text animated zoomIn" id="signintext2">
+                    <input type="email"  class="form-control text animated zoomIn" id="cardelement" name="email" value="{{ user.email }}" readonly>
+                </div>
+                <div>
+                  
+                    <label for="phone_number" id="carde" class="form-label text animated zoomIn" >Mobile :</label>
+                    <hr class=" text animated zoomIn" id="signintext2">
+                    {% if user.userprofile.phone_number is not None  %}
+                    <input class="form-control text animated zoomIn" id="cardelement" name="phone_number" value="{{ user.userprofile.phone_number }}">
+                    {% else %}   
+                    <input class="form-control text animated zoomIn" id="cardelement" name="phone_number">
+                    {% endif  %}
+                    <span id="phone_number_error" class="text-danger"></span>
+
+                  
+                    
+                </div>
+                <div>
+                   
+                    <label for="address" id="carde" class="form-label text animated zoomIn">Address:</label>
+                    <hr class=" text animated zoomIn" id="signintext2">
+                    {% if user.userprofile.address is not None  %}
+                    <input type="text" class="form-control text animated zoomIn"  id="cardelement" value="{{ user.userprofile.address }}" name="address">
+                    {% else %}
+                    <input type="text" class="form-control text animated zoomIn"  id="cardelement" name="address">
+                    {% endif  %}
+                    <span id="address_error" class="text-danger"></span>
+
+                   
+                    
+                </div>
+                <div>
+                    <label for="address" id="carde" class="form-label text animated zoomIn">Reset Password:</label>
+                    <hr class=" text animated zoomIn" id="signintext2">
+                    <input type="Password" class="form-control text animated zoomIn"  id="cardelement" name="old_password" placeholder="current password">
+                    <input type="Password" class="form-control text animated zoomIn"  id="cardelement" name="reset_password" style="margin-top:20px;" placeholder="new password">
+                    <input type="Password" class="form-control text animated zoomIn"  id="cardelement" name="cpass" style="margin-top:20px;" placeholder="confirm new password">
+                    <span id="pspan" class="text-danger" style="margin-left:50%;"></span>
+                </div>
+                <button class=" text animated zoomIn" type="submit" id="signinbtn">Update</button>
+                {% if messages %}
+                        {% for message in messages %}
+                            <p class="text-danger" style="margin-left:">{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+            </div>
+</form>
+</div>
+<div class="col-md-8">
+    <!-- Other content related to user profile -->
+</div>
+</div>
+<script>
+$(document).ready(function () {
+    $("input[name='profile_pic']").change(function () {
+        validateProfileImage("input[name='profile_pic']");
+    });
+
+    $("input[name='name']").keyup(function () {
+        validateName("input[name='name']");
+    });
+
+    $("input[name='phone_number']").keyup(function () {
+        validatePhoneNumber("input[name='phone_number']");
+    });
+
+    $("input[name='address']").keyup(function () {
+        validateAddress("input[name='address']");
+    });
+
+    $("input[name='reset_password']").keyup(function () {
+        validatePassword();
+    });
+
+    $("input[name='cpass']").keyup(function () {
+        validateConfirmPassword();
+    });
+});
+
+function validateProfileImage(fieldSelector) {
+    var certificationImage = $(fieldSelector)[0].files[0];
+    var certificationImageError = $("#profilepicerror");
+
+    var validImageTypes = ["image/jpeg", "image/png"]; // Add more types if needed
+
+    if (validImageTypes.indexOf(certificationImage.type) === -1) {
+        certificationImageError.html("Invalid image format. Only JPEG and PNG allowed.").css("color", "red");
+    } else {
+        certificationImageError.html("").css("color", "red");
+    }
+}
+
+function validateName(fieldSelector) {
+    var ownerName = $(fieldSelector).val().trim();
+    var lettersOnlyPattern = /^[A-Za-z\s]+$/;
+
+    if (!lettersOnlyPattern.test(ownerName)) {
+        $("#owner_name_error").html("Name should contain only letters").css("color", "red");
+    } else {
+        $("#owner_name_error").html("");
+    }
+}
+
+function validatePhoneNumber(fieldSelector) {
+    var phoneNumber = $(fieldSelector).val().trim();
+    var phoneNumberPattern = /^(\+91-|0)?[6-9]\d{9}$/; // Adjust the pattern based on your phone number requirements
+
+    if (!phoneNumberPattern.test(phoneNumber)) {
+        $("#phone_number_error").html("Phone Number should be atleast 10 numbers and cannot contain alphabets").css("color", "red");
+    } else {
+        $("#phone_number_error").html(""); // Clear the error message
+    }
+}
+
+function validateAddress(fieldSelector) {
+    var address = $(fieldSelector).val().trim();
+    var addressError = $("#address_error");
+
+    if (address.length > 150) {
+        addressError.html("Address must be upto 150 characters long").css("color", "red");
+        return; // Exit the function if the address length is invalid
+    }
+}
+
+function validatePassword() {
+    var oldpassword = $("input[name='old_password']").val().trim();
+    var password = $("input[name='reset_password']").val().trim();
+    var pattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    var valid = true;
+
+    if (password === oldpassword) {
+        $("#pspan").html("cannot be the same as the old password").css("color", "red");
+        valid = false;
+    } else if (password.length < 8) {
+        $("#pspan").html("At least 8 characters").css("color", "red");
+        valid = false;
+    } else if (!/[0-9]/.test(password)) {
+        $("#pspan").html("At least 1 number").css("color", "red");
+        valid = false;
+    } else if (!/[!@#$%^&*]/.test(password)) {
+        $("#pspan").html("At least 1 symbol (!@#$%^&*)").css("color", "red");
+        valid = false;
+    } else if (!/[A-Z]/.test(password)) {
+        $("#pspan").html("At least 1 capital letter").css("color", "red");
+        valid = false;
+    } else if (!pattern.test(password)) {
+        $("#pspan").html("Invalid password").css("color", "red");
+        valid = false;
+    }
+
+    if (valid) {
+        $("#pspan").html("").css("color", "red");
+    }
+}
+
+function validateConfirmPassword() {
+    var password = $("input[name='reset_password']").val();
+    var confirmPassword = $("input[name='cpass']").val().trim();
+
+    if (confirmPassword === "") {
+        $("#pspan").html("Enter the password").css("color", "red");
+    } else if (confirmPassword !== password) {
+        $("#pspan").html("Passwords do not match").css("color", "red");
+    } else {
+        $("#pspan").html("");
+    }
+}
+
+function validateForm() {
+    // Check if there are any validation errors
+    const errorElements = $(".text-danger");
+    for (const errorElement of errorElements) {
+        if ($(errorElement).html() !== "") {
+            return false; // Prevent form submission if there are validation errors
+        }
+    }
+
+    return true; // Submit the form if there are no validation errors
+}
+
+
+
+</script>
+<script>
+    $(document).ready(function () {
+        $('#search-input').keyup(function () {
+            var query = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: '/live_search/',
+                data: {
+                    'query': query
+                },
+                success: function (data) {
+                    var results = data.products;
+                    var resultsHtml = '';
+                    resultsHtml += '<ul class="list-group">'; // Start the list
+                        if (results.length === 0) {
+                            resultsHtml += '<li class="list-group-item">No products found</li>';
+                        } else {
+                            for (var i = 0; i < results.length; i++) {
+                                var prod_id = results[i].prod_id;
+                                resultsHtml += '<li class="list-group-item" style="background-color:black;"><a href="/product_single/' + prod_id + '">' + results[i].name + '</a></li>';
+                            }
+                        }
+                        resultsHtml += '</ul>'; // End the list
+    
+                    if (query) {
+                        $('#search-results').html(resultsHtml);
+                        $('#search-results').show();
+                    } else {
+                        $('#search-results').hide();
+                    }
+    
+                    // Handle click events on the links with data-prod-id attribute
+                    $('.text-truncate[data-prod-id]').on('click', function (e) {
+                        e.preventDefault();
+                        var prodId = $(this).data('prod-id');
+                        // Construct the URL using JavaScript and navigate to it
+                        var url = '/product_single/' + prodId + '/';
+                        window.location.href = url;
+                    });
+                }
+            });
+        });
+    });
+    
+</script>
+<style>
+
+    form{
+        display: flex; margin-top: 1.5%; }
+    
+    #homebtn
+    {
+        
+        border-radius: 100px;
+        color: #27350F;
+        background-color: white;
+        margin-top: 30px;
+        margin-left: 0px;
+        border-width: 1px;
+        border-style: groove;
+        border-color: #27350F;
+        fill: #27350F;
+        transition: 0.5s;
+        width: 150px;
+        height: 40px;
+        
+    }
+    #homebtn:focus {
+        
+      color: white;
+      border-style: none;
+      background-color: #27350F;
+        
+      }
+      
+      #homebtn:hover {
+        
+        color: white;
+        border-style: none;
+        background-color: #27350F;
+      }
+      #homebtn:active {
+       
+        color: white;
+        border-style: none;
+        background-color: #27350F;
+      }
+    
+    #divout
+    {
+        align-items: center; 
+            border-width: 2px;
+            padding-left: 2.8%; 
+            width: 30%;
+            
+            padding-top: 1%; 
+            padding-bottom: 3%;
+    }
+    #usern
+    {
+        margin-left: 36%;
+        font-size: xx-large; 
+        font-weight: lighter;
+        text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+    
+    }
+    #propic
+    {
+        width:250px; height:250px; border-radius: 190px; margin-left: 55px; margin-top: 8%;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; 
+    
+    }
+    #proname
+    {
+        margin-left: 35%;
+        font-size: x-large; 
+        font-weight: lighter;
+        margin-top: 18%;
+        text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+    
+    }
+    #divout2
+    {
+                    align-items: center;
+                    background-color: white; 
+                    border-width: 2px;
+                    margin-left: 5%;
+                    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; 
+                    padding-left: 4.5%; 
+                    width: 50%;
+                    height:630px;
+                    padding-top: 2%; 
+                    padding-bottom: 4%;
+    }
+    #cardelement
+    {
+        border-color: #27350F;
+        background-color: white;
+        border-style:solid;
+        border-width: 1px;
+        margin-top: -45px;
+        margin-left: 50%;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        width: 250px;
+        height: 40px;
+        padding: 10px;
+    }
+    
+    #cardelement:focus {
+        border-style: hidden;
+        
+      }
+      
+      #cardelement:hover {
+        border-color: darkgreen;
+      background-color: white;
+      border-style: hidden;
+      fill: darkgreen;
+      }
+      
+    #carde
+    {
+        
+        color:#27350F; 
+        margin-top: 20px;
+    }
+    #signintext2
+    {
+        color:#27350F; 
+        width: 3px;
+        height: 20px;
+        margin-top: -28px;
+        margin-left: 30%;
+        border-radius: 30%;
+    }
+    #signinbtn
+    {
+    
+        background-color: #27350F;
+        border-radius: 100px; 
+        color: white;
+        width: 100px;
+        transition: 0.5s;
+        height: 35px;
+        border-style: none;
+        margin-left: 23%;
+        margin-top:-1px;
+    }
+    
+    
+    #signinbtn:focus {
+        color: #27350F;
+        background-color: white;
+        border-width: 1px;
+        border-style: groove;
+        border-color: #27350F;
+        fill: #27350F;
+        
+    }
+    
+    #signinbtn:hover {
+        background-color: white;
+        border-width: 1px;
+        border-style: groove;
+    
+        border-color: #27350F;
+        color: #27350F;
+        fill: #27350F;
+    }
+    #signinbtn:not([disabled]):focus {
+        box-shadow:  0 0 0.5rem #27350F;
+      }
+      
+      #signinbtn:not([disabled]):hover {
+        box-shadow: 0 0 0.5rem #27350F;
+      }
+    #signinbtn:active {
+      
+        color: #27350F;
+        border-style: groove;
+    
+        background-color: white;
+        border-width: 1px;
+        border-color: #27350F;
+        fill: #27350F;
+    }
+    #sbtn
+    {
+        color:white;
+    }
+    
+    #sbtn:hover
+    {
+        color:#27350F;
+        text-decoration: none;
+    }
+    #usern1
+    {
+        font-size: xx-large; 
+        font-weight: lighter;
+        padding-bottom: 5%;
+        margin-top: -35px;
+    }
+    #usern2
+    {
+        width: 155px;
+       
+        margin-left: 245px;
+        border-radius: 30%;
+    }
+    @media (max-width: 991.98px) {
+      
+        #divout
+    {
+            align-items: center; 
+            border-width: 2px;
+            padding-left: 2.8%; 
+            
+            margin-left: 25%;
+            height: 30%;
+            
+            
+    }
+    #usern
+    {
+        margin-left: 48%;
+    }
+    #propic
+    {
+        width:200px; height:200px; border-radius: 180px; margin-left: 0px;
+    }
+    #proname
+    {
+        margin-top:20px ;  margin-left: 50%;
+    }
+    #divout2
+    {
+                    margin-left: -220px;
+                    margin-top: 80%;
+                    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; 
+                    width: 80%;
+                    height: 700px;
+    }
+    #cardelement
+    {
+        margin-top: 0px;
+        margin-left: 10%;
+    }
+    #signintext2
+    {
+        display: none;
+    }
+    #carde
+    {
+        
+        color:#27350F; 
+        margin-top: 10px;
+        margin-left: 10%;
+    }
+    #usern2
+    {
+        width: 65px;
+       
+        margin-left: 245px;
+        border-radius: 30%;
+    }
+    #signinbtn
+    {
+        margin-left: 30%;
+    }
+    }
+    
+    
+    
+    body{
+        font-family:  sans-serif; 
+    
+    }
+    
+</style>
+{% endblock %}

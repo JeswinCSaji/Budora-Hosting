@@ -1,0 +1,67 @@
+{% load static %}
+{% load socialaccount %}
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+
+<body style="background-image: url({% static 'images/5.png' %}); background-repeat: no-repeat; background-size: cover;">
+    <nav class="Logo">
+        <div class="container">
+            <img id="logoimg" src="{% static 'images/8.png' %}">
+            <a id="logoname" href="#">BUDORA </a>
+        </div>
+    </nav>
+    {% if login_error_message %}
+    <div class="error-message" style=" border-style:groove; border-color:red; border-width: 2px; box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; margin-left:43%; height:35px; width:180px; margin-top:-20px; ">
+        <p style="color: red; margin-left: 20px; margin-top:5px; font-size:larger;">
+            {{ login_error_message }}      
+        </p>
+    </div>
+    {% endif %}
+    <div class="signin">
+
+        <div id="signintext">
+            <p id="signintext1">sign in</p>
+            <hr id="signintext2">
+            <h2 id="signintext3">Welcome!</h2>
+        </div>
+        <form class="signin-form" method="post">
+            
+            {% csrf_token %}
+            <input class="signinelement" placeholder="email" name="email" required>
+            <input type="password" class="signinelement" placeholder="password" name="password" required>
+        
+            <button class="signinbtn" type="submit" style="margin-top: 60px; margin-left: 65px;">Sign In</button>
+            <form id="signinelement2" action="{% url 'password_reset' %}" method="post" >
+                {% csrf_token %}
+                <div class="form-group" style=" width: 130px; margin-left: 60px; margin-top:-70px;">
+                    <a  style="color: #27350F; text-decoration: none" href="{% url 'password_reset' %}" class="forgot-password">Forgot Password?</a>
+                </div>
+            </form>          
+            
+           
+            <p style="color: #27350F; text-decoration: none; width: 120px;  margin-top:-87px; margin-left:75px; font-size:medium;">or Sign In with : </p>
+            
+            <div class="icon-container"  style="margin-top: -33px; margin-left: 143px;">
+                <a href="{% provider_login_url 'google'%}?next=/"><span id="icon" class="fab fa-google" style="color: red"></span></a> <!-- Google icon placeholder -->
+
+            </div> 
+            
+            <p id="signinelement3" style="margin-left: 44px; margin-top:31px; margin-bottom:18px; font-size: medium;">Don't have an account? <a href="register.html" style="color: #27350F; text-decoration: none">Signup</a></p>
+        </form>
+        <div class="signinimg">
+            <img id="img1" src="{% static 'images/plant-8049076.jpg' %}">
+        </div>
+    </div>
+    <!-- <a style="color: white; text-decoration: none; font-size: large;text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;margin-left: 49%; " href="{% url 'seller_login.html' %}">
+        Login as Seller<i style="color:green; margin-left: 10px;" class="fa fa-arrow-right" ></i></a> -->
+
+</body>
+</html>
+

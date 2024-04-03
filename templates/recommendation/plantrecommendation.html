@@ -1,0 +1,445 @@
+{% extends 'usertems/base.html' %}
+
+{% load static %}
+<body style="background-image: url({% static 'images/5.png' %}); padding-bottom: 80px;">
+    {% block content %}
+    <div class="container-xxl py-5">
+          <div class="container">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s">
+              <p class="fs-5 fw-medium fst-italic text-dark">Enhance Your Space with Indoor Plants</p>
+              <h5 class="display-8 text-primary">Personalized Indoor Plant Recommendation</h5>
+          </div>
+          <form action="/recommend" method="post" class="row g-4">
+            {% csrf_token %}
+            
+            <div class="cardcheck col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
+              <h5 for="air_purification" class="display-8">Air Purification</h5>
+              <div class="cardcheck__content">
+                  <p class="cardcheck__title">Air Purification:</p>
+                 
+
+                  <div class="PB-range-slider-div">
+                      <input type="range" min="0" max="1" step="0.01" name="air_purification_level" value="0.5" class="PB-range-slider" id="air_purification_slider">
+                      <p class="PB-range-slidervalue" id="air_purification_slider_value"></p>
+                  </div>
+                  <p class="text-muted">Select the importance of air purification for your indoor plants.</p>
+              </div>
+          </div>
+
+          <!-- Humidity Increase Slider -->
+          <div class="cardcheck col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
+              <h5 class="display-8">Humidity Increase</h5>
+              <div class="cardcheck__content">
+                  <p class="cardcheck__title">Humidity Increase:</p>
+                  <div class="PB-range-slider-div">
+                      <input type="range" min="0" max="1" step="0.01" name="humidity_increase_level" value="0.5" class="PB-range-slider" id="humidity_increase_slider">
+                      <p class="PB-range-slidervalue" id="humidity_increase_slider_value"></p>
+                  </div>
+                  <p class="text-muted">Indicate the importance of humidity increase for your indoor plants. </p>
+              </div>
+          </div>
+
+          <!-- Stress Reduction Slider -->
+          <div class="cardcheck col-lg-4 wow fadeInUp" data-wow-delay="0.2s">
+              <h5 class="display-8">Stress Reduction</h5>
+              <div class="cardcheck__content">
+                  <p class="cardcheck__title">Stress Reduction:</p>
+                  <div class="PB-range-slider-div">
+                      <input type ="range" min="0" max="1" step="0.01" name="stress_reduction_level" value="0.5" class="PB-range-slider" id="stress_reduction_slider">
+                      <p class="PB-range-slidervalue" id="stress_reduction_slider_value"></p>
+                  </div>
+                  <p class="text-muted">Specify the relevance of humidity increase for your indoor plants</p>
+              </div>
+          </div>
+
+          <!-- Mental Health Slider -->
+          <div class="cardcheck col-lg-4 wow fadeInUp" data-wow-delay="0.2s">
+              <h5 class="display-8">Mental Health</h5>
+              <div class="cardcheck__content">
+                  <p class="cardcheck__title">Mental Health:</p>
+                  <div class="PB-range-slider-div">
+                      <input type="range" min="0" max="1" step="0.01" name="mental_health_level" value="0.5" class="PB-range-slider" id="mental_health_slider">
+                      <p class="PB-range-slidervalue" id="mental_health_slider_value"></p>
+                  </div>
+                  <p class="text-muted">Specify the relevance of mental health benefits.</p>
+              </div>
+          </div>
+
+          <!-- Productivity Slider -->
+          <div class="cardcheck col-lg-4 wow fadeInUp" data-wow-delay="0.2s">
+              <h5 class="display-8">Productivity</h5>
+              <div class="cardcheck__content">
+                  <p class="cardcheck__title">Productivity:</p>
+                  <div class="PB-range-slider-div">
+                      <input type="range" min="0" max="1" step="0.01" name="productivity_level" value="0.5" class="PB-range-slider" id="productivity_slider">
+                      <p class="PB-range-slidervalue" id="productivity_slider_value"></p>
+                  </div>
+                  <p class="text-muted">Specify the importance of productivity enhancement</p>
+              </div>
+          </div>
+
+          <!-- Sleep Improvement Slider -->
+          <div class="cardcheck col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
+              <h5 class="display-8">Sleep Improvement</h5>
+              <div class="cardcheck__content">
+                  <p class="cardcheck__title">Sleep Improvement:</p>
+                  <div class="PB-range-slider-div">
+                      <input type="range" min="0" max="1" step="0.01" name="sleep_improvement_level" value="0.5" class="PB-range-slider" id="sleep_improvement_slider">
+                      <p class="PB-range-slidervalue" id="sleep_improvement_slider_value"></p>
+                  </div>
+                  <p class="text-muted">Choose the importance of sleep improvement for your indoor plants. </p>
+              </div>
+          </div>
+
+          <div class="cardcheck col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
+            <h5 class="display-8">Aroma Benefits</h5>
+            <div class="cardcheck__content">
+                <p class="cardcheck__title">Aroma Benefits:</p>
+                <div class="PB-range-slider-div">
+                    <input type="range" min="0" max="1" step="0.01" name="aroma_benefit_level" value="0.5" class="PB-range-slider" id="aroma_benefit_slider">
+                    <p class="PB-range-slidervalue" id="aroma_benefit_slider_value"></p>
+                </div>
+                <p class="text-muted">Indicate how important the aroma benefits are for your indoor space.</p>
+            </div>
+        </div>
+          <!-- Aesthetic Pleasure Slider -->
+          <div class="cardcheck col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
+              <h5 class="display-8">Aesthetic Appeal</h5>
+              <div class="cardcheck__content">
+                  <p class="cardcheck__title">Aesthetic Appeal:</p>
+                  <div class="PB-range-slider-div">
+                      <input type="range" min="0" max="1" step="0.01" name="aesthetic_pleasure_level" value="0.5" class="PB-range-slider" id="aesthetic_pleasure_slider">
+                      <p class="PB-range-slidervalue" id="aesthetic_pleasure_slider_value"></p>
+                  </div>
+                  <p class="text-muted">Indicate how important aesthetic pleasure is for your indoor plants.</p>
+              </div>
+          </div>
+            
+            <!-- Repeat this structure for additional sliders as needed -->
+            
+            <div class="wow fadeInUp" data-wow-delay="0.1s" style="display: flex; justify-content: center; align-items: center;">
+                <input type="submit" class="btn btn-primary wow fadeInUp" data-wow-delay="0.2s" value="Get Recommendations">
+            </div>
+        </form>
+         
+        
+      </div>
+  <!-- Store End -->
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  function updateSliderValue(sliderId, outputClass) {
+      const slider = document.getElementById(sliderId);
+      const output = document.querySelector(outputClass);
+
+      slider.oninput = function () {
+          const value = parseFloat(this.value);
+          if (value === 0) {
+              output.innerHTML = "Irrelevant";
+          } else if (value < 0.35) {
+              output.innerHTML = "Low Relevance";
+          } else if (value >= 0.35 && value <= 0.65) {
+              output.innerHTML = "Moderate Relevance";
+          } else if (value < 1) {
+              output.innerHTML = "High Relevance";
+          } else {
+              output.innerHTML = "Very High Relevance";
+          }
+      };
+  }
+  function updateHumiditySliderValue(sliderId, outputClass) {
+    const slider = document.getElementById(sliderId);
+    const output = document.querySelector(outputClass);
+
+    slider.addEventListener('input', function () {
+        const value = parseFloat(this.value);
+        if (value === 0) {
+            output.innerHTML = "Irrelevant";
+        } else if (value < 0.35) {
+            output.innerHTML = "Low Relevance";
+        } else if (value >= 0.35 && value <= 0.65) {
+            output.innerHTML = "Moderate Relevance";
+        } else if (value < 1) {
+            output.innerHTML = "High Relevance";
+        } else {
+            output.innerHTML = "Very High Relevance";
+        }
+    });
+}
+function updatestressSliderValue(sliderId, outputClass) {
+  const slider = document.getElementById(sliderId);
+  const output = document.querySelector(outputClass);
+
+  slider.addEventListener('input', function () {
+      const value = parseFloat(this.value);
+      if (value === 0) {
+          output.innerHTML = "Irrelevant";
+      } else if (value < 0.35) {
+          output.innerHTML = "Low Relevance";
+      } else if (value >= 0.35 && value <= 0.65) {
+          output.innerHTML = "Moderate Relevance";
+      } else if (value < 1) {
+          output.innerHTML = "High Relevance";
+      } else {
+          output.innerHTML = "Very High Relevance";
+      }
+  });
+}
+
+function updatementalValue(sliderId, outputClass) {
+  const slider = document.getElementById(sliderId);
+  const output = document.querySelector(outputClass);
+
+  slider.addEventListener('input', function () {
+      const value = parseFloat(this.value);
+      if (value === 0) {
+          output.innerHTML = "Irrelevant";
+      } else if (value < 0.35) {
+          output.innerHTML = "Low Relevance";
+      } else if (value >= 0.35 && value <= 0.65) {
+          output.innerHTML = "Moderate Relevance";
+      } else if (value < 1) {
+          output.innerHTML = "High Relevance";
+      } else {
+          output.innerHTML = "Very High Relevance";
+      }
+  });
+}
+
+function updateproductivityValue(sliderId, outputClass) {
+  const slider = document.getElementById(sliderId);
+  const output = document.querySelector(outputClass);
+
+  slider.addEventListener('input', function () {
+      const value = parseFloat(this.value);
+      if (value === 0) {
+          output.innerHTML = "Irrelevant";
+      } else if (value < 0.35) {
+          output.innerHTML = "Low Relevance";
+      } else if (value >= 0.35 && value <= 0.65) {
+          output.innerHTML = "Moderate Relevance";
+      } else if (value < 1) {
+          output.innerHTML = "High Relevance";
+      } else {
+          output.innerHTML = "Very High Relevance";
+      }
+  });
+}
+
+function updatesleepValue(sliderId, outputClass) {
+  const slider = document.getElementById(sliderId);
+  const output = document.querySelector(outputClass);
+
+  slider.addEventListener('input', function () {
+      const value = parseFloat(this.value);
+      if (value === 0) {
+          output.innerHTML = "Irrelevant";
+      } else if (value < 0.35) {
+          output.innerHTML = "Low Relevance";
+      } else if (value >= 0.35 && value <= 0.65) {
+          output.innerHTML = "Moderate Relevance";
+      } else if (value < 1) {
+          output.innerHTML = "High Relevance";
+      } else {
+          output.innerHTML = "Very High Relevance";
+      }
+  });
+}
+
+function updatearomaValue(sliderId, outputClass) {
+    const slider = document.getElementById(sliderId);
+    const output = document.querySelector(outputClass);
+  
+    slider.addEventListener('input', function () {
+        const value = parseFloat(this.value);
+        if (value === 0) {
+            output.innerHTML = "Irrelevant";
+        } else if (value < 0.35) {
+            output.innerHTML = "Low Relevance";
+        } else if (value >= 0.35 && value <= 0.65) {
+            output.innerHTML = "Moderate Relevance";
+        } else if (value < 1) {
+            output.innerHTML = "High Relevance";
+        } else {
+            output.innerHTML = "Very High Relevance";
+        }
+    });
+}
+
+function updateaestheticValue(sliderId, outputClass) {
+  const slider = document.getElementById(sliderId);
+  const output = document.querySelector(outputClass);
+
+  slider.addEventListener('input', function () {
+      const value = parseFloat(this.value);
+      if (value === 0) {
+          output.innerHTML = "Irrelevant";
+      } else if (value < 0.35) {
+          output.innerHTML = "Low Relevance";
+      } else if (value >= 0.35 && value <= 0.65) {
+          output.innerHTML = "Moderate Relevance";
+      } else if (value < 1) {
+          output.innerHTML = "High Relevance";
+      } else {
+          output.innerHTML = "Very High Relevance";
+      }
+  });
+}
+
+
+  updateSliderValue("air_purification_slider", "#air_purification_slider_value");
+  updateHumiditySliderValue("humidity_increase_slider", "#humidity_increase_slider_value");
+  updatestressSliderValue("stress_reduction_slider", "#stress_reduction_slider_value");
+  updatementalValue("mental_health_slider", "#mental_health_slider_value");
+  updateproductivityValue("productivity_slider", "#productivity_slider_value");
+  updatesleepValue("sleep_improvement_slider", "#sleep_improvement_slider_value");
+  updatearomaValue("aroma_benefit_slider", "#aroma_benefit_slider_value");
+  updateaestheticValue("aesthetic_pleasure_slider", "#aesthetic_pleasure_slider_value");
+ 
+</script>
+
+
+<style>
+
+  .cardcheck {
+    position: relative;
+    width: 250px;
+    margin-left:4%;
+    aspect-ratio: 16/9;
+    background-color: white;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    perspective: 1000px;
+   
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .cardcheck label {
+    
+    fill: #333;
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .cardcheck__image {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .cardcheck:hover {
+    transform: scale(1.05);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+
+  }
+  
+    
+  .cardcheck__content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+   
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+
+    {% comment %} background: linear-gradient(white,#d4ecb3); {% endcomment %}
+    background-color:white;
+    transform: rotateX(-90deg);
+    transform-origin: bottom;
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .cardcheck:hover .cardcheck__content {
+    transform: rotateX(0deg);
+  }
+  
+  .cardcheck__title {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+    font-weight: 700;
+  }
+  
+  
+  
+  .cardcheck:hover label {
+    scale: 0;
+  }
+  
+  .cardcheck__description {
+    margin: 10px 0 10px;
+    font-size: 12px;
+    color: #777;
+    line-height: 1.4;
+  }
+  
+  .text-muted {
+    margin: 0;
+    font-size: 12px;
+    color: #333;
+    font-weight: 700;
+  }
+  .PB-range-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 0.2px;
+    border-radius: 2px;
+    background:black;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .PB-range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: green;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .PB-range-slider::-webkit-slider-thumb:hover {
+    box-shadow: 0px 0px 0px 8px rgba(0, 0, 0, 0.16);
+    transition: 0.3s ease-in-out;
+  }
+  
+  .PB-range-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #000000;
+    cursor: pointer;
+  }
+  
+  .PB-range-slider-div {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+   
+    width:100%;
+    height:50px;
+    
+  }
+  
+  .PB-range-slidervalue {
+    margin: 0;
+    font-size: 12px;
+    color: #333;
+    font-weight: 700;
+  }
+</style>
+
+{% endblock %}
+</html>

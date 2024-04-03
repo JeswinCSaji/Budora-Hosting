@@ -1,0 +1,221 @@
+{% load static %}
+
+
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% comment %} <script src="{% static 'js/sellervalidate.js' %}"></script> {% endcomment %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">    <title>Register</title>
+    
+</head>
+<style>
+    #img1
+{
+    margin-left: 8360%;
+}
+span
+{
+    margin-left: 30px;
+    display:flex;
+}
+</style>
+<body>
+    <nav class="Logo">
+        <div class="container">
+            <img id="logoimg" src="{% static 'images/Budoralogo.png' %}">
+            <a id="logoname" href="#">BUDORA </a>
+        </div>
+    </nav>
+        <div class="signup" >
+            {% if messages %}
+    <div class="error-message" style=" border-style:groove; border-color:red; border-width: 2px; box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;   width:300px;margin-left:20px;margin-left: 5%; margin-top:-20px; ">
+        <p style="color: red; margin-left: 20px; margin-top:5px; font-size:larger;">
+                    {% for message in messages %}
+                        {{ message }}
+                     {% endfor %}
+                 </p>
+            </div>
+            {% endif %}
+                <div id="signuptext" >
+                    <p id="signuptext1">sign up</p>
+                    <hr id="signuptext2">
+                    <h2 id="signuptext3">Hello there!</h2>
+                </div>
+                    <form class="signup-form" style=" width:45%; "  method="post" >     
+                        {% csrf_token %}        
+                            <input id="st" class="signupelement" placeholder="Store Name" style="margin-top: 1px;" name="storename" required>
+                            <span id="stspan" style="font-size: small;"></span> <br>  
+                            <input id="fn" class="signupelement" placeholder="Full Name" style="margin-top: 1px;" name="username" required>
+                            <span id="fnspan" style="font-size: small;"></span> <br>                      
+                            <input id="mail" class="signupelement" placeholder="Email" style="margin-top: 1px;" name="email" required>
+                            <span id="emspan" style="font-size: small;"></span> <br>     
+                            <input id="contact" class="signupelement" placeholder="Contact" style="margin-top: 1px;" name="contact" required>
+                            <span id="cnspan" style="font-size: small;"></span> <br>    
+                            <input id="address" class="signupelement" placeholder="Address" style="margin-top: 1px;" name="address" required>
+                            <span id="adspan" style="font-size: small;"></span> <br>      
+                            <input id="landmark" class="signupelement" placeholder="landmark" style="margin-top: 1px;" name="landmark" required>
+                            <span id="ldspan" style="font-size: small;"></span> <br>                                     
+                            <input id="pass"  class="signupelement" placeholder="Password" style="margin-top: 1px;" name="pwd" type="password" required>
+                            <span id="pspan" style="font-size: small;"></span>  <br>
+                            <input id="cpass"  class="signupelement"  placeholder="Confirm Password" style="margin-top: 1px;" name="cpwd" type="password">
+                            <span id="cpspan" style="font-size: small;"></span>  <br>
+                            {% comment %} <div class="icon-container">
+                                <a href="#"><span id="icon" class="fab fa-google" style="color: red"></span></a> <!-- Google icon placeholder -->
+                                <a href="#"><span id="icon" class="fab fa-facebook"  style="color: blue"></span></a> <!-- Facebook icon placeholder -->
+                                <a href="#"><span id="icon" class="fab fa-twitter" style="color: #1DA1F2"></span></a> <!-- Twitter icon placeholder -->
+                            </div> {% endcomment %}
+                            <button class="signupbtn" type="submit"  >Sign Up</button>
+                           
+                            <p id="signupelement2">Already have an account? <a href="{% url 'loginu' %}" style="color: #27350F; text-decoration: none">signin</a></p>
+                    </form>
+                <div class="signupimg">
+                    <img id="img1" src="{% static 'images/9.png' %}">
+                </div>               
+        </div>
+</body>
+<script>
+$(document).ready(function () {
+    $("#st").keyup(function () {
+        validateStoreName("#st");
+    });
+
+    $("#fn").keyup(function () {
+        validateName("#fn");
+    });
+
+    $("#mail").keyup(function () {
+        validateEmail("#mail");
+    });
+
+    $("#contact").keyup(function () {
+        validateContact("#contact");
+    });
+
+    $("#address").keyup(function () { 
+        validateAddress("#address");
+    });
+
+    $("#landmark").keyup(function () { 
+        validateLandmark("#landmark");
+    });
+
+    $("#pass").keyup(function () {
+        validatePassword("#pass");
+    });
+
+    $("#cpass").keyup(function () {
+        validateConfirmPassword("#cpass");
+    });
+
+});
+
+function validateName(fieldId) {
+    var name = $(fieldId).val().trim();
+    var fullNameRegex = /^[A-Z][a-z]*(\s[A-Z][a-z]*)*$/;
+    var words = name.split(' ');
+
+    if (name === "") {
+        $("#fnspan").html("Enter your full name and only alphabets are allowed").css("color", "red");
+    } else if (words.length < 2) {
+        $("#fnspan").html("Please enter your full name").css("color", "red");
+    } else if (!fullNameRegex.test(name)) {
+        $("#fnspan").html("Name should start with a capital letter and contain only alphabets and spaces").css("color", "red");
+    } else {
+        $("#fnspan").html("");
+    }
+}
+
+function validateStoreName(fieldId) {
+    var storename = $(fieldId).val();
+    var lettersWithSpaces = /^[A-Za-z\s]+$/;
+    if (storename.trim() === "") {
+        $("#stspan").html("Enter your store name").css("color", "red");
+    } else if (!lettersWithSpaces.test(storename)) {
+        $("#stspan").html("Only alphabets are allowed").css("color", "red");
+    } else {
+        $("#stspan").html("");
+    }
+}
+
+function validateEmail(fieldId) {
+    var email = $(fieldId).val();
+    var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (email === "") {
+        $("#emspan").html("Enter your Email Id").css("color", "red");
+    } else if (!filter.test(email)) {
+        $("#emspan").html("Incorrect Email Id").css("color", "red");
+    } else {
+        $("#emspan").html("");
+    }
+}
+
+function validatePassword(fieldId) {
+    var password = $(fieldId).val();
+    var pattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    if (!pattern.test(password)) {
+        if (password.length < 8) {
+            $("#pspan").html("At least 8 characters").css("color", "red");
+        }
+        if (!/[0-9]/.test(password)) {
+            $("#pspan").html("At least 1 number").css("color", "red");
+        }
+        if (!/[!@#$%^&*]/.test(password)) {
+            $("#pspan").html("At least 1 symbol (!@#$%^&*)").css("color", "red");
+            }
+        if (!/[A-Z]/.test(password)) {
+            $("#pspan").html("At least 1 capital letter").css("color", "red");
+        }
+        $("#pspan").html("Invalid password").css("color", "red");
+        }
+        $("#pspan").html("").css("color", "red");
+        }
+
+
+function validateConfirmPassword(fieldId) {
+    var password = $("#pass").val();
+    var confirmPassword = $(fieldId).val();
+    if (confirmPassword === "") {
+        $("#cpspan").html("Enter the password").css("color", "red");
+    } else if (confirmPassword !== password) {
+        $("#cpspan").html("Passwords do not match").css("color", "red");
+    } else {
+        $("#cpspan").html("");
+    }
+}
+
+function validateContact(fieldId) {
+    var con = $(fieldId).val();
+    var filtercon = /^(\+91-|0)?[6-9]\d{9}$/;
+    if (con === "") {
+        $("#cnspan").html("Enter your Mobile Number").css("color", "red");
+    } else if (!filtercon.test(con)) {
+        $("#cnspan").html("Phone Number should be atleast 10 numbers and cannot contain alphabets").css("color", "red");
+    } else {
+        $("#cnspan").html("");
+    }
+}
+
+function validateAddress(fieldId) {
+    var con = $(fieldId).val();
+    if (con === "") {
+        $("#adspan").html("Enter your address").css("color", "red");
+    } else {
+        $("#adspan").html("");
+    }
+}
+
+function validateLandmark(fieldId) {
+    var con = $(fieldId).val();
+    if (con === "") {
+        $("#ldspan").html("Enter a Landmark").css("color", "red");
+    } else {
+        $("#ldspan").html("");
+    }ldspan
+}
+
+</script>
+</html>
+
+

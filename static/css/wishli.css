@@ -1,0 +1,114 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.cart-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow:  rgb(51, 51, 51) 0px 0px 0px 3px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+h1 {
+    font-weight:lighter;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    padding-left:20px;
+    border-style: groove;
+    padding-top:20px;
+    height: 400px; /* Set your desired fixed height here */
+    overflow-y: auto;
+    display: block;
+    
+}
+
+table th, table td {
+    text-align: left;
+    padding: 10px;
+    border-style: none;
+    text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+    margin-top: 20px;
+}
+
+table tr:hover {
+    color:green;
+}
+::-webkit-scrollbar {
+    border-style:groove ;
+    width: 5px; 
+    border-radius: 30px;/* You can adjust the width as needed */
+  }
+  
+  /* Track (the area behind the thumb) */
+  ::-webkit-scrollbar-track {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    border-radius: 30px;/
+
+  }
+  
+  /* Thumb (the draggable part) */
+  ::-webkit-scrollbar-thumb {
+    background: black; /* You can change the thumb color */
+    border-radius: 30px;/
+  }
+  
+  /* On hover, style the thumb */
+  ::-webkit-scrollbar-thumb:hover {
+    background: black; /* You can change the hover color */
+  }
+
+thead{
+    padding: 20px;
+    border-radius: 5px;
+}
+
+
+input[type="number"] {
+    width: 50px;
+    padding: 5px;
+}
+
+.remove-button {
+    text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+    background-color: white;
+    color:black;
+}
+.remove-button :hover
+{
+    text-shadow: rgba(1, 1, 1, 0.25) 0px 14px 28px, rgba(1, 1, 1, 0.22) 0px 3px 3px;
+    background-color: black;
+    color:white;
+}
+
+
+.cart-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+.cart-summary p {
+    font-weight: bold;
+}
+
+.cart-summary span {
+    color: #ff6b6b;
+}
+
+.checkout-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}

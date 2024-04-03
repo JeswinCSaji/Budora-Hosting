@@ -1,0 +1,16 @@
+
+{% extends 'seller/base1.html' %}
+{% load static %}
+
+  {% block content %}
+  <div class="row">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Plant Added</h4>
+    <p>Your Plant has been added successfully.</p>
+      <a href="{% url 'viewaddproduct' %}" class="btn btn-danger">View Plants</a></p>
+  </div>
+</div>
+</div>
+  {% endblock %}

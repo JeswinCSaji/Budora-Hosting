@@ -1,0 +1,277 @@
+{% extends 'admin/base1.html' %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/viewproducts.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="container-fluid" class="card-title mb-4" style="padding-bottom:5%;">
+    <h5 id="regtitle">Edit Product Stock</h5>
+
+    <div class="card" style="border-style: none; box-shadow: black 0px 20px 30px -10px;">
+        <div class="card-body">
+            
+            <form method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="product_sci_name">Scientific Name</label>
+                    <textarea class="form-control" id="product_sci_name" name="product_sci_name" required>{{ product_summary.product_sci_name }}</textarea>
+                    <p id="product_sci_name_error" class="error-message"  style="color: red;"></p>
+                </div>
+                <div class="form-group">
+                    <label for="product_description">Plant Description</label>
+                    <textarea class="form-control" id="product_description" name="product_description" required>{{ product_summary.product_description }}</textarea>
+                    <p id="plant_description_error"  class="error-message" style="color: red;"></p>
+                </div>
+                <!-- Input field for image upload if needed -->
+                <div class="form-group">
+                    <label for="product_image">Plant Image</label>
+                    {% if product_summary.product_image %}
+                    <input type="file" class="form-control" id="product_image" name="product_image" value="{{ product_summary.product_image.url }}">
+                    {% else %}
+                    <input type="file" class="form-control" id="product_image" name="product_image">
+                    {% endif %}
+
+                    <p id="plant_image_error"  class="error-message" style="color: red;"></p>
+                </div>
+                <div class="form-group">
+                    <label for="light_requirements">Light Requirements</label>
+                    <input type="text" id="light_requirements" name="light_requirements" class="form-control" value="{{ product_summary.light_requirements }}" required>
+                    <p id="light_requirements_error" class="error-message" style="color: red;"></p>
+
+                </div>
+                <div class="form-group">
+                    <label for="water_requirements">Water Requirements</label>
+                    <input type="text" id="water_requirements" name="water_requirements" class="form-control" value="{{ product_summary.water_requirements }}" required>
+                    <p id="water_requirements_error" class="error-message" style="color: red;"></p>
+
+                </div>
+                <div class="form-group">
+                    <label for="humidity_requirements">Humidity Requirements</label>
+                    <input type="text" id="humidity_requirements" name="humidity_requirements" class="form-control" value="{{ product_summary.humidity_requirements }}" required>
+                    <p id="humidity_requirements_error" class="error-message" style="color: red;"></p>
+
+                </div>
+                <div class="form-group">
+                    <label for="soil_type">Soil Type</label>
+                    <input type="text" id="soil_type" name="soil_type" class="form-control" value="{{ product_summary.soil_type }}" required>
+                    <p id="soil_type_error"  class="error-message" style="color: red;"></p>
+
+                </div>
+                <div class="form-group">
+                    <label for="toxicity_information">Toxicity Information</label>
+                    <input type="text" id="toxicity_information" name="toxicity_information" class="form-control" value="{{ product_summary.toxicity_information }}" required>
+                    <p id="toxicity_information_error"  class="error-message" style="color: red;"></p>
+
+                </div>
+                <div class="form-group">
+                    <label for="maintenance_instructions">Maintenance Instructions</label>
+                    <textarea class="form-control" id="maintenance_instructions" name="maintenance_instructions" required>{{ product_summary.maintenance_instructions }}</textarea>
+                    <p id="maintenance_instructions_error"  class="error-message" style="color: red;"></p>
+
+                </div>
+                <button type="submit" class="btn btn-primary" href="{% url 'viewstock' %}">Save</button>
+            </form>
+        </div>
+    </div>
+    
+</div>
+<script>
+    $(document).ready(function () {
+
+        $("input[name='product_price']").keyup(function () {
+            validateProductPrice("input[name='product_price']");
+        });
+        $("input[name='product_sci_name']").keyup(function () {
+            validateProductsciname("input[name='product_sci_name']");
+        });
+        // Validation for light requirements
+        $("input[name='light_requirements']").keyup(function () {
+            validateLightRequirements("input[name='light_requirements']");
+        });
+
+        // Validation for water requirements
+        $("input[name='water_requirements']").keyup(function () {
+            validateWaterRequirements("input[name='water_requirements']");
+        });
+
+        // Validation for humidity requirements
+        $("input[name='humidity_requirements']").keyup(function () {
+            validateHumidityRequirements("input[name='humidity_requirements']");
+        });
+
+        // Validation for soil type
+        $("input[name='soil_type']").keyup(function () {
+            validateSoilType("input[name='soil_type']");
+        });
+
+        // Validation for toxicity information
+        $("input[name='toxicity_information']").keyup(function () {
+            validateToxicityInformation("input[name='toxicity_information']");
+        });
+
+        // Validation for maintenance instructions
+        $("textarea[name='maintenance_instructions']").keyup(function () {
+            validateMaintenanceInstructions("textarea[name='maintenance_instructions']");
+        });
+
+        $("input[name='product_image']").change(function () {
+            validatePlantImage("input[name='product_image']");
+        });
+
+        $("textarea[name='product_description']").keyup(function () {
+            validatePlantDescription("textarea[name='product_description']");
+        });
+
+        // Add an event listener for the form submission
+       
+    });
+
+    function validateForm() {
+        // Check if there are any error messages
+        const errorElements = document.querySelectorAll('.error-message');
+        for (const errorElement of errorElements) {
+            if (errorElement.textContent.trim() !== '') {
+                return false; // Prevent form submission if there are validation errors
+            }
+        }
+
+        return true; // Submit the form if there are no validation errors
+    }
+
+    function validateLightRequirements(fieldSelector) {
+    var lightRequirements = $(fieldSelector).val().trim();
+    var lightRequirementsError = $("#light_requirements_error");
+    
+    if (lightRequirements === "") {
+        $("#light_requirements_error").html("Light Requirements are required").css("color", "red");
+    } else {
+        $("#light_requirements_error").html("").css("color", "red");
+    }
+}
+
+function validateProductsciname(fieldSelector) {
+    var SciName = $(fieldSelector).val().trim();
+    var lettersOnlyPattern = /^[A-Za-z\s]+$/;
+
+    if (SciName === "") {
+      $("#product_sci_name_error").html("Enter Scientific name").css("color", "red");
+    } else if (!lettersOnlyPattern.test(SciName)) {
+      $("#product_sci_name_error").html("Scientific Name should contain only letters").css("color", "red");
+   } else {
+      $("#product_sci_name_error").html("");
+  }
+  }
+
+function validateProductPrice(fieldSelector) {
+    var plantPrice = $(fieldSelector).val().trim();
+    var plantPriceError = $("#product_price_error");
+    var numericPattern = /^\d+(\.\d{1,2})?$/; // Pattern for numeric values with up to 2 decimal places
+
+    if (plantPrice === "") {
+        plantPriceError.text("Plant Price is required").css("color", "red");
+        return false;
+    } else if (!numericPattern.test(plantPrice)) {
+        plantPriceError.text("Invalid Plant Price. Enter a valid numeric value (up to 2 decimal places)").css("color", "red");
+        return false;
+    } else {
+        plantPriceError.html(""); // Clear the error message
+        return true;
+    }
+}
+
+function validateWaterRequirements(fieldSelector) {
+    var waterRequirements = $(fieldSelector).val().trim();
+    var waterRequirementsError = $("#water_requirements_error");
+    
+    if (waterRequirements === "") {
+        $("#water_requirements_error").html("Water Requirements are required").css("color", "red");
+    } else {
+        $("#water_requirements_error").html("").css("color", "red");
+    }
+}
+
+function validateSoilType(fieldSelector) {
+    var soilType = $(fieldSelector).val().trim();
+    var soilTypeError = $("#soil_type_error");
+    
+    if (soilType === "") {
+        $("#soil_type_error").html("Soil Type is required").css("color", "red");
+    } else {
+        $("#soil_type_error").html("").css("color", "red");
+    }
+}
+
+function validateHumidityRequirements(fieldSelector) {
+    var humidityRequirements = $(fieldSelector).val().trim();
+    var humidityRequirementsError = $("#humidity_requirements_error");
+    
+    if (humidityRequirements === "") {
+        $("#humidity_requirements_error").html("Humidity Requirements are required").css("color", "red");
+    } else {
+        $("#humidity_requirements_error").html("").css("color", "red");
+    }
+}
+
+function validateToxicityInformation(fieldSelector) {
+    var toxicityInformation = $(fieldSelector).val().trim();
+    var toxicityInformationError = $("#toxicity_information_error");
+    
+    if (toxicityInformation === "") {
+        $("#toxicity_information_error").html("Toxicity Information is required").css("color", "red");
+    } else {
+        $("#toxicity_information_error").html("").css("color", "red");
+    }
+}
+
+function validateMaintenanceInstructions(fieldSelector) {
+    var maintenanceInstructions = $(fieldSelector).val().trim();
+    var maintenanceInstructionsError = $("#maintenance_instructions_error");
+    
+    if (maintenanceInstructions === "") {
+        $("#maintenance_instructions_error").html("Maintenance Instructions are required").css("color", "red");
+    } else {
+        $("#maintenance_instructions_error").html("").css("color", "red");
+    }
+}
+function validatePlantImage(fieldSelector) {
+    var plantImage =$(fieldSelector)[0].files[0];
+    var plantImageError = $("#plant_image_error");
+    var validImageTypes = ["image/jpeg", "image/png"]; 
+
+    if (plantImage === "") {
+        plantImageError.text("Plant Image is required").css("color", "red");
+        return false;
+    } else if (validImageTypes.indexOf(plantImage.type) === -1) {
+        plantImageError.html("Invalid image format. Only JPEG and PNG allowed.").css("color", "red");
+    } else {
+        plantImageError.html("").css("color", "red");
+    }
+}
+
+// Validation function for Plant Description
+function validatePlantDescription(fieldSelector) {
+    var plantDescription = $(fieldSelector).val().trim();
+    var plantDescriptionError = $("#plant_description_error");
+
+    if (plantDescription === "") {
+        plantDescriptionError.text("Plant Description is required").css("color", "red");
+        return false;
+    } else {
+        plantDescriptionError.html(""); // Clear the error message
+        return true;
+    }
+}
+
+</script>
+
+<style>
+    .form-group {
+        margin-bottom: 20px; /* Add space between form groups (input fields) */
+    }
+
+    .form-group .btn {
+        margin-right: 10px; /* Add space to the right of the buttons */
+        line-height: 2; /* Adjust line height for better vertical alignment */
+    }
+</style>
+{% endblock %}

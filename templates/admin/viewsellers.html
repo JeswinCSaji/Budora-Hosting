@@ -1,0 +1,79 @@
+{% extends 'admin/base1.html' %}
+{% block content %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="row">
+{% for seller in sellers %}
+<div class="col-md-6 col-xl-4 grid-margin stretch-card">
+    <div class="card">
+        
+      <div class="card-body">
+        <h4 class="card-title">{{ seller.storename }}</h4>
+        
+        {% comment %} <div class="item">
+            <img src="{% static 'assets/images/dashboard/Rectangle.jpg' %}" alt="">
+          </div> {% endcomment %}
+        <div class="d-flex py-4">
+            
+          <div class="preview-list w-100">
+            <div class="preview-item p-0">
+            
+              <div class="preview-thumbnail">
+                {% if seller.store_image %}
+                <img src="{{ seller.store_image.url }}" class="rounded-circle" alt="">
+                {% else %}
+                <img src="{% static 'images/usericon.png' %}" class="rounded-circle" alt="">
+                {% endif %}
+              </div>
+              <div class="preview-item-content d-flex flex-grow">
+                <div class="flex-grow">
+                  <div class="d-flex d-md-block d-xl-flex justify-content-between">
+                    <h6 class="preview-subject">{{ seller.name }}</h6>
+                    
+                    <p class="text-muted text-small">Rating:- {{ seller.avgrating }}</p>
+                  </div>
+                  <p class="text-muted">{{ seller.contact }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <p class="text-muted">{{ seller.address }}</p>
+        <p class="text-muted">
+        {{ seller.opening_days }}</p>
+        <p class="text-muted">
+        {{ seller.opening_time }}-{{ seller.closing_time }}
+        </p>
+        {% comment %} <div class="progress progress-md portfolio-progress">
+          <div class="progress-bar bg-success" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        </div> {% endcomment %}
+      </div>
+    </div>
+    
+</div>
+
+{% endfor %}
+</div>
+<style>
+
+    .card {
+      
+     
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+   
+    
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  
+    }
+    
+      
+</style>
+  
+
+  
+{% endblock %}
