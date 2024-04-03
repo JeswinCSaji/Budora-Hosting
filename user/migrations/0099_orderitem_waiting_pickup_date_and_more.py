@@ -15,9 +15,4 @@ class Migration(migrations.Migration):
             name='waiting_pickup_date',
             field=models.DateTimeField(blank=True, null=True),
         ),
-        migrations.AlterField(
-            model_name='orderitem',
-            name='waiting_pickup',
-            field=models.BooleanField(default=False),
-        ),
     ]
